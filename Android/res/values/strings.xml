@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dr Turbo!</string>
+    <string name="menu_levelselect">Levels</string>
+    <string name="menu_restartlevel">Restart</string>
+    <string name="title_levelselect">Select level</string>
+    
+    <string name="end_level_points_title">Points:</string>
+    <string name="end_level_best_title">Best:</string>
+    <string name="end_level_retry">Retry level</string>
+    <string name="end_level_list">Level list</string>
+    <string name="end_level_next">Next level</string>
+    <string name="end_level_title_won">Congratulations!</string>
+    <string name="end_level_title_lost_die">Too bad!</string>
+    <string name="end_level_title_lost_lost">Too bad!</string>
+    <string name="end_level_subtitle_won">You finished this level successfully!</string>
+    <string name="end_level_subtitle_lost_die">Nice tan!</string>
+    <string name="end_level_subtitle_lost_lost">You are lost in space...</string>
+    
+    <string name="pause_restart">Restart level</string>
+    <string name="pause_list">Level list</string>
+    <string name="pause_continue">Continue</string>
+    <string name="pause_title">Game paused</string>
+    
+    <string name="level_locked">This level is locked!</string>
+    <string name="loading_text">Loading...</string>
+</resources>
+
+
