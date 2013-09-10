@@ -1,10 +1,5 @@
 package com.games.spaceman;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.spacemangames.library.SpaceData;
-import com.spacemangames.library.SpaceLevel;
-import com.spacemangames.pal.PALManager;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.spacemangames.library.SpaceData;
+import com.spacemangames.library.SpaceLevel;
+import com.spacemangames.pal.PALManager;
 
 public class HelpActivity extends Activity {
     private static final String TAG = "HelpActivity";

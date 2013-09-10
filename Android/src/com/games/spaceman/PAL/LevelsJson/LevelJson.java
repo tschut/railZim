@@ -1,23 +1,23 @@
-package com.games.spaceman.PAL.LevelsJson;
+package com.games.spaceman.pal.levelsjson;
 
 import java.util.List;
 
 public class LevelJson {
-    private int id;
+    private int              id;
 
-    private int silver;
-    private int gold;
+    private int              silver;
+    private int              gold;
 
-    private int startCenterX;
-    private int startCenterY;
+    private int              startCenterX;
+    private int              startCenterY;
 
-    private String name;
+    private String           name;
 
-    private String predictionBitmap;
+    private String           predictionBitmap;
 
     private List<ObjectJson> objects;
 
-    private BackgroundJson background;
+    private BackgroundJson   background;
 
     public int getId() {
         return id;

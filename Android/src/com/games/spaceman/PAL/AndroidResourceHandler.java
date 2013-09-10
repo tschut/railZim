@@ -1,4 +1,4 @@
-package com.games.spaceman.PAL;
+package com.games.spaceman.pal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.util.List;
 
 import com.games.spaceman.R;
 import com.games.spaceman.SpaceApp;
-import com.games.spaceman.PAL.LevelsJson.LevelJson;
-import com.games.spaceman.PAL.LevelsJson.LevelsJson;
-import com.games.spaceman.PAL.LevelsJson.ObjectJson;
+import com.games.spaceman.pal.levelsjson.LevelJson;
+import com.games.spaceman.pal.levelsjson.LevelsJson;
+import com.games.spaceman.pal.levelsjson.ObjectJson;
 import com.google.gson.Gson;
 import com.spacemangames.framework.MoveProperties;
 import com.spacemangames.library.SpaceData;
@@ -105,7 +105,8 @@ public class AndroidResourceHandler implements IResourceHandler {
         }
     }
 
-    // public void preloadLevels(ArrayList<SpaceLevel> aLevels, int aXmlResourceID) {
+    // public void preloadLevels(ArrayList<SpaceLevel> aLevels, int
+    // aXmlResourceID) {
     // Resources lRes = SpaceApp.mAppContext.getResources();
     // XmlResourceParser lParser = lRes.getXml(aXmlResourceID);
     // boolean lInLevelTag = false;
@@ -121,7 +122,8 @@ public class AndroidResourceHandler implements IResourceHandler {
     // if (lTag.equals("level")) {
     // if (lInLevelTag) {
     // PALManager.getLog()
-    // .e(TAG, "Error parsing XML: found level start tag while still in previous level tag");
+    // .e(TAG,
+    // "Error parsing XML: found level start tag while still in previous level tag");
     // } else {
     // // create a new level object
     // lLevel = new SpaceLevel();
@@ -169,7 +171,8 @@ public class AndroidResourceHandler implements IResourceHandler {
     // else if (lAtt.equals("bounce"))
     // lBounce = lParser.getAttributeFloatValue(i, SpaceObject.BOUNCE_NONE);
     // else if (lAtt.equals("collisionsize"))
-    // lCollisionSize = lParser.getAttributeIntValue(i, SpaceObject.COLLISION_SIZE_IMAGE_WIDTH);
+    // lCollisionSize = lParser.getAttributeIntValue(i,
+    // SpaceObject.COLLISION_SIZE_IMAGE_WIDTH);
     // else if (lAtt.equals("arrowbitmap"))
     // lArrowBitmap = lParser.getAttributeValue(i);
     // else if (lAtt.equals("death_on_impact"))
@@ -183,12 +186,14 @@ public class AndroidResourceHandler implements IResourceHandler {
     // else if (lAtt.equals("move_offset"))
     // lMove.mOffset = lParser.getAttributeIntValue(i, 0);
     // else
-    // PALManager.getLog().e(TAG, "Unexpected attribute [" + lAtt + "] in tag " + lTag);
+    // PALManager.getLog().e(TAG, "Unexpected attribute [" + lAtt + "] in tag "
+    // + lTag);
     // }
     // if (lType.equals("spaceman"))
     // lLevel.addSpaceMan(lX, lY, lBitmap, lArrowBitmap, lCollisionSize, lMove);
     // else if (lType.equals("planet"))
-    // lLevel.addPlanet(lX, lY, lBitmap, lGrav, lBounce, lCollisionSize, lDOI, lMove);
+    // lLevel.addPlanet(lX, lY, lBitmap, lGrav, lBounce, lCollisionSize, lDOI,
+    // lMove);
     // else if (lType.equals("rocket"))
     // lLevel.addRocket(lX, lY, lBitmap, lCollisionSize, lMove);
     // else if (lType.equals("junk"))
@@ -206,18 +211,21 @@ public class AndroidResourceHandler implements IResourceHandler {
     // else if (lAtt.equals("color_outer"))
     // lColorOuter = lParser.getAttributeValue(i);
     // else
-    // PALManager.getLog().e(TAG, "Unexpected attribute [" + lAtt + "] in tag " + lTag);
+    // PALManager.getLog().e(TAG, "Unexpected attribute [" + lAtt + "] in tag "
+    // + lTag);
     // }
     // lLevel.addBackground(lColorInner, lColorOuter);
     // } else {
-    // PALManager.getLog().e(TAG, "Unknown tag [" + lTag + "] in levels xml file");
+    // PALManager.getLog().e(TAG, "Unknown tag [" + lTag +
+    // "] in levels xml file");
     // }
     // break;
     // case XmlResourceParser.END_TAG:
     // lTag = lParser.getName();
     // if (lTag.equals("level")) {
     // if (!lInLevelTag) {
-    // PALManager.getLog().e(TAG, "Error parsing XML: found level end tag without start tag");
+    // PALManager.getLog().e(TAG,
+    // "Error parsing XML: found level end tag without start tag");
     // } else {
     // aLevels.add(lLevel.mId, lLevel);
     // lInLevelTag = false;
@@ -229,7 +237,8 @@ public class AndroidResourceHandler implements IResourceHandler {
     // lEventType = lParser.getEventType();
     // }
     // } catch (XmlPullParserException e) {
-    // PALManager.getLog().e("SpaceData", "Exception parsing xml: XmlPullParserException");
+    // PALManager.getLog().e("SpaceData",
+    // "Exception parsing xml: XmlPullParserException");
     // e.printStackTrace();
     // } catch (IOException e) {
     // PALManager.getLog().e("SpaceData", "Exception parsing xml: IOException");

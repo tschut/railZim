@@ -1,4 +1,4 @@
-package com.games.spaceman.PAL.LevelsJson;
+package com.games.spaceman.pal.levelsjson;
 
 public class BackgroundJson {
     private String color_inner;

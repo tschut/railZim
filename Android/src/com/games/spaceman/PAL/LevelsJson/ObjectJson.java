@@ -1,22 +1,22 @@
-package com.games.spaceman.PAL.LevelsJson;
+package com.games.spaceman.pal.levelsjson;
 
 public class ObjectJson {
-    private String type;
-    private String bitmap;
-    private String arrowBitmap;
+    private String  type;
+    private String  bitmap;
+    private String  arrowBitmap;
 
-    private int collisionSize;
+    private int     collisionSize;
 
     private boolean deathOnImpact;
-    private float gravity;
+    private float   gravity;
 
     private boolean move;
-    private int moveDps;
-    private int moveOffset;
-    private int moveRadius;
+    private int     moveDps;
+    private int     moveOffset;
+    private int     moveRadius;
 
-    private int posx;
-    private int posy;
+    private int     posx;
+    private int     posy;
     private boolean lazyLoading = false;
 
     public String getType() {

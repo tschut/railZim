@@ -1,4 +1,4 @@
-package com.games.spaceman.PAL;
+package com.games.spaceman.pal;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.games.spaceman.PAL;
+package com.games.spaceman.pal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,26 +22,27 @@ import com.spacemangames.pal.IRenderer;
 
 public class AndroidRenderer implements IRenderer {
     @SuppressWarnings("unused")
-    private static final String TAG = "AndroidRenderer";
+    private static final String         TAG          = "AndroidRenderer";
 
-    private boolean mInitialized = false;
+    private boolean                     mInitialized = false;
 
-    private Canvas mCanvas;
-    private Rect mViewport;
-    private Rect mScreen;
+    private Canvas                      mCanvas;
+    private Rect                        mViewport;
+    private Rect                        mScreen;
 
-    // For the background we make a copy of the gradient bitmap to speed up future rendering
-    private Bitmap mBackgroundGradient;
-    private Canvas mGradientCanvas;
-    private GradientDrawable mGradientDrawable;
+    // For the background we make a copy of the gradient bitmap to speed up
+    // future rendering
+    private Bitmap                      mBackgroundGradient;
+    private Canvas                      mGradientCanvas;
+    private GradientDrawable            mGradientDrawable;
 
     // Bitmaps for the stars
-    private List<Bitmap> mStarBitmaps = null;
-    private final Canvas mScratchCanvas;
+    private List<Bitmap>                mStarBitmaps = null;
+    private final Canvas                mScratchCanvas;
 
     // helpers
-    private int mCanvasWidth;
-    private int mCanvasHeight;
+    private int                         mCanvasWidth;
+    private int                         mCanvasHeight;
     private final android.graphics.Rect mScratchRect;
 
     public AndroidRenderer() {
@@ -187,7 +188,8 @@ public class AndroidRenderer implements IRenderer {
                 predictionDrawable.setBounds(xLeft, yTop, (int) (xLeft + lW), (int) (yTop + lH));
                 predictionDrawable.draw(mCanvas);
             }
-            // set spaceman rotation to reflect direction we're going to shoot in
+            // set spaceman rotation to reflect direction we're going to shoot
+            // in
             aObject.setRotation(-1 * SpaceGameState.getInstance().mChargingState.getAngle());
         }
 

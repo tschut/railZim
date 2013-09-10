@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-import com.games.spaceman.PAL.AndroidBitmapFactory;
-import com.games.spaceman.PAL.AndroidLog;
-import com.games.spaceman.PAL.AndroidResourceHandler;
+import com.games.spaceman.pal.AndroidBitmapFactory;
+import com.games.spaceman.pal.AndroidLog;
+import com.games.spaceman.pal.AndroidResourceHandler;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.Rect;

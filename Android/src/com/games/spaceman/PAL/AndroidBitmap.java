@@ -1,4 +1,4 @@
-package com.games.spaceman.PAL;
+package com.games.spaceman.pal;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
