@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.R;
@@ -29,8 +24,10 @@ public class PauseMenuFragment extends DialogFragment {
 
     private final class OnLevelListClickListener implements View.OnClickListener {
         public void onClick(View v) {
-            // Reload the current level. If we don't do that, the flow makes it possible to get back to
-            // the level in the state it's in now because you can press the 'back'button in the level selector
+            // Reload the current level. If we don't do that, the flow makes it
+            // possible to get back to
+            // the level in the state it's in now because you can press the
+            // 'back'button in the level selector
             int lState = SpaceGameState.getInstance().endState();
             if (lState != SpaceGameState.NOT_YET_ENDED) {
                 GameThreadHolder.getThread().reloadCurrentLevel();
@@ -49,7 +46,7 @@ public class PauseMenuFragment extends DialogFragment {
     }
 
     private Activity activity;
-    private AdView adView;
+    private AdView   adView;
 
     public void setStartingActivity(Activity activity) {
         this.activity = activity;
@@ -58,16 +55,6 @@ public class PauseMenuFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pause_layout, container);
-        LinearLayout adLayout = (LinearLayout) view.findViewById(R.id.adLayout);
-
-        adView = new AdView(activity, AdSize.BANNER, AdSettings.ADSENSE_ID);
-        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
-        int width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, AdSize.BANNER.getWidth(), displayMetrics));
-        int height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, AdSize.BANNER.getHeight(), displayMetrics));
-        adLayout.addView(adView, width, height);
-        AdRequest adRequest = new AdRequest();
-        adRequest.addTestDevice(AdSettings.TEST_DEVICE_ID);
-        adView.loadAd(adRequest);
 
         getDialog().setTitle(R.string.pause_title);
 
