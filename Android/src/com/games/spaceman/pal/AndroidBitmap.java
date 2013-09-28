@@ -7,14 +7,14 @@ import com.games.spaceman.SpaceApp;
 import com.spacemangames.pal.IBitmap;
 
 public class AndroidBitmap implements IBitmap {
-    private Drawable drawable;
-    private int width;
-    private int height;
-    private final String name;
+    private Drawable         drawable;
+    private int              width;
+    private int              height;
+    private final String     name;
 
     private static Resources mResources;
-    private final int identifier;
-    private final boolean lazyLoading;
+    private final int        identifier;
+    private final boolean    lazyLoading;
     static {
         mResources = SpaceApp.mAppContext.getResources();
     }
@@ -22,7 +22,7 @@ public class AndroidBitmap implements IBitmap {
     public AndroidBitmap(String aResource, boolean lazyLoading) {
         this.lazyLoading = lazyLoading;
         name = aResource;
-        identifier = mResources.getIdentifier(name, "drawable", "com.games.spaceman");
+        identifier = mResources.getIdentifier(name, "drawable", "com.spacemangames.gravisphere");
 
         if (!lazyLoading) {
             loadDrawable();
