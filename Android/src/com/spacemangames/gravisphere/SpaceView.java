@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import java.util.Vector;
 

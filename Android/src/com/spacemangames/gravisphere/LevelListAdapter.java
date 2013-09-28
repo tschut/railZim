@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import android.database.Cursor;
 import android.view.LayoutInflater;

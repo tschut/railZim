@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 public class GameThreadHolder {
     private static SpaceGameThread mThread;

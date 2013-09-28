@@ -1,4 +1,4 @@
-package com.games.spaceman.pal;
+package com.spacemangames.gravisphere.pal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +10,13 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.games.spaceman.SpaceApp;
-import com.games.spaceman.pal.levelsjson.LevelJson;
-import com.games.spaceman.pal.levelsjson.LevelsJson;
-import com.games.spaceman.pal.levelsjson.ObjectJson;
 import com.google.gson.Gson;
 import com.spacemangames.framework.MoveProperties;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.SpaceApp;
+import com.spacemangames.gravisphere.pal.levelsjson.LevelJson;
+import com.spacemangames.gravisphere.pal.levelsjson.LevelsJson;
+import com.spacemangames.gravisphere.pal.levelsjson.ObjectJson;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.IResourceHandler;

@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 public class DebugSettings {
     // disable all debug stuff

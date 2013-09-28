@@ -1,17 +1,17 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-import com.games.spaceman.pal.AndroidBitmapFactory;
-import com.games.spaceman.pal.AndroidLog;
-import com.games.spaceman.pal.AndroidResourceHandler;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.pal.AndroidBitmapFactory;
+import com.spacemangames.gravisphere.pal.AndroidLog;
+import com.spacemangames.gravisphere.pal.AndroidResourceHandler;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.EmptyLog;
@@ -75,6 +75,6 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
     public void loadingDone() {
         SpaceData.getInstance().remLoadingDoneListener(this);
         // loading done, continue to the MainMenuActivity
-        startActivity(new Intent(SpaceApp.mAppContext, com.games.spaceman.MainMenu.class));
+        startActivity(new Intent(SpaceApp.mAppContext, com.spacemangames.gravisphere.MainMenu.class));
     }
 }

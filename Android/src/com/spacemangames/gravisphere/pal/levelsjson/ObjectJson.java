@@ -1,4 +1,4 @@
-package com.games.spaceman.pal.levelsjson;
+package com.spacemangames.gravisphere.pal.levelsjson;
 
 public class ObjectJson {
     private String  type;

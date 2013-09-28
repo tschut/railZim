@@ -1,4 +1,4 @@
-package com.games.spaceman.pal;
+package com.spacemangames.gravisphere.pal;
 
 import java.util.ArrayList;
 import java.util.List;

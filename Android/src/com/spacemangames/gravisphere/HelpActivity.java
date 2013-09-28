@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -72,7 +72,7 @@ public class HelpActivity extends Activity {
             sp.commit();
         } else {
             // we are being restored: restart the app
-            Intent i = new Intent(this, com.games.spaceman.LoadingActivity.class);
+            Intent i = new Intent(this, com.spacemangames.gravisphere.LoadingActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();

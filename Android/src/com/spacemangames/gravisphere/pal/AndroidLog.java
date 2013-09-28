@@ -1,4 +1,4 @@
-package com.games.spaceman.pal;
+package com.spacemangames.gravisphere.pal;
 
 import com.spacemangames.pal.ILog;
 

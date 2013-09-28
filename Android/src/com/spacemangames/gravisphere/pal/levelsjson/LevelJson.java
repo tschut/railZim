@@ -1,4 +1,4 @@
-package com.games.spaceman.pal.levelsjson;
+package com.spacemangames.gravisphere.pal.levelsjson;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import android.content.ContentValues;
 import android.content.Context;

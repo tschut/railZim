@@ -1,4 +1,4 @@
-package com.games.spaceman;
+package com.spacemangames.gravisphere;
 
 import java.util.Queue;
 
@@ -10,11 +10,11 @@ import android.util.FloatMath;
 import android.view.SurfaceHolder;
 
 import com.badlogic.gdx.math.Vector2;
-import com.games.spaceman.pal.AndroidRenderer;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.GameThread;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.Viewport;
+import com.spacemangames.gravisphere.pal.AndroidRenderer;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
 import com.spacemangames.math.Rect;
