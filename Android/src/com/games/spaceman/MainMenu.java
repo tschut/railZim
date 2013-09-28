@@ -161,13 +161,15 @@ public class MainMenu extends Activity {
         }
     }
 
-    // if this returns true we should skip the menu and go to the help immediately
+    // if this returns true we should skip the menu and go to the help
+    // immediately
     private boolean goToHelpImmediately() {
         // return true if the first level is never completed...
         if (LevelDbAdapter.getInstance().highScore(0) > 0)
             return false;
 
-        // ... and the shared preferences indicate we've never showed the help before
+        // ... and the shared preferences indicate we've never showed the help
+        // before
         SharedPreferences sp = getSharedPreferences(getPackageName(), MODE_PRIVATE);
         boolean hasSeenHelp = sp.getBoolean(HelpActivity.HAS_SEEN_HELP_SHARED_PREF_KEY, false);
 

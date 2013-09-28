@@ -18,27 +18,32 @@ import com.spacemangames.gravisphere.R;
 import com.spacemangames.pal.PALManager;
 
 public class LevelSelect extends ListActivity {
-    private static final String TAG = "LevelSelect";
+    private static final String       TAG                   = "LevelSelect";
 
-    private LevelDbAdapter mDbHelper;
-    private Cursor mLevelCursor;
+    private LevelDbAdapter            mDbHelper;
+    private Cursor                    mLevelCursor;
 
     // Create a message handling object as an anonymous class.
     private final OnItemClickListener mLevelSelectedHandler = new OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View aView, int position, long id) {
-            // return the result
-            int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.level_number)).getText());
+                                                                public void onItemClick(AdapterView<?> parent, View aView, int position,
+                                                                        long id) {
+                                                                    // return
+                                                                    // the
+                                                                    // result
+                                                                    int lID = Integer.parseInt((String) ((TextView) aView
+                                                                            .findViewById(R.id.level_number)).getText());
 
-            if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
-                Toast.makeText(getApplicationContext(), R.string.level_locked, Toast.LENGTH_SHORT).show();
-            } else {
-                Intent aIntent = new Intent();
-                aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
-                setResult(Activity.RESULT_OK, aIntent);
-                finish();
-            }
-        }
-    };
+                                                                    if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
+                                                                        Toast.makeText(getApplicationContext(), R.string.level_locked,
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        Intent aIntent = new Intent();
+                                                                        aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
+                                                                        setResult(Activity.RESULT_OK, aIntent);
+                                                                        finish();
+                                                                    }
+                                                                }
+                                                            };
 
     @Override
     protected void onResume() {

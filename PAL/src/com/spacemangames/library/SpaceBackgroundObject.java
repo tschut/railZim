@@ -10,9 +10,10 @@ import com.spacemangames.framework.SpaceUtil;
 
 public class SpaceBackgroundObject extends SpaceObject {
     public class Star implements Comparable<Star> {
-        public float mX, mY;
-        public float mDiameter, mRadius;
-        public float mDepth; // 0 = no movement, 1 = same as viewport
+        public float   mX, mY;
+        public float   mDiameter, mRadius;
+        public float   mDepth;               // 0 = no movement, 1 = same as
+                                              // viewport
         public float[] mColor = new float[3];
 
         public Star(float[] aColor, int aX, int aY, float aSize, float aDepth) {
@@ -46,30 +47,36 @@ public class SpaceBackgroundObject extends SpaceObject {
     public final class GradientProperties {
         public String mInnerColor;
         public String mOuterColor;
-        public float mCenterX;
-        public float mCenterY;
-        public float mRadius;
+        public float  mCenterX;
+        public float  mCenterY;
+        public float  mRadius;
     }
 
-    private final static float STAR_GENERATION_COUNT = 8f; // generate STAR_GENERATION_COUNT stars per pixel
-    private final static float SIZE_MIN = 0.02f; // in cm
-    private final static float SIZE_MAX = 0.08f; // in cm
-    private final static float STAR_HUE = 210f;
-    private final static float STAR_SAT_MIN = 0.70f;
-    private final static float STAR_SAT_MAX = 1.0f;
-    private final static float STAR_BRIGHTNESS_MIN = 0.60f;
-    private final static float STAR_BRIGHTNESS_MAX = 1.0f;
+    private final static float       STAR_GENERATION_COUNT = 8f;                      // generate
+                                                                                       // STAR_GENERATION_COUNT
+                                                                                       // stars
+                                                                                       // per
+                                                                                       // pixel
+    private final static float       SIZE_MIN              = 0.02f;                   // in
+                                                                                       // cm
+    private final static float       SIZE_MAX              = 0.08f;                   // in
+                                                                                       // cm
+    private final static float       STAR_HUE              = 210f;
+    private final static float       STAR_SAT_MIN          = 0.70f;
+    private final static float       STAR_SAT_MAX          = 1.0f;
+    private final static float       STAR_BRIGHTNESS_MIN   = 0.60f;
+    private final static float       STAR_BRIGHTNESS_MAX   = 1.0f;
 
-    private final static int BACKGROUND_RADIUS_MIN = 600;
-    private final static int BACKGROUND_RADIUS_MAX = 1500;
+    private final static int         BACKGROUND_RADIUS_MIN = 600;
+    private final static int         BACKGROUND_RADIUS_MAX = 1500;
 
-    private final List<Star> mStars;
-    private final float[] mScratchColor;
+    private final List<Star>         mStars;
+    private final float[]            mScratchColor;
 
-    private final String mSeed;
-    private boolean mGenerated = false;
+    private final String             mSeed;
+    private boolean                  mGenerated            = false;
 
-    private final GradientProperties mGradientProperties = new GradientProperties();
+    private final GradientProperties mGradientProperties   = new GradientProperties();
 
     public SpaceBackgroundObject(String aBackgroundColorInner, String aBackgroundColorOuter, String aSeed) {
         super(null, false, TYPE_BACKGROUND, 0, 0, 0, new MoveProperties());

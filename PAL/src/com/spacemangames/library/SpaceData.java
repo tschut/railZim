@@ -13,39 +13,56 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceData {
-    public static final String TAG = "SpaceData";
+    public static final String                   TAG                    = "SpaceData";
 
-    public static final float BOX2D_TIMESTEP = 1.0f / 60.0f; // 60 fps
+    public static final float                    BOX2D_TIMESTEP         = 1.0f / 60.0f;                        // 60
+                                                                                                                // fps
 
-    public static final float BOX2D_PREDICT_TIMESTEP = 1.0f / 60.0f; // 30 fps
-    public static final float PREDICTION_STEP = 1.0f / 10f; // 5 per second
+    public static final float                    BOX2D_PREDICT_TIMESTEP = 1.0f / 60.0f;                        // 30
+                                                                                                                // fps
+    public static final float                    PREDICTION_STEP        = 1.0f / 10f;                          // 5
+                                                                                                                // per
+                                                                                                                // second
 
-    public static final float BOX2D_SPEEDUP = 1.0f; // simulate x times the real time
-    public static final int BOX2D_POS_ITER = 4; // 10 = suggested by manual
-    public static final int BOX2D_VEL_ITER = 2; // 10 = suggested by manual
+    public static final float                    BOX2D_SPEEDUP          = 1.0f;                                // simulate
+                                                                                                                // x
+                                                                                                                // times
+                                                                                                                // the
+                                                                                                                // real
+                                                                                                                // time
+    public static final int                      BOX2D_POS_ITER         = 4;                                   // 10
+                                                                                                                // =
+                                                                                                                // suggested
+                                                                                                                // by
+                                                                                                                // manual
+    public static final int                      BOX2D_VEL_ITER         = 2;                                   // 10
+                                                                                                                // =
+                                                                                                                // suggested
+                                                                                                                // by
+                                                                                                                // manual
 
-    public static final int PREDICT_SECONDS = 1;
+    public static final int                      PREDICT_SECONDS        = 1;
 
     /** All levels loaded end up here */
-    public ArrayList<SpaceLevel> mLevels;
+    public ArrayList<SpaceLevel>                 mLevels;
 
     /** except these special ones :) */
-    public ArrayList<SpaceLevel> mSpecialLevels;
+    public ArrayList<SpaceLevel>                 mSpecialLevels;
 
     /** This is the current level */
-    public SpaceLevel mCurrentLevel;
+    public SpaceLevel                            mCurrentLevel;
 
     /** Boolean indicating if preloading is finished */
-    public boolean mPreloadingDone;
+    public boolean                               mPreloadingDone;
 
     /** Box2D stuff */
-    private World mWorld;
+    private World                                mWorld;
 
     /** Object that keeps track of the points scored for the current level */
-    public SpaceGamePoints mPoints;
+    public SpaceGamePoints                       mPoints;
 
     /** List of listeners for loading done event */
-    private final HashSet<ILoadingDoneListener> mLoadingDoneListeners = new HashSet<ILoadingDoneListener>();
+    private final HashSet<ILoadingDoneListener>  mLoadingDoneListeners  = new HashSet<ILoadingDoneListener>();
     /** List of listeners for change level event */
     private final HashSet<ILevelChangedListener> mLevelChangedListeners = new HashSet<ILevelChangedListener>();
 
@@ -76,7 +93,8 @@ public class SpaceData {
         mWorld.setAutoClearForces(true);
         mWorld.setContactListener(SpaceWorldEventBuffer.getInstance().getContactListener());
 
-        // reset the current level (if there is one), we may clean up resources there
+        // reset the current level (if there is one), we may clean up resources
+        // there
         if (mCurrentLevel != null) {
             mCurrentLevel.releaseLazyMemory();
             mCurrentLevel.reset();

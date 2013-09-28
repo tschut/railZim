@@ -2,7 +2,7 @@ package com.games.spaceman;
 
 public class GameThreadHolder {
     private static SpaceGameThread mThread;
-    
+
     // Create the thread
     public static SpaceGameThread createThread() {
         if (mThread == null) {
@@ -10,7 +10,7 @@ public class GameThreadHolder {
         }
         return mThread;
     }
-    
+
     public static SpaceGameThread getThread() {
         return mThread;
     }

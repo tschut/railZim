@@ -16,46 +16,54 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public abstract class SpaceObject {
-    public static final String MTAG = "SpaceObject";
+    public static final String MTAG                       = "SpaceObject";
 
-    public static final float BOX2D_SCALE_FACTOR = 100f; // 1 pixel = 0.01 meter = 1 cm
+    public static final float  BOX2D_SCALE_FACTOR         = 100f;             // 1
+                                                                               // pixel
+                                                                               // =
+                                                                               // 0.01
+                                                                               // meter
+                                                                               // =
+                                                                               // 1
+                                                                               // cm
 
-    public static final float BOUNCE_NONE = -1.0f;
+    public static final float  BOUNCE_NONE                = -1.0f;
 
     /** Resources */
-    private IBitmap mBitmap;
+    private IBitmap            mBitmap;
 
     // Possible object types
-    public static final int TYPE_BACKGROUND = 0;
-    public static final int TYPE_SPACEMAN = 1;
-    public static final int TYPE_PLANET = 2;
-    public static final int TYPE_ROCKET = 3;
-    public static final int TYPE_JUNK = 4;
-    public static final int TYPE_BONUS = 5;
+    public static final int    TYPE_BACKGROUND            = 0;
+    public static final int    TYPE_SPACEMAN              = 1;
+    public static final int    TYPE_PLANET                = 2;
+    public static final int    TYPE_ROCKET                = 3;
+    public static final int    TYPE_JUNK                  = 4;
+    public static final int    TYPE_BONUS                 = 5;
 
-    public static final int COLLISION_SIZE_IMAGE_WIDTH = -1;
+    public static final int    COLLISION_SIZE_IMAGE_WIDTH = -1;
 
-    public int mType;
+    public int                 mType;
 
-    public float mStartX;
-    public float mStartY;
+    public float               mStartX;
+    public float               mStartY;
 
-    public float mX;
-    public float mY;
+    public float               mX;
+    public float               mY;
 
-    protected Body mBody;
+    protected Body             mBody;
 
-    public float mCollisionSize;
+    public float               mCollisionSize;
 
-    protected Rect mRect;
+    protected Rect             mRect;
 
-    protected MoveProperties mMove;
-    protected MouseJoint mMouseJoint;
-    protected Body mMouseJointBody;
-    private final Vector2 mMoveScratchVect = new Vector2(0, 0);
+    protected MoveProperties   mMove;
+    protected MouseJoint       mMouseJoint;
+    protected Body             mMouseJointBody;
+    private final Vector2      mMoveScratchVect           = new Vector2(0, 0);
 
     public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, MoveProperties aMove) {
-        if (aBitmap != null) // objects don't always have a bitmap (e.g. SpaceBackgroundObject)
+        if (aBitmap != null) // objects don't always have a bitmap (e.g.
+                             // SpaceBackgroundObject)
             mBitmap = PALManager.getBitmapFactory().createBitmap(aBitmap, lazyLoading);
         mType = aType;
         mStartX = aX;
@@ -65,7 +73,9 @@ public abstract class SpaceObject {
         mRect = new Rect();
 
         if (aCollisionSize == COLLISION_SIZE_IMAGE_WIDTH) {
-            mCollisionSize = mBitmap.getWidth() / 2.0f; // TODO this should use the platform-specific code!
+            mCollisionSize = mBitmap.getWidth() / 2.0f; // TODO this should use
+                                                        // the platform-specific
+                                                        // code!
         } else {
             mCollisionSize = aCollisionSize;
         }
@@ -103,12 +113,14 @@ public abstract class SpaceObject {
         }
     }
 
-    // override this in derived class to make an object affected by gravity from others
+    // override this in derived class to make an object affected by gravity from
+    // others
     public boolean isAffectedByGravity() {
         return false;
     }
 
-    // override this in derived class to make an object exert a gravitational pull
+    // override this in derived class to make an object exert a gravitational
+    // pull
     public float gravity() {
         return -1.f;
     }

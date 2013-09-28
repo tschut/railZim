@@ -10,45 +10,47 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceLevel {
-    public static final String MTAG = "SpaceLevel";
+    public static final String    MTAG              = "SpaceLevel";
 
-    public static final int ID_LOADING_SCREEN = 0;
-    public static final int ID_HELP1 = 1;
-    public static final int ID_HELP2 = 2;
-    public static final int ID_HELP3 = 3;
-    public static final int ID_HELP4 = 4;
+    public static final int       ID_LOADING_SCREEN = 0;
+    public static final int       ID_HELP1          = 1;
+    public static final int       ID_HELP2          = 2;
+    public static final int       ID_HELP3          = 3;
+    public static final int       ID_HELP4          = 4;
 
     /** list of objects in this level */
     public ArrayList<SpaceObject> mObjects;
     /** The background (which is a special object) */
-    public SpaceBackgroundObject mBackgroundObject;
+    public SpaceBackgroundObject  mBackgroundObject;
 
     /** Id of this level */
-    public int mId;
+    public int                    mId;
 
     /** Bitmap used for prediction */
-    public IBitmap mPredictionBitmap;
+    public IBitmap                mPredictionBitmap;
 
     /** Name of this level */
-    public String mName;
+    public String                 mName;
 
-    private int mStartY;
-    private int mStartX;
+    private int                   mStartY;
+    private int                   mStartX;
 
     /** Point you have to score for silver/gold medals */
-    private int mSilver;
-    private int mGold;
+    private int                   mSilver;
+    private int                   mGold;
 
     /** scratch variables */
-    public static Vector2 mScratchVector1 = new Vector2();
-    public static Vector2 mScratchVector2 = new Vector2();
-    public static Vector2 mScratchVector3 = new Vector2();
+    public static Vector2         mScratchVector1   = new Vector2();
+    public static Vector2         mScratchVector2   = new Vector2();
+    public static Vector2         mScratchVector3   = new Vector2();
 
-    private final Vector2 mSpaceManSpeedBuf = new Vector2();
+    private final Vector2         mSpaceManSpeedBuf = new Vector2();
 
     public SpaceLevel() {
-        // Note: 16 is the initial value, we can grow beyond that. However, it seems a nice estimate,
-        // so as long as we stay below that we should have better loading performance as the array doesn't
+        // Note: 16 is the initial value, we can grow beyond that. However, it
+        // seems a nice estimate,
+        // so as long as we stay below that we should have better loading
+        // performance as the array doesn't
         // have to grow.
         mObjects = new ArrayList<SpaceObject>(16);
     }
@@ -100,8 +102,10 @@ public class SpaceLevel {
         mObjects.add(lObject);
     }
 
-    // public void addJunk(int aX, int aY, String aBitmap, int aRotation, float aBounce, boolean aDOI, MoveProperties aMove) {
-    // SpaceJunkObject lObject = new SpaceJunkObject(aBitmap, aX, aY, aRotation, aBounce, aDOI, aMove);
+    // public void addJunk(int aX, int aY, String aBitmap, int aRotation, float
+    // aBounce, boolean aDOI, MoveProperties aMove) {
+    // SpaceJunkObject lObject = new SpaceJunkObject(aBitmap, aX, aY, aRotation,
+    // aBounce, aDOI, aMove);
     // mObjects.add(lObject);
     // }
 
@@ -126,7 +130,8 @@ public class SpaceLevel {
     public void reset() {
         int count = mObjects.size();
         for (int i = 0; i < count; i++) {
-            // by doing this we force the correct rotation for objects that move and rotate with that (e.g. the rocket)
+            // by doing this we force the correct rotation for objects that move
+            // and rotate with that (e.g. the rocket)
             mObjects.get(i).updateMoving(1);
             mObjects.get(i).reset();
         }
@@ -163,7 +168,9 @@ public class SpaceLevel {
                 mScratchVector3.set(mScratchVector2); // vec3 = vec2
                 mScratchVector3.sub(mScratchVector1); // vec3 = vec2 - vec1
                 mScratchVector1.set(mScratchVector3); // vec1 = vec3
-                mScratchVector1.mul(1.0f / mScratchVector3.len()); // vec1 = normalized direction
+                mScratchVector1.mul(1.0f / mScratchVector3.len()); // vec1 =
+                                                                   // normalized
+                                                                   // direction
                 // grav pull, inverse square relationship with distance
                 float lGravPull = (lGrav / (lDistance * lDistance)) * aElapsed;
                 mScratchVector1.mul(lGravPull);

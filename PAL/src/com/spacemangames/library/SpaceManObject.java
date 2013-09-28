@@ -18,8 +18,8 @@ import com.spacemangames.pal.PALManager;
 public class SpaceManObject extends SpaceObject {
     public class ArrowData {
         public float mAngle;
-        public int mAlpha;
-        public Rect mRect;
+        public int   mAlpha;
+        public Rect  mRect;
 
         public ArrowData() {
             mAngle = 0f;
@@ -29,15 +29,15 @@ public class SpaceManObject extends SpaceObject {
     }
 
     /** Variables for drawing the arrow when spaceman is offscreen */
-    private final IBitmap mArrowBitmap;
-    private final ArrowData mArrowData;
-    private final Rect mScratchRect;
+    private final IBitmap    mArrowBitmap;
+    private final ArrowData  mArrowData;
+    private final Rect       mScratchRect;
 
-    private final Vector2 mScratchVector;
+    private final Vector2    mScratchVector;
 
     /** Prediction of where spaceman is going */
     public ArrayList<PointF> mPredictionData;
-    public int mLastPrediction;
+    public int               mLastPrediction;
 
     public SpaceManObject(String aBitmap, int aX, int aY, String aArrowResource, int aCollisionSize, MoveProperties aMoveProperties) {
         super(aBitmap, false, TYPE_SPACEMAN, aX, aY, aCollisionSize, aMoveProperties);
@@ -49,7 +49,14 @@ public class SpaceManObject extends SpaceObject {
         mScratchVector = new Vector2(0, 0);
 
         mPredictionData = new ArrayList<PointF>();
-        int predictionPoints = (int) ((SpaceData.PREDICT_SECONDS / SpaceData.PREDICTION_STEP) + 1); // + 1 just to be sure we've got
+        int predictionPoints = (int) ((SpaceData.PREDICT_SECONDS / SpaceData.PREDICTION_STEP) + 1); // +
+                                                                                                    // 1
+                                                                                                    // just
+                                                                                                    // to
+                                                                                                    // be
+                                                                                                    // sure
+                                                                                                    // we've
+                                                                                                    // got
                                                                                                     // enough
         for (int i = 0; i < predictionPoints; ++i) {
             mPredictionData.add(new PointF(0, 0));

@@ -21,10 +21,10 @@ import com.spacemangames.pal.PALManager;
 
 public class SpaceApp extends FragmentActivity implements ILevelChangedListener {
     class PointsUpdateThread extends Thread {
-        private static final String TAG = "PointsUpdateThread";
-        private final float mMinFrameTime;
-        private long mLastTime;
-        public boolean mRunning = true;
+        private static final String TAG      = "PointsUpdateThread";
+        private final float         mMinFrameTime;
+        private long                mLastTime;
+        public boolean              mRunning = true;
 
         public PointsUpdateThread(float aMinFrameTime) {
             mMinFrameTime = aMinFrameTime;
@@ -68,35 +68,36 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         }
     }
 
-    public static final int ACTIVITY_LEVELSELECT = 0;
-    public static final int ACTIVITY_HELP = 1;
+    public static final int        ACTIVITY_LEVELSELECT = 0;
+    public static final int        ACTIVITY_HELP        = 1;
 
-    public static final int DIALOG_END_LEVEL = 0;
+    public static final int        DIALOG_END_LEVEL     = 0;
 
-    public static final int LAST_UNLOCKED_LEVEL = -2;
+    public static final int        LAST_UNLOCKED_LEVEL  = -2;
 
-    public static final String LEVEL_ID_STRING = "com.games.spaceman.level_id";
+    public static final String     LEVEL_ID_STRING      = "com.games.spaceman.level_id";
 
-    public static final int MENU_LEVELSELECT_ID = Menu.FIRST;
-    public static final int MENU_RESTARTLEVEL_ID = Menu.FIRST + 1;
+    public static final int        MENU_LEVELSELECT_ID  = Menu.FIRST;
+    public static final int        MENU_RESTARTLEVEL_ID = Menu.FIRST + 1;
 
-    private static final String TAG = "SpaceApp";
+    private static final String    TAG                  = "SpaceApp";
 
-    public static Context mAppContext;
+    public static Context          mAppContext;
 
-    private PointsUpdateThread mHUDThread;
+    private PointsUpdateThread     mHUDThread;
 
-    private static int mRestoreLevel = -1;
+    private static int             mRestoreLevel        = -1;
 
     private GoogleAnalyticsTracker tracker;
 
-    // parse events that occurred. This is called after the physics have been updated
-    public Handler mMsgHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            showEndLevelDialog();
-        }
-    };
+    // parse events that occurred. This is called after the physics have been
+    // updated
+    public Handler                 mMsgHandler          = new Handler() {
+                                                            @Override
+                                                            public void handleMessage(Message msg) {
+                                                                showEndLevelDialog();
+                                                            }
+                                                        };
 
     private void showEndLevelDialog() {
         tracker.trackPageView("/endLevelDialog");

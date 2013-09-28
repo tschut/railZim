@@ -15,14 +15,14 @@ import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 
 public class HelpActivity extends Activity {
-    private static final String TAG = "HelpActivity";
+    private static final String TAG                           = "HelpActivity";
 
-    public static final int HELP_ACTION_START_GAME = 0;
+    public static final int     HELP_ACTION_START_GAME        = 0;
 
-    private Button mNextButton;
-    private Button mPrevButton;
+    private Button              mNextButton;
+    private Button              mPrevButton;
 
-    public static final String HAS_SEEN_HELP_SHARED_PREF_KEY = "hasSeenHelp";
+    public static final String  HAS_SEEN_HELP_SHARED_PREF_KEY = "hasSeenHelp";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

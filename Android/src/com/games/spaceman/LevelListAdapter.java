@@ -14,14 +14,14 @@ import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
 public class LevelListAdapter extends BaseAdapter {
-    private static final String TAG = "LevelListAdapter";
+    private static final String  TAG            = "LevelListAdapter";
 
-    private static final int TYPE_LEVEL = 0;
-    private static final int TYPE_AD = 1;
-    private static final int TYPE_MAX_COUNT = TYPE_AD + 1;
+    private static final int     TYPE_LEVEL     = 0;
+    private static final int     TYPE_AD        = 1;
+    private static final int     TYPE_MAX_COUNT = TYPE_AD + 1;
 
     private final LayoutInflater mInflater;
-    private final Cursor mCursor;
+    private final Cursor         mCursor;
 
     public LevelListAdapter(Cursor aCursor, LayoutInflater aInflater) {
         mInflater = aInflater;
@@ -77,8 +77,7 @@ public class LevelListAdapter extends BaseAdapter {
         } else if (Integer.parseInt(lLevelHighScore) == 0) {
             lStarImageView.setImageResource(R.drawable.star_enabled);
         } else {
-            int lStarColor = SpaceData.getInstance().levelStarColor(Integer.parseInt(lLevelNumber),
-                    Integer.parseInt(lLevelHighScore));
+            int lStarColor = SpaceData.getInstance().levelStarColor(Integer.parseInt(lLevelNumber), Integer.parseInt(lLevelHighScore));
             switch (lStarColor) {
             case SpaceGameState.WON_BRONZE:
                 lStarImageView.setImageResource(R.drawable.star_bronze);

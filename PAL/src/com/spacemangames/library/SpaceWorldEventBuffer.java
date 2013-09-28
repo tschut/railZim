@@ -10,18 +10,18 @@ import com.spacemangames.pal.PALManager;
 
 public class SpaceWorldEventBuffer {
     // Game events
-    public static final int     EVENT_HIT_ROCKET                = 0;
-    public static final int     EVENT_HIT_DOI_OBJECT            = 1;
-    public static final int     EVENT_SCORE_BONUS               = 2;
-    
-    private static final String         TAG                 = "SpaceWorldEventBuffer";
-    
+    public static final int     EVENT_HIT_ROCKET     = 0;
+    public static final int     EVENT_HIT_DOI_OBJECT = 1;
+    public static final int     EVENT_SCORE_BONUS    = 2;
+
+    private static final String TAG                  = "SpaceWorldEventBuffer";
+
     private class SpaceContactListener implements ContactListener {
         public void beginContact(Contact contact) {
-            SpaceObject lObjectA = (SpaceObject)contact.getFixtureA().getBody().getUserData();
-            SpaceObject lObjectB = (SpaceObject)contact.getFixtureB().getBody().getUserData();
+            SpaceObject lObjectA = (SpaceObject) contact.getFixtureA().getBody().getUserData();
+            SpaceObject lObjectB = (SpaceObject) contact.getFixtureB().getBody().getUserData();
             SpaceObject lSpaceMan, lOther;
-            
+
             if (lObjectA.mType == SpaceObject.TYPE_SPACEMAN) {
                 lSpaceMan = lObjectA;
                 lOther = lObjectB;
@@ -29,23 +29,24 @@ public class SpaceWorldEventBuffer {
                 lSpaceMan = lObjectB;
                 lOther = lObjectA;
             } else {
-                PALManager.getLog().e (TAG, "Error: collision between two object detected but neither is spaceman");
+                PALManager.getLog().e(TAG, "Error: collision between two object detected but neither is spaceman");
                 return;
             }
-            
-            if (lOther.mType == SpaceObject.TYPE_ROCKET) { // woohoo we hit the rocket!
+
+            if (lOther.mType == SpaceObject.TYPE_ROCKET) { // woohoo we hit the
+                                                           // rocket!
                 mEvents.add(EVENT_HIT_ROCKET);
             } else if (lOther.deathOnImpact()) {
                 mEvents.add(EVENT_HIT_DOI_OBJECT);
             } else if (lOther.mType == SpaceObject.TYPE_BONUS && !SpaceGameState.getInstance().isPredicting()) {
-                SpaceBonusObject lObject = (SpaceBonusObject)lOther;
+                SpaceBonusObject lObject = (SpaceBonusObject) lOther;
                 if (lObject.visible()) {
                     mEvents.add(EVENT_SCORE_BONUS);
                     // make the object invisible
-                    lObject.setVisible (false);
+                    lObject.setVisible(false);
                 }
             } else {
-                PALManager.getLog().w (TAG, "Warning: Unhandled collision detected");
+                PALManager.getLog().w(TAG, "Warning: Unhandled collision detected");
                 return;
             }
         }
@@ -53,39 +54,39 @@ public class SpaceWorldEventBuffer {
         public void endContact(Contact contact) {
         }
     }
-    
-    public Queue<Integer>                  mEvents;
-    
+
+    public Queue<Integer> mEvents;
+
     // private constructor
-    private SpaceWorldEventBuffer () {
+    private SpaceWorldEventBuffer() {
         mListener = new SpaceContactListener();
-        mEvents = new LinkedList<Integer> ();
+        mEvents = new LinkedList<Integer>();
     }
-    
+
     // Singleton holder
-    private static class SingletonHolder { 
+    private static class SingletonHolder {
         public static final SpaceWorldEventBuffer INSTANCE = new SpaceWorldEventBuffer();
     }
-    
+
     // Singleton access
     public static SpaceWorldEventBuffer getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    
+
     private SpaceContactListener mListener;
-    
-    public SpaceContactListener getContactListener () {
+
+    public SpaceContactListener getContactListener() {
         return mListener;
     }
-    
-    public boolean forceStopEventHappened () {
+
+    public boolean forceStopEventHappened() {
         boolean result = false;
-        
+
         if (mEvents.contains(EVENT_HIT_ROCKET))
             result = true;
         if (mEvents.contains(EVENT_HIT_DOI_OBJECT))
             result = true;
-        
+
         return result;
     }
 

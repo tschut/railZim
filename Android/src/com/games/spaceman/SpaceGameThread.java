@@ -21,24 +21,29 @@ import com.spacemangames.library.SpaceWorldEventBuffer;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceGameThread extends GameThread {
-    public static final String TAG = "SpaceGameThread";
+    public static final String           TAG                 = "SpaceGameThread";
     // maximum frame rate
-    public static final float MIN_FRAME_TIME = 0.033f; // in seconds (0.033 = 30 fps)
-    public static final float MAX_FRAME_TIME = 0.100f;
+    public static final float            MIN_FRAME_TIME      = 0.033f;           // in
+                                                                                  // seconds
+                                                                                  // (0.033
+                                                                                  // =
+                                                                                  // 30
+                                                                                  // fps)
+    public static final float            MAX_FRAME_TIME      = 0.100f;
 
-    private final Rect mViewportScratch;
+    private final Rect                   mViewportScratch;
 
     /** Handle to the surface manager object we interact with */
-    private SurfaceHolder mSurfaceHolder;
-    private final Object mDummySurfaceHolder = new Object();
+    private SurfaceHolder                mSurfaceHolder;
+    private final Object                 mDummySurfaceHolder = new Object();
 
     // used to message the ui thread
-    private Handler mMsgHandler;
+    private Handler                      mMsgHandler;
 
     // The rendering engine
-    private final AndroidRenderer mRenderer;
+    private final AndroidRenderer        mRenderer;
 
-    private boolean mFrozen = false;
+    private boolean                      mFrozen             = false;
 
     private final GoogleAnalyticsTracker tracker;
 
@@ -151,7 +156,8 @@ public class SpaceGameThread extends GameThread {
                 if (upToHere < MIN_FRAME_TIME)
                     SystemClock.sleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
 
-                // PALManager.getLog().v (TAG, "FPS: " + 1f / ((System.nanoTime() - lFpsHelper) / 1000000000d));
+                // PALManager.getLog().v (TAG, "FPS: " + 1f /
+                // ((System.nanoTime() - lFpsHelper) / 1000000000d));
                 lFpsHelper = System.nanoTime();
                 // now blit to the screen
                 if (c != null) {
