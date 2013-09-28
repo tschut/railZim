@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.R;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
+import com.spacemangames.gravisphere.R;
 
 public class EndLevelDialogFragment extends DialogFragment {
     private final class OnRetryClickListener implements View.OnClickListener {

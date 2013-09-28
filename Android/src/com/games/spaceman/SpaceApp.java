@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.R;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 

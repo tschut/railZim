@@ -10,7 +10,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.games.spaceman.R;
+import com.spacemangames.gravisphere.R;
 import com.games.spaceman.SpaceApp;
 import com.games.spaceman.pal.levelsjson.LevelJson;
 import com.games.spaceman.pal.levelsjson.LevelsJson;

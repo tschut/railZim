@@ -16,6 +16,7 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.R;
 
 public class PauseMenuFragment extends DialogFragment {
     private final class OnRestartClickListener implements View.OnClickListener {

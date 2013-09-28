@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.games.spaceman"
+      package="com.spacemangames.gravisphere"
       android:versionCode="11"
       android:versionName="1.0.3"
       android:installLocation="auto">
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application android:icon="@drawable/icon" android:label="@string/app_name"
                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        <activity android:name="LoadingActivity"
+        <activity android:name="com.games.spaceman.LoadingActivity"
                   android:screenOrientation="landscape"
                   android:configChanges="keyboardHidden|orientation"
                   android:label="@string/app_name">
@@ -18,17 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenu"
+        <activity android:name="com.games.spaceman.MainMenu"
                   android:screenOrientation="landscape"
                   android:configChanges="keyboardHidden|orientation"
                   android:label="@string/app_name"/>
-        <activity android:name=".SpaceApp"
+        <activity android:name="com.games.spaceman.SpaceApp"
                   android:screenOrientation="landscape" 
                   android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".LevelSelect"
+        <activity android:name="com.games.spaceman.LevelSelect"
                   android:configChanges="orientation"
                   android:screenOrientation="landscape"/>
-        <activity android:name=".HelpActivity"
+        <activity android:name="com.games.spaceman.HelpActivity"
                   android:configChanges="orientation"
                   android:screenOrientation="landscape"/>
         <activity android:name="com.google.ads.AdActivity"
