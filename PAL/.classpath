@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Spaceman/libs/gdx-backend-android.jar"/>
-	<classpathentry kind="lib" path="/Spaceman/libs/gdx.jar"/>
-	<classpathentry kind="lib" path="/Spaceman/libs/libGoogleAnalytics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiemen/Documents/GitHub/gravisphere/Android/libs/gdx-backend-android.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiemen/Documents/GitHub/gravisphere/Android/libs/gdx.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiemen/Documents/GitHub/gravisphere/Android/libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
