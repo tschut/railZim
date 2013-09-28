@@ -2,6 +2,7 @@ package com.spacemangames.framework;
 
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.library.SpaceData;
+import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class Viewport {

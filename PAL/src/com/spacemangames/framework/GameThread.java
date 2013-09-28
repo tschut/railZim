@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceObject;
+import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public abstract class GameThread extends Thread {

@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.spacemangames.framework.MoveProperties;
-import com.spacemangames.framework.Rect;
+import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IBitmap;
 import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;

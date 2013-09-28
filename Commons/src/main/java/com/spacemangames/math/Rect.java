@@ -1,4 +1,4 @@
-package com.spacemangames.framework;
+package com.spacemangames.math;
 
 public class Rect {
     public int left;

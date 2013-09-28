@@ -13,11 +13,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.games.spaceman.pal.AndroidRenderer;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.GameThread;
-import com.spacemangames.framework.Rect;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.Viewport;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
+import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceGameThread extends GameThread {

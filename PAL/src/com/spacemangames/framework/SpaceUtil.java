@@ -1,6 +1,8 @@
 package com.spacemangames.framework;
 
 import com.badlogic.gdx.math.Vector2;
+import com.spacemangames.math.Rect;
+import com.spacemangames.math.RectF;
 
 public class SpaceUtil {
     private static float mScaleForResolution = 1.0f;

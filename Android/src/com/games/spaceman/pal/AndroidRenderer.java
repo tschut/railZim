@@ -11,13 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 
-import com.spacemangames.framework.Rect;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.library.SpaceBackgroundObject;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceManObject;
 import com.spacemangames.library.SpaceObject;
+import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IRenderer;
 
 public class AndroidRenderer implements IRenderer {
