@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.EndLevelDialogFragment.EndLevelDialogFragmentData;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
@@ -136,8 +137,10 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
         FragmentManager fm = getSupportFragmentManager();
         EndLevelDialogFragment endLevelDialog = new EndLevelDialogFragment_();
-        endLevelDialog.setStartingActivity(this);
-        endLevelDialog.setProperties(points, best, imageResource, titleResource, textResource, nextLevelUnlocked);
+        EndLevelDialogFragmentData data = new EndLevelDialogFragmentData();
+        data.activity(this).points(points).best(best).star(imageResource).subtitle(titleResource).message(textResource)
+                .nextLevelUnlocked(nextLevelUnlocked);
+        endLevelDialog.setProperties(data);
         endLevelDialog.show(fm, "end_level_dialog");
     }
 

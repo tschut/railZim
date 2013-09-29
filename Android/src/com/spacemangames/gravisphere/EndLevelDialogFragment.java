@@ -15,26 +15,73 @@ import com.googlecode.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.end_level_layout)
 public class EndLevelDialogFragment extends DialogFragment {
-    @ViewById
-    protected Button    retryButton;
+    public static class EndLevelDialogFragmentData {
+        private Activity activity;
+        private int      message;
+        private int      subtitle;
+        private int      star;
+        private int      best;
+        private int      points;
+        private boolean  nextLevelUnlocked;
+
+        public EndLevelDialogFragmentData activity(Activity activity) {
+            this.activity = activity;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData message(int message) {
+            this.message = message;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData subtitle(int subtitle) {
+            this.subtitle = subtitle;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData star(int star) {
+            this.star = star;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData best(int best) {
+            this.best = best;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData points(int points) {
+            this.points = points;
+            return this;
+        }
+
+        public EndLevelDialogFragmentData nextLevelUnlocked(boolean isUnlocked) {
+            this.nextLevelUnlocked = isUnlocked;
+            return this;
+        }
+    }
 
     @ViewById
-    protected Button    levelListButton;
+    protected Button                   retryButton;
 
     @ViewById
-    protected Button    nextLevelButton;
+    protected Button                   levelListButton;
 
     @ViewById
-    protected TextView  subtitleTextView;
+    protected Button                   nextLevelButton;
 
     @ViewById
-    protected ImageView starImageView;
+    protected TextView                 subtitleTextView;
 
     @ViewById
-    protected TextView  pointsTextView;
+    protected ImageView                starImageView;
 
     @ViewById
-    protected TextView  highscoreTextView;
+    protected TextView                 pointsTextView;
+
+    @ViewById
+    protected TextView                 highscoreTextView;
+
+    private EndLevelDialogFragmentData data;
 
     @Click(R.id.retryButton)
     protected void retryLevel() {
@@ -50,8 +97,8 @@ public class EndLevelDialogFragment extends DialogFragment {
         // the level in the state it's in now because you can press the
         // 'back'button in the level selector
         GameThreadHolder.getThread().reloadCurrentLevel();
-        Intent intent = new Intent(activity, LevelSelect.class);
-        activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
+        Intent intent = new Intent(data.activity, LevelSelect.class);
+        data.activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
         dismiss();
     }
 
@@ -60,18 +107,6 @@ public class EndLevelDialogFragment extends DialogFragment {
         GameThreadHolder.getThread().loadNextLevel();
         GameThreadHolder.getThread().redrawOnce();
         dismiss();
-    }
-
-    private Activity activity;
-    private int      textResource;
-    private int      titleResource;
-    private int      imageResource;
-    private int      best;
-    private int      points;
-    private boolean  nextLevelUnlocked;
-
-    public void setStartingActivity(Activity activity) {
-        this.activity = activity;
     }
 
     @Override
@@ -83,20 +118,15 @@ public class EndLevelDialogFragment extends DialogFragment {
 
     @AfterViews
     protected void init() {
-        getDialog().setTitle(titleResource);
-        nextLevelButton.setEnabled(nextLevelUnlocked);
-        subtitleTextView.setText(textResource);
-        starImageView.setImageResource(imageResource);
-        pointsTextView.setText(Integer.toString(points));
-        highscoreTextView.setText(Integer.toString(best));
+        getDialog().setTitle(data.subtitle);
+        nextLevelButton.setEnabled(data.nextLevelUnlocked);
+        subtitleTextView.setText(data.message);
+        starImageView.setImageResource(data.star);
+        pointsTextView.setText(Integer.toString(data.points));
+        highscoreTextView.setText(Integer.toString(data.best));
     }
 
-    public void setProperties(int points, int best, int imageResource, int titleResource, int textResource, boolean nextLevelUnlocked) {
-        this.points = points;
-        this.best = best;
-        this.imageResource = imageResource;
-        this.titleResource = titleResource;
-        this.textResource = textResource;
-        this.nextLevelUnlocked = nextLevelUnlocked;
+    public void setProperties(EndLevelDialogFragmentData data) {
+        this.data = data;
     }
 }
