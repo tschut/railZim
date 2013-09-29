@@ -13,21 +13,21 @@
         android:padding="5dip" >
 
         <Button
-            android:id="@+id/pause_button_list"
+            android:id="@+id/levelListButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/pause_list" />
 
         <Button
-            android:id="@+id/pause_button_continue"
+            android:id="@+id/continueButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/pause_continue" />
 
         <Button
-            android:id="@+id/pause_button_restart"
+            android:id="@+id/restartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

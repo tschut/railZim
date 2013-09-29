@@ -197,7 +197,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         tracker.trackPageView("/pauseDialog");
 
         FragmentManager fm = getSupportFragmentManager();
-        PauseMenuFragment pauseMenu = new PauseMenuFragment();
+        PauseMenuFragment pauseMenu = new PauseMenuFragment_();
         pauseMenu.setStartingActivity(this);
         pauseMenu.show(fm, "pause_menu");
     }

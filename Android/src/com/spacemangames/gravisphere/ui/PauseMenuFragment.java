@@ -2,80 +2,65 @@ package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.ads.AdView;
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.annotations.EFragment;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelSelect;
 import com.spacemangames.gravisphere.R;
 
+@EFragment(R.layout.pause_layout)
 public class PauseMenuFragment extends DialogFragment {
-    private final class OnRestartClickListener implements View.OnClickListener {
-        public void onClick(View v) {
-            GameThreadHolder.getThread().reloadCurrentLevel();
-            GameThreadHolder.getThread().redrawOnce();
-            dismiss();
-        }
-    }
+    @ViewById
+    protected Button levelListButton;
 
-    private final class OnLevelListClickListener implements View.OnClickListener {
-        public void onClick(View v) {
-            // Reload the current level. If we don't do that, the flow makes it
-            // possible to get back to
-            // the level in the state it's in now because you can press the
-            // 'back'button in the level selector
-            int lState = SpaceGameState.getInstance().endState();
-            if (lState != SpaceGameState.NOT_YET_ENDED) {
-                GameThreadHolder.getThread().reloadCurrentLevel();
-            }
-            Intent intent = new Intent(activity, LevelSelect.class);
-            activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
-            dismiss();
-        }
-    }
+    @ViewById
+    protected Button restartButton;
 
-    private final class OnContinueClickListener implements View.OnClickListener {
-        public void onClick(View v) {
-            SpaceGameState.getInstance().setPaused(false);
-            dismiss();
-        }
-    }
+    @ViewById
+    protected Button continueButton;
 
     private Activity activity;
-    private AdView   adView;
+
+    @Click(R.id.restartButton)
+    protected void onRestart() {
+        GameThreadHolder.getThread().reloadCurrentLevel();
+        GameThreadHolder.getThread().redrawOnce();
+        dismiss();
+    }
+
+    @Click(R.id.levelListButton)
+    protected void gotoLevelList() {
+        // Reload the current level. If we don't do that, the flow makes it
+        // possible to get back to
+        // the level in the state it's in now because you can press the
+        // 'back'button in the level selector
+        int lState = SpaceGameState.getInstance().endState();
+        if (lState != SpaceGameState.NOT_YET_ENDED) {
+            GameThreadHolder.getThread().reloadCurrentLevel();
+        }
+        Intent intent = new Intent(activity, LevelSelect.class);
+        activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
+        dismiss();
+    }
+
+    @Click(R.id.continueButton)
+    protected void onContinue() {
+        SpaceGameState.getInstance().setPaused(false);
+        dismiss();
+    }
 
     public void setStartingActivity(Activity activity) {
         this.activity = activity;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pause_layout, container);
-
+    @AfterViews
+    protected void init() {
         getDialog().setTitle(R.string.pause_title);
-
-        Button pauseList = (Button) view.findViewById(R.id.pause_button_list);
-        Button pauseRestart = (Button) view.findViewById(R.id.pause_button_restart);
-        Button pauseContinue = (Button) view.findViewById(R.id.pause_button_continue);
-
-        pauseContinue.setOnClickListener(new OnContinueClickListener());
-        pauseList.setOnClickListener(new OnLevelListClickListener());
-        pauseRestart.setOnClickListener(new OnRestartClickListener());
-
-        return view;
-    }
-
-    @Override
-    public void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
-        super.onDestroy();
     }
 }
