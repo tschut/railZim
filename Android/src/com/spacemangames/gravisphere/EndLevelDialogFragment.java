@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.EFragment;
+
+@EFragment
 public class EndLevelDialogFragment extends DialogFragment {
     private final class OnRetryClickListener implements View.OnClickListener {
         public void onClick(View v) {

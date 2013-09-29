@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.gravisphere.R;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
@@ -59,6 +58,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
                 mLastTime = System.nanoTime();
 
                 runOnUiThread(new Runnable() {
+                    @Override
                     public void run() {
                         TextView pointsView = (TextView) findViewById(R.id.pointsView);
                         pointsView.setText(Integer.toString(SpaceData.getInstance().mPoints.getCurrentPoints()));
@@ -135,7 +135,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        EndLevelDialogFragment endLevelDialog = new EndLevelDialogFragment();
+        EndLevelDialogFragment endLevelDialog = new EndLevelDialogFragment_();
         endLevelDialog.setStartingActivity(this);
         endLevelDialog.setProperties(points, best, imageResource, titleResource, textResource, nextLevelUnlocked);
         endLevelDialog.show(fm, "end_level_dialog");
@@ -212,6 +212,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             SpaceGameState.getInstance().setPaused(true);
         }
         GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
+            @Override
             public void run() {
                 GameThreadHolder.getThread().freeze();
             }
@@ -244,6 +245,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             GameThreadHolder.getThread().changeLevel(0, false);
         }
         GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
+            @Override
             public void run() {
                 GameThreadHolder.getThread().unfreeze();
             }
@@ -257,6 +259,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         super.onSaveInstanceState(outState);
     }
 
+    @Override
     public void LevelChanged(int aNewLevelID, boolean aSpecial) {
         if (!aSpecial) {
             tracker.trackPageView("/levels/" + aNewLevelID);
