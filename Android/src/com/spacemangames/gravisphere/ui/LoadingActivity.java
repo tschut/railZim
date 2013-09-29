@@ -66,6 +66,7 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
             lThread.start();
 
         lThread.postRunnable(new Runnable() {
+            @Override
             public void run() {
                 SpaceData.getInstance().preloadAllLevels();
                 LevelDbAdapter.getInstance().insertAllLevelsIfEmpty();
@@ -76,9 +77,10 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
         });
     }
 
+    @Override
     public void loadingDone() {
         SpaceData.getInstance().remLoadingDoneListener(this);
         // loading done, continue to the MainMenuActivity
-        startActivity(new Intent(SpaceApp.mAppContext, com.spacemangames.gravisphere.ui.MainMenu.class));
+        startActivity(new Intent(SpaceApp.mAppContext, com.spacemangames.gravisphere.ui.MainMenu_.class));
     }
 }
