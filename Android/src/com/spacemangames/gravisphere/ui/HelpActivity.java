@@ -9,8 +9,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
@@ -39,12 +41,7 @@ public class HelpActivity extends Activity {
                 public void onClick(View v) {
                     PALManager.getLog().v(TAG, "OnClick NextButton");
                     if (SpaceData.getInstance().mCurrentLevel.mId == SpaceLevel.ID_HELP4) {
-                        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-                            @Override
-                            public void run() {
-                                GameThreadHolder.getThread().freeze();
-                            }
-                        });
+                        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
                         Intent i = new Intent();
                         i.putExtra("action", HELP_ACTION_START_GAME);
                         setResult(Activity.RESULT_OK, i);
@@ -95,23 +92,13 @@ public class HelpActivity extends Activity {
 
         GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
         GameThreadHolder.getThread().changeLevel(SpaceLevel.ID_HELP1, true);
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().unfreeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
     }
 
     @Override
     protected void onPause() {
         PALManager.getLog().v(TAG, "onPause");
         super.onPause();
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
     }
 }

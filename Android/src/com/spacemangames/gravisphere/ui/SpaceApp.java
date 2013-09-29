@@ -16,10 +16,12 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.DebugSettings;
+import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.SpaceGameThread;
+import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
@@ -219,12 +221,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING) {
             SpaceGameState.getInstance().setPaused(true);
         }
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
         mRestoreLevel = SpaceData.getInstance().getCurrentLevelId();
         PALManager.getLog().v(TAG, "storing level id " + mRestoreLevel);
         super.onPause();
@@ -252,12 +249,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             PALManager.getLog().v(TAG, "restoring level id " + 0);
             GameThreadHolder.getThread().changeLevel(0, false);
         }
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().unfreeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
         GameThreadHolder.getThread().redrawOnce();
     }
 
