@@ -11,9 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.ads.AdView;
-import com.spacemangames.gravisphere.R;
-
 public class EndLevelDialogFragment extends DialogFragment {
     private final class OnRetryClickListener implements View.OnClickListener {
         public void onClick(View v) {
@@ -45,7 +42,6 @@ public class EndLevelDialogFragment extends DialogFragment {
     }
 
     private Activity activity;
-    private AdView   adView;
     private int      textResource;
     private int      titleResource;
     private int      imageResource;
@@ -85,14 +81,6 @@ public class EndLevelDialogFragment extends DialogFragment {
         retry.setOnClickListener(new OnRetryClickListener());
 
         return view;
-    }
-
-    @Override
-    public void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
-        super.onDestroy();
     }
 
     public void setProperties(int points, int best, int imageResource, int titleResource, int textResource, boolean nextLevelUnlocked) {
