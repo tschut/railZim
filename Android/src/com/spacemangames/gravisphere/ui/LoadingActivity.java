@@ -13,7 +13,6 @@ import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.SpaceGameThread;
-import com.spacemangames.gravisphere.R.layout;
 import com.spacemangames.gravisphere.pal.AndroidBitmapFactory;
 import com.spacemangames.gravisphere.pal.AndroidLog;
 import com.spacemangames.gravisphere.pal.AndroidResourceHandler;

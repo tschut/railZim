@@ -11,8 +11,6 @@ import android.widget.Button;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.R.id;
-import com.spacemangames.gravisphere.R.layout;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
@@ -37,10 +35,12 @@ public class HelpActivity extends Activity {
             // add button handlers
             mNextButton = (Button) findViewById(R.id.button_next);
             mNextButton.setOnClickListener(new OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     PALManager.getLog().v(TAG, "OnClick NextButton");
                     if (SpaceData.getInstance().mCurrentLevel.mId == SpaceLevel.ID_HELP4) {
                         GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
+                            @Override
                             public void run() {
                                 GameThreadHolder.getThread().freeze();
                             }
@@ -57,6 +57,7 @@ public class HelpActivity extends Activity {
 
             mPrevButton = (Button) findViewById(R.id.button_prev);
             mPrevButton.setOnClickListener(new OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     PALManager.getLog().v(TAG, "OnClick PrevButton");
                     if (SpaceData.getInstance().mCurrentLevel.mId == SpaceLevel.ID_HELP1) {
@@ -95,6 +96,7 @@ public class HelpActivity extends Activity {
         GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
         GameThreadHolder.getThread().changeLevel(SpaceLevel.ID_HELP1, true);
         GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
+            @Override
             public void run() {
                 GameThreadHolder.getThread().unfreeze();
             }
@@ -106,6 +108,7 @@ public class HelpActivity extends Activity {
         PALManager.getLog().v(TAG, "onPause");
         super.onPause();
         GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
+            @Override
             public void run() {
                 GameThreadHolder.getThread().freeze();
             }

@@ -15,8 +15,6 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelSelect;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.R.id;
-import com.spacemangames.gravisphere.R.layout;
 
 @EFragment(R.layout.end_level_layout)
 public class EndLevelDialogFragment extends DialogFragment {

@@ -14,8 +14,6 @@ import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.LevelSelect;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.R.id;
-import com.spacemangames.gravisphere.R.layout;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 
