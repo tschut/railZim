@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,7 +15,12 @@ import android.widget.TextView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.gravisphere.EndLevelDialogFragment.EndLevelDialogFragmentData;
+import com.spacemangames.gravisphere.DebugSettings;
+import com.spacemangames.gravisphere.GameThreadHolder;
+import com.spacemangames.gravisphere.LevelDbAdapter;
+import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.SpaceGameThread;
+import com.spacemangames.gravisphere.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
@@ -172,7 +177,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             SpaceData.getInstance().addLevelChangedListener(this);
         } else {
             // we are being restored: restart the app
-            Intent i = new Intent(this, com.spacemangames.gravisphere.LoadingActivity.class);
+            Intent i = new Intent(this, com.spacemangames.gravisphere.ui.LoadingActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();

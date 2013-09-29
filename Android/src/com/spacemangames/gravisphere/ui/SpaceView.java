@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.ui;
 
 import java.util.Vector;
 
@@ -12,6 +12,8 @@ import android.view.SurfaceView;
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
+import com.spacemangames.gravisphere.GameThreadHolder;
+import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 

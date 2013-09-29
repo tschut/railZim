@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,12 @@ import android.widget.Button;
 
 import com.google.ads.AdView;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.GameThreadHolder;
+import com.spacemangames.gravisphere.LevelSelect;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.R.id;
+import com.spacemangames.gravisphere.R.layout;
+import com.spacemangames.gravisphere.R.string;
 
 public class PauseMenuFragment extends DialogFragment {
     private final class OnRestartClickListener implements View.OnClickListener {

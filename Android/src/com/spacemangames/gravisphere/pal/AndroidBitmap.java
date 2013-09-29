@@ -3,7 +3,7 @@ package com.spacemangames.gravisphere.pal;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.spacemangames.gravisphere.SpaceApp;
+import com.spacemangames.gravisphere.ui.SpaceApp;
 import com.spacemangames.pal.IBitmap;
 
 public class AndroidBitmap implements IBitmap {

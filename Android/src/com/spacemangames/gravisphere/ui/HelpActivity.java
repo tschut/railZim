@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.R.id;
+import com.spacemangames.gravisphere.R.layout;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
@@ -72,7 +75,7 @@ public class HelpActivity extends Activity {
             sp.commit();
         } else {
             // we are being restored: restart the app
-            Intent i = new Intent(this, com.spacemangames.gravisphere.LoadingActivity.class);
+            Intent i = new Intent(this, com.spacemangames.gravisphere.ui.LoadingActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();

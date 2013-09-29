@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.ui.LoadingActivity;
+import com.spacemangames.gravisphere.ui.SpaceApp;
 import com.spacemangames.pal.PALManager;
 
 public class LevelSelect extends ListActivity {

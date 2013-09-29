@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.spacemangames.gravisphere.SpaceView
+    <com.spacemangames.gravisphere.ui.SpaceView
         android:id="@+id/space"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
