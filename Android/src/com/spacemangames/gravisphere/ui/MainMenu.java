@@ -11,10 +11,12 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.LevelSelect;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 
@@ -34,12 +36,7 @@ public class MainMenu extends Activity {
     @Click(R.id.playButton)
     protected void onClickPlay() {
         PALManager.getLog().v(TAG, "OnClick playButton");
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
         Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
         i.putExtra("level", SpaceApp.LAST_UNLOCKED_LEVEL);
         startActivity(i);
@@ -48,12 +45,7 @@ public class MainMenu extends Activity {
     @Click(R.id.listButton)
     protected void onClickList() {
         PALManager.getLog().v(TAG, "OnClick listButton");
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
         Intent intent = new Intent(SpaceApp.mAppContext, LevelSelect.class);
         startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
     }
@@ -61,12 +53,7 @@ public class MainMenu extends Activity {
     @Click(R.id.helpButton)
     protected void onClickHelp() {
         PALManager.getLog().v(TAG, "OnClick helpButton");
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
         Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity.class);
         startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
     }
@@ -93,12 +80,7 @@ public class MainMenu extends Activity {
         super.onResume();
 
         if (goToHelpImmediately()) {
-            GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    GameThreadHolder.getThread().freeze();
-                }
-            });
+            GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
             Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity.class);
             startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
         } else {
@@ -107,12 +89,7 @@ public class MainMenu extends Activity {
 
             GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
             GameThreadHolder.getThread().changeLevel(SpaceLevel.ID_LOADING_SCREEN, true);
-            GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    GameThreadHolder.getThread().unfreeze();
-                }
-            });
+            GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
             SpaceGameState.getInstance().setPaused(false);
         }
     }
@@ -121,12 +98,7 @@ public class MainMenu extends Activity {
     protected void onPause() {
         PALManager.getLog().v(TAG, "onPause");
         super.onPause();
-        GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameThreadHolder.getThread().freeze();
-            }
-        });
+        GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
     }
 
     @Override
@@ -144,12 +116,7 @@ public class MainMenu extends Activity {
         switch (aRequestCode) {
         case SpaceApp.ACTIVITY_LEVELSELECT:
             if (aResultCode == Activity.RESULT_OK) {
-                GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        GameThreadHolder.getThread().freeze();
-                    }
-                });
+                GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
 
                 int level = aData.getIntExtra(SpaceApp.LEVEL_ID_STRING, 0);
                 Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
@@ -161,12 +128,7 @@ public class MainMenu extends Activity {
             if (aResultCode == Activity.RESULT_OK) {
                 int action = aData.getIntExtra("action", HelpActivity.HELP_ACTION_START_GAME);
                 if (action == HelpActivity.HELP_ACTION_START_GAME) {
-                    GameThreadHolder.getThread().postSyncRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            GameThreadHolder.getThread().freeze();
-                        }
-                    });
+                    GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
                     startActivity(new Intent(SpaceApp.mAppContext, SpaceApp.class));
                 }
             }

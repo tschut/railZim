@@ -102,18 +102,15 @@ public abstract class GameThread extends Thread {
     }
 
     // returns immediately!
-    public void postRunnable(Runnable aRunnable) {
+    public void postRunnable(Runnable runnable) {
         synchronized (mEventQueue) {
-            mEventQueue.add(aRunnable);
+            mEventQueue.add(runnable);
         }
     }
 
-    // returns immediately!
-    public void postSyncRunnable(Runnable aRunnable) {
-        synchronized (mEventQueue) {
-            mEventQueue.add(aRunnable);
-        }
-        while (mEventQueue.contains(aRunnable)) {
+    public void postSyncRunnable(Runnable runnable) {
+        postRunnable(runnable);
+        while (mEventQueue.contains(runnable)) {
             try {
                 sleep(100);
             } catch (InterruptedException e) {
