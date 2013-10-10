@@ -21,7 +21,7 @@
             android:orientation="vertical" android:gravity="left|center_vertical">
 
             <Button
-                android:id="@+id/button_prev"
+                android:id="@+id/prevButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_prev"/>
@@ -35,7 +35,7 @@
             android:orientation="vertical" android:gravity="right|center_vertical">
 
             <Button
-                android:id="@+id/button_next"
+                android:id="@+id/nextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_next"/>
