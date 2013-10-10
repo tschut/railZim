@@ -45,7 +45,7 @@ public class MainMenu extends Activity {
     protected void onClickPlay() {
         PALManager.getLog().v(TAG, "OnClick playButton");
         GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-        Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
+        Intent i = new Intent(SpaceApp.mAppContext, SpaceApp_.class);
         i.putExtra("level", SpaceApp.LAST_UNLOCKED_LEVEL);
         startActivity(i);
     }
@@ -121,7 +121,7 @@ public class MainMenu extends Activity {
             GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
 
             int level = data.getIntExtra(SpaceApp.LEVEL_ID_STRING, 0);
-            Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
+            Intent i = new Intent(SpaceApp.mAppContext, SpaceApp_.class);
             i.putExtra("level", level);
             startActivity(i);
         }
@@ -133,7 +133,7 @@ public class MainMenu extends Activity {
             int action = data.getIntExtra("action", HelpActivity.HELP_ACTION_START_GAME);
             if (action == HelpActivity.HELP_ACTION_START_GAME) {
                 GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-                startActivity(new Intent(SpaceApp.mAppContext, SpaceApp.class));
+                startActivity(new Intent(SpaceApp.mAppContext, SpaceApp_.class));
             }
         }
     }

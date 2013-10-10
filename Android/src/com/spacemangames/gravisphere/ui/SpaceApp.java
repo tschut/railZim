@@ -10,9 +10,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.DebugSettings;
@@ -20,57 +22,13 @@ import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
+@EActivity
 public class SpaceApp extends FragmentActivity implements ILevelChangedListener {
-    class PointsUpdateThread extends Thread {
-        private final float minFrameTime;
-        private long        lastTime;
-        public boolean      running = true;
-
-        public PointsUpdateThread(float minFrameTime) {
-            this.minFrameTime = minFrameTime;
-            lastTime = System.nanoTime();
-        }
-
-        @Override
-        public void run() {
-            while (running) {
-                if (SpaceGameState.getInstance().getState() < SpaceGameState.STATE_NOT_STARTED) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e1) {
-                    }
-                    continue;
-                }
-
-                long now = System.nanoTime();
-                float elapsed = (now - lastTime) / 1000000000f;
-
-                if (elapsed < minFrameTime) {
-                    try {
-                        sleep((long) ((minFrameTime - elapsed) * 1000));
-                        continue;
-                    } catch (InterruptedException e) {
-                    }
-                }
-                lastTime = System.nanoTime();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView pointsView = (TextView) findViewById(R.id.pointsView);
-                        pointsView.setText(Integer.toString(SpaceData.getInstance().points.getCurrentPoints()));
-                    }
-                });
-            }
-        }
-    }
-
     public static final int        ACTIVITY_LEVELSELECT = 0;
     public static final int        ACTIVITY_HELP        = 1;
 
@@ -87,11 +45,12 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     public static Context          mAppContext;
 
-    private PointsUpdateThread     mHUDThread;
-
     private static int             mRestoreLevel        = -1;
 
     private GoogleAnalyticsTracker tracker;
+
+    @Bean
+    protected PointsUpdateThread   pointsUpdateThread;
 
     // parse events that occurred. This is called after the physics have been
     // updated
@@ -146,7 +105,11 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         endLevelDialog.show(fm, "end_level_dialog");
     }
 
-    /** Called when the activity is first created. */
+    @AfterViews
+    protected void startPointsUpdateThread() {
+        pointsUpdateThread.start();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DebugSettings.DEBUG_LOGGING) {
@@ -162,8 +125,6 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
             setContentView(R.layout.space_layout);
 
-            mHUDThread = new PointsUpdateThread(SpaceGameThread.MIN_FRAME_TIME);
-            mHUDThread.start();
             SpaceView lSpaceView = (SpaceView) findViewById(R.id.space);
             GameThreadHolder.getThread().setSurfaceHolder(lSpaceView.getHolder());
             GameThreadHolder.getThread().setMsgHandler(mMsgHandler);
