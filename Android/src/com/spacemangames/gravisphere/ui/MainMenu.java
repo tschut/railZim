@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.spacemangames.framework.SpaceGameState;
@@ -33,6 +34,9 @@ public class MainMenu extends Activity {
 
     @ViewById
     protected Button            listButton;
+
+    @ViewById
+    protected SpaceView         spaceView;
 
     @Pref
     protected GamePrefs_        gamePrefs;
@@ -77,18 +81,15 @@ public class MainMenu extends Activity {
 
     @Override
     protected void onResume() {
-        PALManager.getLog().v(TAG, "onResume");
-
         GoogleAnalyticsTracker.getInstance().trackPageView("/mainmenu");
 
         super.onResume();
 
         if (goToHelpImmediately()) {
             GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-            Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity_.class);
+            Intent intent = HelpActivity_.intent(this).get();
             startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
         } else {
-            SpaceView spaceView = (SpaceView) findViewById(R.id.space);
             spaceView.ignoreInput(true);
 
             GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
@@ -114,34 +115,29 @@ public class MainMenu extends Activity {
         startActivity(setIntent);
     }
 
-    @Override
-    public void onActivityResult(int aRequestCode, int aResultCode, Intent aData) {
-        PALManager.getLog().v(TAG, "onActivityResult");
-        switch (aRequestCode) {
-        case SpaceApp.ACTIVITY_LEVELSELECT:
-            if (aResultCode == Activity.RESULT_OK) {
-                GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
+    @OnActivityResult(SpaceApp.ACTIVITY_LEVELSELECT)
+    protected void onLevelSelectResult(int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
 
-                int level = aData.getIntExtra(SpaceApp.LEVEL_ID_STRING, 0);
-                Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
-                i.putExtra("level", level);
-                startActivity(i);
-            }
-            break;
-        case SpaceApp.ACTIVITY_HELP:
-            if (aResultCode == Activity.RESULT_OK) {
-                int action = aData.getIntExtra("action", HelpActivity.HELP_ACTION_START_GAME);
-                if (action == HelpActivity.HELP_ACTION_START_GAME) {
-                    GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-                    startActivity(new Intent(SpaceApp.mAppContext, SpaceApp.class));
-                }
-            }
-            break;
+            int level = data.getIntExtra(SpaceApp.LEVEL_ID_STRING, 0);
+            Intent i = new Intent(SpaceApp.mAppContext, SpaceApp.class);
+            i.putExtra("level", level);
+            startActivity(i);
         }
     }
 
-    // if this returns true we should skip the menu and go to the help
-    // immediately
+    @OnActivityResult(SpaceApp.ACTIVITY_HELP)
+    protected void onReturnFromHelp(int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            int action = data.getIntExtra("action", HelpActivity.HELP_ACTION_START_GAME);
+            if (action == HelpActivity.HELP_ACTION_START_GAME) {
+                GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
+                startActivity(new Intent(SpaceApp.mAppContext, SpaceApp.class));
+            }
+        }
+    }
+
     private boolean goToHelpImmediately() {
         // return true if the first level is never completed...
         if (LevelDbAdapter.getInstance().highScore(0) > 0)
