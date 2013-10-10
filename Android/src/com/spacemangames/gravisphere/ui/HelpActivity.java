@@ -2,14 +2,16 @@ package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
+import com.spacemangames.gravisphere.GamePrefs_;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
@@ -17,15 +19,17 @@ import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 
+@EActivity
 public class HelpActivity extends Activity {
-    private static final String TAG                           = "HelpActivity";
+    private static final String TAG                    = "HelpActivity";
 
-    public static final int     HELP_ACTION_START_GAME        = 0;
+    public static final int     HELP_ACTION_START_GAME = 0;
 
     private Button              mNextButton;
     private Button              mPrevButton;
 
-    public static final String  HAS_SEEN_HELP_SHARED_PREF_KEY = "hasSeenHelp";
+    @Pref
+    protected GamePrefs_        gamePrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +72,7 @@ public class HelpActivity extends Activity {
             });
 
             // set the shared pref that the help has been shown
-            SharedPreferences.Editor sp = getSharedPreferences(getPackageName(), MODE_PRIVATE).edit();
-            sp.putBoolean(HAS_SEEN_HELP_SHARED_PREF_KEY, true);
-            sp.commit();
+            gamePrefs.hasSeenHelp().put(true);
         } else {
             // we are being restored: restart the app
             Intent i = new Intent(this, com.spacemangames.gravisphere.ui.LoadingActivity.class);

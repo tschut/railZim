@@ -41,7 +41,7 @@
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.spacemangames.gravisphere.ui.HelpActivity"
+            android:name="com.spacemangames.gravisphere.ui.HelpActivity_"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
     </application>

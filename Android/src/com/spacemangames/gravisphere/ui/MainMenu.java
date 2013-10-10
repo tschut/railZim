@@ -2,7 +2,6 @@ package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -10,8 +9,10 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
+import com.spacemangames.gravisphere.GamePrefs_;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.LevelSelect;
@@ -32,6 +33,9 @@ public class MainMenu extends Activity {
 
     @ViewById
     protected Button            listButton;
+
+    @Pref
+    protected GamePrefs_        gamePrefs;
 
     @Click(R.id.playButton)
     protected void onClickPlay() {
@@ -54,7 +58,7 @@ public class MainMenu extends Activity {
     protected void onClickHelp() {
         PALManager.getLog().v(TAG, "OnClick helpButton");
         GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-        Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity.class);
+        Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity_.class);
         startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
     }
 
@@ -81,7 +85,7 @@ public class MainMenu extends Activity {
 
         if (goToHelpImmediately()) {
             GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-            Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity.class);
+            Intent intent = new Intent(SpaceApp.mAppContext, HelpActivity_.class);
             startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
         } else {
             SpaceView spaceView = (SpaceView) findViewById(R.id.space);
@@ -143,11 +147,6 @@ public class MainMenu extends Activity {
         if (LevelDbAdapter.getInstance().highScore(0) > 0)
             return false;
 
-        // ... and the shared preferences indicate we've never showed the help
-        // before
-        SharedPreferences sp = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-        boolean hasSeenHelp = sp.getBoolean(HelpActivity.HAS_SEEN_HELP_SHARED_PREF_KEY, false);
-
-        return !hasSeenHelp;
+        return !gamePrefs.hasSeenHelp().getOr(false);
     }
 }
