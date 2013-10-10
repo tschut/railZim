@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.DebugSettings;
@@ -21,6 +22,7 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.EmptyLog;
 import com.spacemangames.pal.PALManager;
 
+@EActivity(R.layout.loading_layout)
 public class LoadingActivity extends Activity implements ILoadingDoneListener {
     private final static String TAG = "LoadingActivity";
 
@@ -32,31 +34,7 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize the PALManager stuff
-        PALManager.setResourceHandler(new AndroidResourceHandler());
-        PALManager.setBitmapFactory(new AndroidBitmapFactory());
-        if (DebugSettings.DEBUG_LOGGING) {
-            PALManager.setLog(new AndroidLog());
-        } else {
-            PALManager.setLog(new EmptyLog());
-        }
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        SpaceUtil.init(dm.xdpi, dm.ydpi);
-        Rect resolution = new Rect(0, 0, dm.widthPixels, dm.heightPixels);
-        SpaceUtil.setResolution(resolution);
-
-        SpaceApp.mAppContext = this;
-
-        PALManager.getLog().v(TAG, "onCreate");
-
-        GoogleAnalyticsTracker.getInstance().startNewSession("UA-34397887-2", 30, this);
-
-        // set the view
-        setContentView(R.layout.loading_layout);
-
-        SpaceData.getInstance().addLoadingDoneListener(this);
+        bootstrap();
 
         // start the game thread
         final SpaceGameThread lThread = GameThreadHolder.createThread();
@@ -75,6 +53,33 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
                 SpaceData.getInstance().setLoadingDone();
             }
         });
+    }
+
+    private void bootstrap() {
+        initializePAL();
+        initDisplay();
+
+        SpaceApp.mAppContext = this;
+        GoogleAnalyticsTracker.getInstance().startNewSession("UA-34397887-2", 30, this);
+        SpaceData.getInstance().addLoadingDoneListener(this);
+    }
+
+    private void initDisplay() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        SpaceUtil.init(dm.xdpi, dm.ydpi);
+        Rect resolution = new Rect(0, 0, dm.widthPixels, dm.heightPixels);
+        SpaceUtil.setResolution(resolution);
+    }
+
+    private void initializePAL() {
+        PALManager.setResourceHandler(new AndroidResourceHandler());
+        PALManager.setBitmapFactory(new AndroidBitmapFactory());
+        if (DebugSettings.DEBUG_LOGGING) {
+            PALManager.setLog(new AndroidLog());
+        } else {
+            PALManager.setLog(new EmptyLog());
+        }
     }
 
     @Override

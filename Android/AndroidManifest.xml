@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
-            android:name="com.spacemangames.gravisphere.ui.LoadingActivity"
+            android:name="com.spacemangames.gravisphere.ui.LoadingActivity_"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
