@@ -40,8 +40,8 @@ public class PauseMenuFragment extends DialogFragment {
         // possible to get back to
         // the level in the state it's in now because you can press the
         // 'back'button in the level selector
-        int lState = SpaceGameState.getInstance().endState();
-        if (lState != SpaceGameState.NOT_YET_ENDED) {
+        int state = SpaceGameState.getInstance().endState();
+        if (state != SpaceGameState.NOT_YET_ENDED) {
             GameThreadHolder.getThread().reloadCurrentLevel();
         }
         Intent intent = new Intent(activity, LevelSelect.class);
