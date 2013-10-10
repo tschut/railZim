@@ -28,42 +28,37 @@ import com.spacemangames.pal.PALManager;
 
 public class SpaceApp extends FragmentActivity implements ILevelChangedListener {
     class PointsUpdateThread extends Thread {
-        private static final String TAG      = "PointsUpdateThread";
-        private final float         mMinFrameTime;
-        private long                mLastTime;
-        public boolean              mRunning = true;
+        private final float minFrameTime;
+        private long        lastTime;
+        public boolean      running = true;
 
         public PointsUpdateThread(float aMinFrameTime) {
-            mMinFrameTime = aMinFrameTime;
-            mLastTime = System.nanoTime();
+            minFrameTime = aMinFrameTime;
+            lastTime = System.nanoTime();
         }
 
         @Override
         public void run() {
-            while (mRunning) {
+            while (running) {
                 if (SpaceGameState.getInstance().getState() < SpaceGameState.STATE_NOT_STARTED) {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
                     }
                     continue;
                 }
 
-                long lNow = System.nanoTime();
-                float lElapsed = (lNow - mLastTime) / 1000000000f;
+                long now = System.nanoTime();
+                float elapsed = (now - lastTime) / 1000000000f;
 
-                if (lElapsed < mMinFrameTime) {
+                if (elapsed < minFrameTime) {
                     try {
-                        sleep((long) ((mMinFrameTime - lElapsed) * 1000));
+                        sleep((long) ((minFrameTime - elapsed) * 1000));
                         continue;
                     } catch (InterruptedException e) {
-                        PALManager.getLog().e(TAG, "This should not happen!");
-                        e.printStackTrace();
                     }
                 }
-                mLastTime = System.nanoTime();
+                lastTime = System.nanoTime();
 
                 runOnUiThread(new Runnable() {
                     @Override
