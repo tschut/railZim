@@ -59,7 +59,7 @@ public class SpaceData {
     private World                                mWorld;
 
     /** Object that keeps track of the points scored for the current level */
-    public SpaceGamePoints                       mPoints;
+    public SpaceGamePoints                       points;
 
     /** List of listeners for loading done event */
     private final HashSet<ILoadingDoneListener>  mLoadingDoneListeners  = new HashSet<ILoadingDoneListener>();
@@ -70,7 +70,7 @@ public class SpaceData {
         mPreloadingDone = false;
         mLevels = new ArrayList<SpaceLevel>();
         mSpecialLevels = new ArrayList<SpaceLevel>();
-        mPoints = new SpaceGamePoints();
+        points = new SpaceGamePoints();
     }
 
     // Singleton holder
@@ -110,7 +110,7 @@ public class SpaceData {
         // mCurrentLevel.dump();
 
         // reset points
-        mPoints.reset();
+        points.reset();
 
         // create bodies for all objects
         int count = mCurrentLevel.mObjects.size();
@@ -130,7 +130,7 @@ public class SpaceData {
     public void stepCurrentLevel(float aElapsed) {
         if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING) {
             // update points
-            mPoints.elapse((int) (1000 * aElapsed));
+            points.elapse((int) (1000 * aElapsed));
         }
 
         // update physics

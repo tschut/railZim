@@ -138,7 +138,7 @@ public abstract class GameThread extends Thread {
     }
 
     protected synchronized void fireSpaceMan() {
-        mSpaceData.mPoints.reset();
+        mSpaceData.points.reset();
         SpaceGameState.getInstance().setState(SpaceGameState.STATE_FLYING);
         Vector2 speed = SpaceGameState.getInstance().mChargingState.getSpaceManSpeed();
         PALManager.getLog().v(TAG, "setting speed to " + speed.len());

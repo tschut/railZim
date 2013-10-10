@@ -223,7 +223,7 @@ public class SpaceGameThread extends GameThread {
 
     private void parseGameEvents() {
         // check if points have reached zero
-        if (SpaceData.getInstance().mPoints.getCurrentPoints() == 0) {
+        if (SpaceData.getInstance().points.getCurrentPoints() == 0) {
             tracker.trackEvent("out-of-time", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
             SpaceGameState.getInstance().setPaused(true);
             SpaceGameState.getInstance().setEndState(SpaceGameState.LOST_LOST);
@@ -239,7 +239,7 @@ public class SpaceGameThread extends GameThread {
                 SpaceGameState.getInstance().setPaused(true);
                 int lCurrentLevelID = SpaceData.getInstance().getCurrentLevelId();
                 int lHighScore = LevelDbAdapter.getInstance().highScore(lCurrentLevelID);
-                int lCurScore = SpaceData.getInstance().mPoints.getCurrentPoints();
+                int lCurScore = SpaceData.getInstance().points.getCurrentPoints();
                 SpaceGameState.getInstance().setEndState(SpaceData.getInstance().currentLevelWinState(lCurScore));
                 tracker.trackEvent("win", String.valueOf(lCurrentLevelID), String.valueOf(lCurScore), 0);
 
@@ -254,7 +254,7 @@ public class SpaceGameThread extends GameThread {
                 mMsgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_SCORE_BONUS):
-                SpaceData.getInstance().mPoints.bonus(BONUS_POINTS);
+                SpaceData.getInstance().points.bonus(BONUS_POINTS);
                 break;
             default:
                 PALManager.getLog().e(TAG, "Unexpected game event");

@@ -32,8 +32,8 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         private long        lastTime;
         public boolean      running = true;
 
-        public PointsUpdateThread(float aMinFrameTime) {
-            minFrameTime = aMinFrameTime;
+        public PointsUpdateThread(float minFrameTime) {
+            this.minFrameTime = minFrameTime;
             lastTime = System.nanoTime();
         }
 
@@ -64,7 +64,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
                     @Override
                     public void run() {
                         TextView pointsView = (TextView) findViewById(R.id.pointsView);
-                        pointsView.setText(Integer.toString(SpaceData.getInstance().mPoints.getCurrentPoints()));
+                        pointsView.setText(Integer.toString(SpaceData.getInstance().points.getCurrentPoints()));
                     }
                 });
             }
@@ -105,7 +105,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     private void showEndLevelDialog() {
         tracker.trackPageView("/endLevelDialog");
 
-        int points = SpaceData.getInstance().mPoints.getCurrentPoints();
+        int points = SpaceData.getInstance().points.getCurrentPoints();
         int best = LevelDbAdapter.getInstance().highScore(SpaceData.getInstance().getCurrentLevelId());
         int imageResource = R.drawable.star_enabled;
         int titleResource = R.string.end_level_title_won;
