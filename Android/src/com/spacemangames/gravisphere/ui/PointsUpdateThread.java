@@ -1,5 +1,7 @@
 package com.spacemangames.gravisphere.ui;
 
+import org.apache.commons.collections4.Predicate;
+
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.EBean;
@@ -11,8 +13,21 @@ import com.spacemangames.library.SpaceData;
 
 @EBean
 class PointsUpdateThread extends Thread {
+    private final class GameNotStartedPredicate implements Predicate<Void> {
+        @Override
+        public boolean evaluate(Void object) {
+            return SpaceGameState.getInstance().getState() >= SpaceGameState.STATE_NOT_STARTED;
+        }
+    }
+
+    private final class FrameTimeElapsedPredicate implements Predicate<Void> {
+        @Override
+        public boolean evaluate(Void object) {
+            return elapsedTime() >= SpaceGameThread.MIN_FRAME_TIME;
+        }
+    }
+
     private long       lastTime;
-    public boolean     running = true;
 
     @ViewById
     protected TextView pointsView;
@@ -23,28 +38,27 @@ class PointsUpdateThread extends Thread {
 
     @Override
     public void run() {
-        while (running) {
-            if (SpaceGameState.getInstance().getState() < SpaceGameState.STATE_NOT_STARTED) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                }
-                continue;
-            }
+        while (true) {
+            sleepUntil(new GameNotStartedPredicate(), 100);
+            sleepUntil(new FrameTimeElapsedPredicate(), (long) ((SpaceGameThread.MIN_FRAME_TIME - elapsedTime()) * 1000));
 
-            float elapsed = (System.nanoTime() - lastTime) / 1000000000f;
-
-            if (elapsed < SpaceGameThread.MIN_FRAME_TIME) {
-                try {
-                    sleep((long) ((SpaceGameThread.MIN_FRAME_TIME - elapsed) * 1000));
-                    continue;
-                } catch (InterruptedException e) {
-                }
-            }
             lastTime = System.nanoTime();
 
             updatePointsView();
         }
+    }
+
+    private void sleepUntil(Predicate<Void> predicate, long sleepTime) {
+        while (!predicate.evaluate(null)) {
+            try {
+                sleep(sleepTime);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    private float elapsedTime() {
+        return (System.nanoTime() - lastTime) / 1000000000f;
     }
 
     @UiThread
