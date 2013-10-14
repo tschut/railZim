@@ -134,10 +134,10 @@ public class SpaceGameThread extends GameThread {
                 updatePhysics(lElapsed);
                 if (mViewport.isFocusOnSpaceman())
                     mViewport.viewportFollowSpaceman();
-                if (lGameState.mChargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD
+                if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD
                         && lGameState.getState() == SpaceGameState.STATE_CHARGING) {
                     lGameState.setPredicting(true);
-                    mSpaceData.calculatePredictionData(SpaceGameState.getInstance().mChargingState.getSpaceManSpeed());
+                    mSpaceData.calculatePredictionData(SpaceGameState.getInstance().chargingState.getSpaceManSpeed());
                     lGameState.setPredicting(false);
                 }
                 c = mSurfaceHolder.lockCanvas(null);

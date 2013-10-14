@@ -190,7 +190,7 @@ public class AndroidRenderer implements IRenderer {
             }
             // set spaceman rotation to reflect direction we're going to shoot
             // in
-            aObject.setRotation(-1 * SpaceGameState.getInstance().mChargingState.getAngle());
+            aObject.setRotation(-1 * SpaceGameState.getInstance().chargingState.getAngle());
         }
 
         // now use normal drawing function to draw spaceman

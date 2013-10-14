@@ -69,7 +69,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         SpaceGameState aState = SpaceGameState.getInstance();
         if (!aHasWindowFocus) {
             aState.setPaused(true);
-            aState.mChargingState.reset();
+            aState.chargingState.reset();
         } else {
             aState.setPaused(false);
         }
@@ -105,7 +105,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         // check for multi-touch input
         if (aEvent.getPointerCount() > 1) {
             if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_CHARGING) {
-                SpaceGameState.getInstance().mChargingState.reset();
+                SpaceGameState.getInstance().chargingState.reset();
                 SpaceData.getInstance().resetPredictionData();
                 SpaceGameState.getInstance().setState(SpaceGameState.STATE_NOT_STARTED);
             }
@@ -137,16 +137,16 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             lX = SpaceUtil.resolutionScale(lX);
             lY = SpaceUtil.resolutionScale(lY);
             SpaceGameState.getInstance().setState(SpaceGameState.STATE_CHARGING);
-            SpaceGameState.getInstance().mChargingState.setChargingStart(lX, lY);
-            SpaceGameState.getInstance().mChargingState.setChargingCurrent(lX, lY);
+            SpaceGameState.getInstance().chargingState.setChargingStart(lX, lY);
+            SpaceGameState.getInstance().chargingState.setChargingCurrent(lX, lY);
             lResult = true;
         } else if (lState == SpaceGameState.STATE_CHARGING) {
             lX = SpaceUtil.resolutionScale(lX);
             lY = SpaceUtil.resolutionScale(lY);
             if (lAction == MotionEvent.ACTION_MOVE) {
-                SpaceGameState.getInstance().mChargingState.setChargingCurrent(lX, lY);
+                SpaceGameState.getInstance().chargingState.setChargingCurrent(lX, lY);
             } else if (lAction == MotionEvent.ACTION_UP) {
-                SpaceGameState.getInstance().mChargingState.setChargingCurrent(lX, lY);
+                SpaceGameState.getInstance().chargingState.setChargingCurrent(lX, lY);
                 lThread.requestFireSpaceman();
             }
             lResult = true;

@@ -10,58 +10,58 @@ public class SpaceGameState {
         public static final float CHARGING_MULTIPLIER = 1.3f;
 
         /** Start of charging gesture */
-        private float             mChargingStartX;
-        private float             mChargingStartY;
+        private float             chargingStartX;
+        private float             chargingStartY;
 
         /** Current pos of charging gesture */
-        private float             mChargingPower      = 0;
-        private float             mChargingAngle      = 0;
+        private float             chargingPower      = 0;
+        private float             chargingAngle      = 0;
 
-        private Vector2           mSpaceManSpeed;
+        private Vector2           spaceManSpeed;
 
         public ChargingState() {
-            mSpaceManSpeed = new Vector2(0, 0);
+            spaceManSpeed = new Vector2(0, 0);
         }
 
         public float chargingPower() {
-            return mChargingPower;
+            return chargingPower;
         }
 
         public void setChargingStart(float aX, float aY) {
-            mChargingStartX = aX;
-            mChargingStartY = aY;
+            chargingStartX = aX;
+            chargingStartY = aY;
         }
 
         public void setChargingCurrent(float aX, float aY) {
-            float lX = aX - mChargingStartX;
-            float lY = aY - mChargingStartY;
-            mChargingPower = (float) (Math.sqrt(lX * lX + lY * lY) * CHARGING_MULTIPLIER);
-            mChargingAngle = (float) Math.atan2(lX, lY);
+            float lX = aX - chargingStartX;
+            float lY = aY - chargingStartY;
+            chargingPower = (float) (Math.sqrt(lX * lX + lY * lY) * CHARGING_MULTIPLIER);
+            chargingAngle = (float) Math.atan2(lX, lY);
             // if length is longer than this we have to recalculate x,y
             // coordinates because we're overcharging
-            if (mChargingPower > MAX_CHARGING_POWER) {
-                mChargingPower = MAX_CHARGING_POWER;
+            if (chargingPower > MAX_CHARGING_POWER) {
+                chargingPower = MAX_CHARGING_POWER;
             }
 
             // we fire in the opposite direction :)
-            lY = -1.0f * (float) Math.cos(mChargingAngle) * mChargingPower;
-            lX = -1.0f * (float) Math.sin(mChargingAngle) * mChargingPower;
-            mSpaceManSpeed.set(lX, lY);
+            lY = -1.0f * (float) Math.cos(chargingAngle) * chargingPower;
+            lX = -1.0f * (float) Math.sin(chargingAngle) * chargingPower;
+            spaceManSpeed.set(lX, lY);
             // PALManager.getLog().i (TAG, "Speed: " + lX + " " + lY);
         }
 
         public Vector2 getSpaceManSpeed() {
-            return mSpaceManSpeed;
+            return spaceManSpeed;
         }
 
         public float getAngle() {
-            return mChargingAngle;
+            return chargingAngle;
         }
 
         public void reset() {
-            mChargingPower = 0;
-            mChargingAngle = 0;
-            mSpaceManSpeed.set(0, 0);
+            chargingPower = 0;
+            chargingAngle = 0;
+            spaceManSpeed.set(0, 0);
         }
     }
 
@@ -69,7 +69,7 @@ public class SpaceGameState {
 
     // private constructor
     private SpaceGameState() {
-        mState = STATE_INVALID;
+        state = STATE_INVALID;
     }
 
     // Singleton holder
@@ -84,10 +84,10 @@ public class SpaceGameState {
 
     // Interesting stuff follows
     // state for charging stuff
-    public ChargingState    mChargingState    = new ChargingState();
+    public ChargingState    chargingState    = new ChargingState();
 
     /** Used to figure out elapsed time between frames */
-    private long            mLastTime;
+    private long            lastTime;
 
     // Possible states
     public static final int STATE_INVALID     = -1;
@@ -105,27 +105,27 @@ public class SpaceGameState {
     public static final int LOST_DIE          = 3;
     public static final int LOST_LOST         = 4;
 
-    private int             mEndState         = NOT_YET_ENDED;
+    private int             endState         = NOT_YET_ENDED;
 
-    private int             mState;
-    private int             mLastState;
+    private int             state;
+    private int             lastState;
 
-    private boolean         mPredicting       = false;
+    private boolean         predicting       = false;
 
     public void setPredicting(boolean aPredicting) {
-        mPredicting = aPredicting;
+        predicting = aPredicting;
     }
 
     public boolean isPredicting() {
-        return mPredicting;
+        return predicting;
     }
 
     public synchronized int getState() {
-        return mState;
+        return state;
     }
 
     public synchronized int getLastState() {
-        return mLastState;
+        return lastState;
     }
 
     public synchronized void setState(int aState) {
@@ -133,42 +133,42 @@ public class SpaceGameState {
             PALManager.getLog().e(TAG, "Trying to setState(STATE_PAUSED). Use setPaused(true) instead");
         }
 
-        PALManager.getLog().i(TAG, "Changing state from " + getStateString(mState) + " to " + getStateString(aState));
+        PALManager.getLog().i(TAG, "Changing state from " + getStateString(state) + " to " + getStateString(aState));
 
         updateTimeTick();
 
-        if (mState == STATE_PAUSED) {
-            mLastState = aState;
+        if (state == STATE_PAUSED) {
+            lastState = aState;
         } else {
-            mState = aState;
+            state = aState;
         }
     }
 
     public synchronized void setPaused(boolean aPause) {
-        assert mState >= STATE_LOADED;
+        assert state >= STATE_LOADED;
 
         if (aPause) {
-            PALManager.getLog().i(TAG, "Pausing. Current state: " + getStateString(mState));
-            if (mState != STATE_PAUSED)
-                mLastState = mState;
-            mState = STATE_PAUSED;
+            PALManager.getLog().i(TAG, "Pausing. Current state: " + getStateString(state));
+            if (state != STATE_PAUSED)
+                lastState = state;
+            state = STATE_PAUSED;
         } else {
             updateTimeTick();
-            if (mState != STATE_PAUSED) {
+            if (state != STATE_PAUSED) {
                 PALManager.getLog().i(TAG, "Resuming while not paused, ignoring.");
             } else {
-                PALManager.getLog().i(TAG, "Resuming. Setting state to: " + getStateString(mLastState));
-                mState = mLastState;
+                PALManager.getLog().i(TAG, "Resuming. Setting state to: " + getStateString(lastState));
+                state = lastState;
             }
         }
     }
 
     public synchronized boolean paused() {
-        return (mState == STATE_PAUSED);
+        return (state == STATE_PAUSED);
     }
 
     public void togglePause() {
-        if (mState == STATE_PAUSED)
+        if (state == STATE_PAUSED)
             setPaused(false);
         else
             setPaused(true);
@@ -205,18 +205,18 @@ public class SpaceGameState {
 
     public synchronized float getElapsedTime() {
         long lNow = System.nanoTime();
-        return (lNow - mLastTime) / 1000000000f;
+        return (lNow - lastTime) / 1000000000f;
     }
 
     public synchronized void updateTimeTick() {
-        mLastTime = System.nanoTime();
+        lastTime = System.nanoTime();
     }
 
     public void setEndState(int aState) {
-        mEndState = aState;
+        endState = aState;
     }
 
     public int endState() {
-        return mEndState;
+        return endState;
     }
 }
