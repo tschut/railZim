@@ -20,12 +20,12 @@ public class LevelListAdapter extends BaseAdapter {
     private static final int     TYPE_AD        = 1;
     private static final int     TYPE_MAX_COUNT = TYPE_AD + 1;
 
-    private final LayoutInflater mInflater;
-    private final Cursor         mCursor;
+    private final LayoutInflater inflater;
+    private final Cursor         cursor;
 
-    public LevelListAdapter(Cursor aCursor, LayoutInflater aInflater) {
-        mInflater = aInflater;
-        mCursor = aCursor;
+    public LevelListAdapter(Cursor cursor, LayoutInflater inflater) {
+        this.inflater = inflater;
+        this.cursor = cursor;
     }
 
     @Override
@@ -55,36 +55,36 @@ public class LevelListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        mCursor.moveToPosition((int) getItemId(position));
-        String lLevelTitle = mCursor.getString(mCursor.getColumnIndex(LevelDbAdapter.KEY_TITLE));
-        String lLevelNumber = mCursor.getString(mCursor.getColumnIndex(LevelDbAdapter.KEY_LEVELNUMBER));
-        String lLevelHighScore = mCursor.getString(mCursor.getColumnIndex(LevelDbAdapter.KEY_HIGHSCORE));
+        cursor.moveToPosition((int) getItemId(position));
+        String levelTitle = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_TITLE));
+        String levelNumber = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_LEVELNUMBER));
+        String levelHighScore = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_HIGHSCORE));
 
-        PALManager.getLog().i(TAG, "Level: " + lLevelNumber + " " + lLevelHighScore + " points");
-        convertView = mInflater.inflate(R.layout.levelselect_item, null);
-        TextView lLevelTitleTextView = (TextView) convertView.findViewById(R.id.level_title);
-        TextView lLevelNumberTextView = (TextView) convertView.findViewById(R.id.level_number);
-        TextView lLevelHighScoreTextView = (TextView) convertView.findViewById(R.id.level_points);
-        TextView lLevelHighScoreTitleView = (TextView) convertView.findViewById(R.id.level_points_text);
-        ImageView lStarImageView = (ImageView) convertView.findViewById(R.id.star_image);
+        PALManager.getLog().i(TAG, "Level: " + levelNumber + " " + levelHighScore + " points");
+        convertView = inflater.inflate(R.layout.levelselect_item, null);
+        TextView levelTitleTextView = (TextView) convertView.findViewById(R.id.level_title);
+        TextView levelNumberTextView = (TextView) convertView.findViewById(R.id.level_number);
+        TextView levelHighScoreTextView = (TextView) convertView.findViewById(R.id.level_points);
+        TextView levelHighScoreTitleView = (TextView) convertView.findViewById(R.id.level_points_text);
+        ImageView starImageView = (ImageView) convertView.findViewById(R.id.star_image);
 
-        lLevelTitleTextView.setText(lLevelTitle);
-        lLevelNumberTextView.setText(lLevelNumber);
-        lLevelHighScoreTextView.setText(lLevelHighScore);
+        levelTitleTextView.setText(levelTitle);
+        levelNumberTextView.setText(levelNumber);
+        levelHighScoreTextView.setText(levelHighScore);
 
-        lLevelHighScoreTextView.setVisibility(View.VISIBLE);
-        lLevelHighScoreTitleView.setVisibility(View.VISIBLE);
-        if (!LevelDbAdapter.getInstance().levelIsUnlocked(Integer.parseInt(lLevelNumber))) {
-            lStarImageView.setImageResource(R.drawable.star_disabled);
-            lLevelHighScoreTextView.setVisibility(View.INVISIBLE);
-            lLevelHighScoreTitleView.setVisibility(View.INVISIBLE);
-        } else if (Integer.parseInt(lLevelHighScore) == 0) {
-            lStarImageView.setImageResource(R.drawable.star_enabled);
+        levelHighScoreTextView.setVisibility(View.VISIBLE);
+        levelHighScoreTitleView.setVisibility(View.VISIBLE);
+        if (!LevelDbAdapter.getInstance().levelIsUnlocked(Integer.parseInt(levelNumber))) {
+            starImageView.setImageResource(R.drawable.star_disabled);
+            levelHighScoreTextView.setVisibility(View.INVISIBLE);
+            levelHighScoreTitleView.setVisibility(View.INVISIBLE);
+        } else if (Integer.parseInt(levelHighScore) == 0) {
+            starImageView.setImageResource(R.drawable.star_enabled);
         } else {
-            EndGameState endGameState = SpaceData.getInstance().levelStarColor(Integer.parseInt(lLevelNumber),
-                    Integer.parseInt(lLevelHighScore));
+            EndGameState endGameState = SpaceData.getInstance().levelStarColor(Integer.parseInt(levelNumber),
+                    Integer.parseInt(levelHighScore));
             EndGameStatePresenter endGameStatePresenter = EndGameStatePresenter.valueOfEndGameState(endGameState);
-            lStarImageView.setImageResource(endGameStatePresenter.getStarImageResourceId());
+            starImageView.setImageResource(endGameStatePresenter.getStarImageResourceId());
         }
 
         return convertView;
