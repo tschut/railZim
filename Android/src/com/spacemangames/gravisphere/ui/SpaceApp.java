@@ -70,31 +70,11 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
         int points = SpaceData.getInstance().points.getCurrentPoints();
         int best = LevelDbAdapter.getInstance().highScore(SpaceData.getInstance().getCurrentLevelId());
-        int imageResource = R.drawable.star_enabled;
-        int titleResource = R.string.end_level_title_won;
-        int textResource = R.string.end_level_subtitle_won;
+        EndGameStatePresenter endState = EndGameStatePresenter.valueOfEndGameState(SpaceGameState.getInstance().endState());
+        int imageResource = endState.getStarImageResourceId();
+        int titleResource = endState.getTitleResourceId();
+        int textResource = endState.getMsgResourceId();
         boolean nextLevelUnlocked = false;
-
-        // set title and subtitle
-        switch (SpaceGameState.getInstance().endState()) {
-        case SpaceGameState.WON_BRONZE:
-            imageResource = R.drawable.star_bronze;
-            break;
-        case SpaceGameState.WON_SILVER:
-            imageResource = R.drawable.star_silver;
-            break;
-        case SpaceGameState.WON_GOLD:
-            imageResource = R.drawable.star_gold;
-            break;
-        case SpaceGameState.LOST_DIE:
-            titleResource = R.string.end_level_title_lost_die;
-            textResource = R.string.end_level_subtitle_lost_die;
-            break;
-        case SpaceGameState.LOST_LOST:
-            titleResource = R.string.end_level_title_lost_lost;
-            textResource = R.string.end_level_subtitle_lost_lost;
-            break;
-        }
 
         if (LevelDbAdapter.getInstance().levelIsUnlocked(SpaceData.getInstance().getCurrentLevelId() + 1)) {
             nextLevelUnlocked = true;

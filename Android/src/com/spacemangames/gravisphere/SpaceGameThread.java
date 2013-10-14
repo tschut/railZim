@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.GameThread;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.Viewport;
@@ -226,7 +227,7 @@ public class SpaceGameThread extends GameThread {
         if (SpaceData.getInstance().points.getCurrentPoints() == 0) {
             tracker.trackEvent("out-of-time", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
             SpaceGameState.getInstance().setPaused(true);
-            SpaceGameState.getInstance().setEndState(SpaceGameState.LOST_LOST);
+            SpaceGameState.getInstance().setEndState(EndGameState.LOST_LOST);
             mMsgHandler.sendEmptyMessage(0);
         }
 
@@ -250,7 +251,7 @@ public class SpaceGameThread extends GameThread {
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):
                 tracker.trackEvent("die", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
                 SpaceGameState.getInstance().setPaused(true);
-                SpaceGameState.getInstance().setEndState(SpaceGameState.LOST_DIE);
+                SpaceGameState.getInstance().setEndState(EndGameState.LOST_DIE);
                 mMsgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_SCORE_BONUS):

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceGamePoints;
@@ -238,28 +239,25 @@ public class SpaceData {
         return mLevels.get(mLevels.size() - 1).mId;
     }
 
-    public int currentLevelWinState(int aPoints) {
+    public EndGameState currentLevelWinState(int aPoints) {
         if (aPoints < mCurrentLevel.silver()) {
-            return SpaceGameState.WON_BRONZE;
+            return EndGameState.WON_BRONZE;
         } else if (aPoints < mCurrentLevel.gold()) {
-            return SpaceGameState.WON_SILVER;
+            return EndGameState.WON_SILVER;
         } else {
-            return SpaceGameState.WON_GOLD;
+            return EndGameState.WON_GOLD;
         }
     }
 
-    public int levelStarColor(int aLevel, int aPoints) {
-        assert aPoints > 0 : "if aPoints 0 we probably didn't finish the level yet";
-
+    public EndGameState levelStarColor(int aLevel, int aPoints) {
         SpaceLevel level = mLevels.get(aLevel);
         if (aPoints >= level.gold()) {
-            return SpaceGameState.WON_GOLD;
+            return EndGameState.WON_GOLD;
         } else if (aPoints >= level.silver()) {
-            return SpaceGameState.WON_SILVER;
-        } else if (aPoints > 0) {
-            return SpaceGameState.WON_BRONZE;
+            return EndGameState.WON_SILVER;
+        } else {
+            return EndGameState.WON_BRONZE;
         }
-        return -1; // invalid?
     }
 
     public void addLoadingDoneListener(ILoadingDoneListener aListener) {

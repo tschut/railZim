@@ -9,6 +9,7 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelSelect;
@@ -40,8 +41,8 @@ public class PauseMenuFragment extends DialogFragment {
         // possible to get back to
         // the level in the state it's in now because you can press the
         // 'back'button in the level selector
-        int state = SpaceGameState.getInstance().endState();
-        if (state != SpaceGameState.NOT_YET_ENDED) {
+        EndGameState state = SpaceGameState.getInstance().endState();
+        if (state != EndGameState.NOT_ENDED) {
             GameThreadHolder.getThread().reloadCurrentLevel();
         }
         Intent intent = new Intent(activity, LevelSelect.class);

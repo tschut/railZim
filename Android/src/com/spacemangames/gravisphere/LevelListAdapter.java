@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.framework.EndGameState;
+import com.spacemangames.gravisphere.ui.EndGameStatePresenter;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
@@ -38,18 +38,22 @@ public class LevelListAdapter extends BaseAdapter {
         return TYPE_MAX_COUNT;
     }
 
+    @Override
     public int getCount() {
         return SpaceData.getInstance().mLevels.size();
     }
 
+    @Override
     public Object getItem(int position) {
         return SpaceData.getInstance().mLevels.get(position);
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mCursor.moveToPosition((int) getItemId(position));
         String lLevelTitle = mCursor.getString(mCursor.getColumnIndex(LevelDbAdapter.KEY_TITLE));
@@ -77,18 +81,10 @@ public class LevelListAdapter extends BaseAdapter {
         } else if (Integer.parseInt(lLevelHighScore) == 0) {
             lStarImageView.setImageResource(R.drawable.star_enabled);
         } else {
-            int lStarColor = SpaceData.getInstance().levelStarColor(Integer.parseInt(lLevelNumber), Integer.parseInt(lLevelHighScore));
-            switch (lStarColor) {
-            case SpaceGameState.WON_BRONZE:
-                lStarImageView.setImageResource(R.drawable.star_bronze);
-                break;
-            case SpaceGameState.WON_SILVER:
-                lStarImageView.setImageResource(R.drawable.star_silver);
-                break;
-            case SpaceGameState.WON_GOLD:
-                lStarImageView.setImageResource(R.drawable.star_gold);
-                break;
-            }
+            EndGameState endGameState = SpaceData.getInstance().levelStarColor(Integer.parseInt(lLevelNumber),
+                    Integer.parseInt(lLevelHighScore));
+            EndGameStatePresenter endGameStatePresenter = EndGameStatePresenter.valueOfEndGameState(endGameState);
+            lStarImageView.setImageResource(endGameStatePresenter.getStarImageResourceId());
         }
 
         return convertView;

@@ -14,8 +14,8 @@ public class SpaceGameState {
         private float             chargingStartY;
 
         /** Current pos of charging gesture */
-        private float             chargingPower      = 0;
-        private float             chargingAngle      = 0;
+        private float             chargingPower       = 0;
+        private float             chargingAngle       = 0;
 
         private Vector2           spaceManSpeed;
 
@@ -84,7 +84,7 @@ public class SpaceGameState {
 
     // Interesting stuff follows
     // state for charging stuff
-    public ChargingState    chargingState    = new ChargingState();
+    public ChargingState    chargingState     = new ChargingState();
 
     /** Used to figure out elapsed time between frames */
     private long            lastTime;
@@ -98,19 +98,12 @@ public class SpaceGameState {
     public static final int STATE_FLYING      = 4;
     public static final int STATE_PAUSED      = 5;
 
-    public static final int NOT_YET_ENDED     = -1;
-    public static final int WON_BRONZE        = 0;
-    public static final int WON_SILVER        = 1;
-    public static final int WON_GOLD          = 2;
-    public static final int LOST_DIE          = 3;
-    public static final int LOST_LOST         = 4;
-
-    private int             endState         = NOT_YET_ENDED;
+    private EndGameState    endState          = EndGameState.NOT_ENDED;
 
     private int             state;
     private int             lastState;
 
-    private boolean         predicting       = false;
+    private boolean         predicting        = false;
 
     public void setPredicting(boolean aPredicting) {
         predicting = aPredicting;
@@ -212,11 +205,11 @@ public class SpaceGameState {
         lastTime = System.nanoTime();
     }
 
-    public void setEndState(int aState) {
-        endState = aState;
+    public void setEndState(EndGameState state) {
+        endState = state;
     }
 
-    public int endState() {
+    public EndGameState endState() {
         return endState;
     }
 }
