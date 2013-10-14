@@ -67,43 +67,28 @@ public class SpaceGameState {
 
     private static final String TAG = "SpaceGameState";
 
-    // private constructor
     private SpaceGameState() {
-        state = STATE_INVALID;
+        state = GameState.INVALID;
     }
 
-    // Singleton holder
     private static class SingletonHolder {
         public static final SpaceGameState INSTANCE = new SpaceGameState();
     }
 
-    // Singleton access
     public static SpaceGameState getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
-    // Interesting stuff follows
-    // state for charging stuff
-    public ChargingState    chargingState     = new ChargingState();
+    public ChargingState chargingState = new ChargingState();
 
-    /** Used to figure out elapsed time between frames */
-    private long            lastTime;
+    private long         lastTime;
 
-    // Possible states
-    public static final int STATE_INVALID     = -1;
-    public static final int STATE_LOADING     = 0;
-    public static final int STATE_LOADED      = 1;
-    public static final int STATE_NOT_STARTED = 2;
-    public static final int STATE_CHARGING    = 3;
-    public static final int STATE_FLYING      = 4;
-    public static final int STATE_PAUSED      = 5;
+    private EndGameState endState      = EndGameState.NOT_ENDED;
 
-    private EndGameState    endState          = EndGameState.NOT_ENDED;
+    private GameState    state;
+    private GameState    lastState;
 
-    private int             state;
-    private int             lastState;
-
-    private boolean         predicting        = false;
+    private boolean      predicting    = false;
 
     public void setPredicting(boolean aPredicting) {
         predicting = aPredicting;
@@ -113,87 +98,57 @@ public class SpaceGameState {
         return predicting;
     }
 
-    public synchronized int getState() {
+    public synchronized GameState getState() {
         return state;
     }
 
-    public synchronized int getLastState() {
+    public synchronized GameState getLastState() {
         return lastState;
     }
 
-    public synchronized void setState(int aState) {
-        if (aState == STATE_PAUSED) { // use setPaused (true) for this
+    public synchronized void setState(GameState state) {
+        if (state == GameState.PAUSED) { // use setPaused (true) for this
             PALManager.getLog().e(TAG, "Trying to setState(STATE_PAUSED). Use setPaused(true) instead");
         }
 
-        PALManager.getLog().i(TAG, "Changing state from " + getStateString(state) + " to " + getStateString(aState));
+        PALManager.getLog().i(TAG, "Changing state from " + state + " to " + state);
 
         updateTimeTick();
 
-        if (state == STATE_PAUSED) {
-            lastState = aState;
+        if (state == GameState.PAUSED) {
+            lastState = state;
         } else {
-            state = aState;
+            this.state = state;
         }
     }
 
-    public synchronized void setPaused(boolean aPause) {
-        assert state >= STATE_LOADED;
-
-        if (aPause) {
-            PALManager.getLog().i(TAG, "Pausing. Current state: " + getStateString(state));
-            if (state != STATE_PAUSED)
+    public synchronized void setPaused(boolean pause) {
+        if (pause) {
+            PALManager.getLog().i(TAG, "Pausing. Current state: " + state);
+            if (state != GameState.PAUSED) {
                 lastState = state;
-            state = STATE_PAUSED;
+            }
+            state = GameState.PAUSED;
         } else {
             updateTimeTick();
-            if (state != STATE_PAUSED) {
+            if (state != GameState.PAUSED) {
                 PALManager.getLog().i(TAG, "Resuming while not paused, ignoring.");
             } else {
-                PALManager.getLog().i(TAG, "Resuming. Setting state to: " + getStateString(lastState));
+                PALManager.getLog().i(TAG, "Resuming. Setting state to: " + lastState);
                 state = lastState;
             }
         }
     }
 
     public synchronized boolean paused() {
-        return (state == STATE_PAUSED);
+        return (state == GameState.PAUSED);
     }
 
     public void togglePause() {
-        if (state == STATE_PAUSED)
+        if (state == GameState.PAUSED)
             setPaused(false);
         else
             setPaused(true);
-    }
-
-    public synchronized String getStateString(int aState) {
-        String lRes = "";
-
-        switch (aState) {
-        case STATE_LOADING:
-            lRes = "STATE_LOADING";
-            break;
-        case STATE_LOADED:
-            lRes = "STATE_LOADED";
-            break;
-        case STATE_NOT_STARTED:
-            lRes = "STATE_NOT_STARTED";
-            break;
-        case STATE_CHARGING:
-            lRes = "STATE_CHARGING";
-            break;
-        case STATE_FLYING:
-            lRes = "STATE_FLYING";
-            break;
-        case STATE_PAUSED:
-            lRes = "STATE_PAUSED";
-            break;
-        default:
-            lRes = "Unknown state!";
-            break;
-        }
-        return lRes;
     }
 
     public synchronized float getElapsedTime() {

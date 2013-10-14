@@ -12,6 +12,7 @@ import android.view.SurfaceHolder;
 import com.badlogic.gdx.math.Vector2;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.EndGameState;
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.GameThread;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.Viewport;
@@ -52,15 +53,12 @@ public class SpaceGameThread extends GameThread {
 
         super();
         // Start in STATE_LOADING
-        SpaceGameState.getInstance().setState(SpaceGameState.STATE_LOADING);
+        SpaceGameState.getInstance().setState(GameState.LOADING);
 
-        // speed for flinging the screen
         mViewport.setFlingSpeed(new Vector2(0, 0));
 
-        // rects
         mViewportScratch = new Rect();
 
-        // rendering engine
         mRenderer = new AndroidRenderer();
 
         tracker = GoogleAnalyticsTracker.getInstance();
@@ -135,8 +133,7 @@ public class SpaceGameThread extends GameThread {
                 updatePhysics(lElapsed);
                 if (mViewport.isFocusOnSpaceman())
                     mViewport.viewportFollowSpaceman();
-                if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD
-                        && lGameState.getState() == SpaceGameState.STATE_CHARGING) {
+                if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && lGameState.getState() == GameState.CHARGING) {
                     lGameState.setPredicting(true);
                     mSpaceData.calculatePredictionData(SpaceGameState.getInstance().chargingState.getSpaceManSpeed());
                     lGameState.setPredicting(false);
@@ -216,7 +213,7 @@ public class SpaceGameThread extends GameThread {
 
     // The actual drawing happens here :)
     private void doDraw(Canvas aCanvas) {
-        if (SpaceGameState.getInstance().getState() >= SpaceGameState.STATE_LOADED) {
+        if (SpaceGameState.getInstance().getState().isDoneLoading()) {
             mRenderer.initialize(aCanvas, mViewportScratch, mViewport.mScreenRect);
             mSpaceData.mCurrentLevel.draw(mRenderer);
         }

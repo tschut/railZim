@@ -16,6 +16,7 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.DebugSettings;
@@ -125,7 +126,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING)
+        if (SpaceGameState.getInstance().getState() == GameState.FLYING)
             SpaceGameState.getInstance().setPaused(true);
 
         showPauseMenu();
@@ -155,7 +156,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     @Override
     protected void onPause() {
         PALManager.getLog().i(TAG, "onPause");
-        if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING) {
+        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
             SpaceGameState.getInstance().setPaused(true);
         }
         GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());

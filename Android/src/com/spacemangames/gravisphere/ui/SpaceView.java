@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.badlogic.gdx.math.Vector2;
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.GameThreadHolder;
@@ -89,25 +90,24 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             return false;
 
         SpaceGameThread lThread = GameThreadHolder.getThread();
-        int lState = SpaceGameState.getInstance().getState();
+        GameState state = SpaceGameState.getInstance().getState();
 
-        if (lState == SpaceGameState.STATE_LOADED) {
-            SpaceGameState.getInstance().setState(SpaceGameState.STATE_NOT_STARTED);
+        if (state == GameState.LOADED) {
+            SpaceGameState.getInstance().setState(GameState.NOT_STARTED);
             return true;
         }
 
         // only process input if we're in the right state
-        if (lState != SpaceGameState.STATE_CHARGING && lState != SpaceGameState.STATE_FLYING && lState != SpaceGameState.STATE_LOADED
-                && lState != SpaceGameState.STATE_NOT_STARTED) {
+        if (state != GameState.CHARGING && state != GameState.FLYING && state != GameState.NOT_STARTED) {
             return true;
         }
 
         // check for multi-touch input
         if (aEvent.getPointerCount() > 1) {
-            if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_CHARGING) {
+            if (SpaceGameState.getInstance().getState() == GameState.CHARGING) {
                 SpaceGameState.getInstance().chargingState.reset();
                 SpaceData.getInstance().resetPredictionData();
-                SpaceGameState.getInstance().setState(SpaceGameState.STATE_NOT_STARTED);
+                SpaceGameState.getInstance().setState(GameState.NOT_STARTED);
             }
             handleMultitouchEvent(aEvent);
             return true;
@@ -133,14 +133,14 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
 
         // This means we are starting with the charging (if this is on the
         // location of spaceman)
-        if (lState == SpaceGameState.STATE_NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsSpaceMan) {
+        if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsSpaceMan) {
             lX = SpaceUtil.resolutionScale(lX);
             lY = SpaceUtil.resolutionScale(lY);
-            SpaceGameState.getInstance().setState(SpaceGameState.STATE_CHARGING);
+            SpaceGameState.getInstance().setState(GameState.CHARGING);
             SpaceGameState.getInstance().chargingState.setChargingStart(lX, lY);
             SpaceGameState.getInstance().chargingState.setChargingCurrent(lX, lY);
             lResult = true;
-        } else if (lState == SpaceGameState.STATE_CHARGING) {
+        } else if (state == GameState.CHARGING) {
             lX = SpaceUtil.resolutionScale(lX);
             lY = SpaceUtil.resolutionScale(lY);
             if (lAction == MotionEvent.ACTION_MOVE) {
@@ -150,7 +150,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
                 lThread.requestFireSpaceman();
             }
             lResult = true;
-        } else if (lState == SpaceGameState.STATE_NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {
+        } else if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {
             lThread.mViewport.focusViewportOnSpaceman();
         } else if (lAction == MotionEvent.ACTION_DOWN && lHitsArrow) { // recenter
                                                                        // on
@@ -236,15 +236,18 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /* Callback invoked when the surface dimensions change. */
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         GameThreadHolder.getThread().setSurfaceSize(width, height);
     }
 
     // Called when the surface has been destroyed
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         // TODO need to do something here?
     }
 
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // TODO need to do something here?
     }

@@ -139,7 +139,7 @@ public abstract class GameThread extends Thread {
 
     protected synchronized void fireSpaceMan() {
         mSpaceData.points.reset();
-        SpaceGameState.getInstance().setState(SpaceGameState.STATE_FLYING);
+        SpaceGameState.getInstance().setState(GameState.FLYING);
         Vector2 speed = SpaceGameState.getInstance().chargingState.getSpaceManSpeed();
         PALManager.getLog().v(TAG, "setting speed to " + speed.len());
         mSpaceData.mCurrentLevel.setSpaceManSpeed(speed);
@@ -153,7 +153,7 @@ public abstract class GameThread extends Thread {
             SpaceData.getInstance().resetPredictionData();
             mViewport.resetFocusViewportStatus(false);
             mSpaceData.setCurrentLevel(aIndex, aSpecial);
-            SpaceGameState.getInstance().setState(SpaceGameState.STATE_NOT_STARTED);
+            SpaceGameState.getInstance().setState(GameState.NOT_STARTED);
             SpaceGameState.getInstance().setEndState(EndGameState.NOT_ENDED);
             mViewport.reset(mSpaceData.mCurrentLevel.startCenterX(), mSpaceData.mCurrentLevel.startCenterY(), mCanvasWidth, mCanvasHeight);
         }

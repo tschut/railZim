@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.library.SpaceBackgroundObject;
@@ -61,6 +62,7 @@ public class AndroidRenderer implements IRenderer {
         mInitialized = true;
     }
 
+    @Override
     public void doDraw(List<SpaceObject> aObjects, SpaceBackgroundObject aBackgroundObject) {
         assert !mInitialized;
 
@@ -76,6 +78,7 @@ public class AndroidRenderer implements IRenderer {
         mInitialized = false;
     }
 
+    @Override
     public void doDraw(SpaceObject aObject) {
         AndroidBitmap lBitmap = (AndroidBitmap) aObject.getBitmap();
         Drawable lDrawable = lBitmap.getDrawable();
@@ -97,6 +100,7 @@ public class AndroidRenderer implements IRenderer {
         mCanvas.restore();
     }
 
+    @Override
     public void doDraw(SpaceBackgroundObject aObject) {
         // if this returns true we cache the gradient
         if (aObject.verifyStarFieldReady(mCanvasWidth, mCanvasHeight)) {
@@ -170,9 +174,10 @@ public class AndroidRenderer implements IRenderer {
         }
     }
 
+    @Override
     public void doDraw(SpaceManObject aObject) {
         // do we need to draw the prediction bitmap?
-        if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_CHARGING) {
+        if (SpaceGameState.getInstance().getState() == GameState.CHARGING) {
             AndroidBitmap predictionBitmap = (AndroidBitmap) SpaceData.getInstance().mCurrentLevel.mPredictionBitmap;
             Drawable predictionDrawable = predictionBitmap.getDrawable();
 

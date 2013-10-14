@@ -3,6 +3,7 @@ package com.spacemangames.library;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.MoveProperties;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.pal.IBitmap;
@@ -102,13 +103,6 @@ public class SpaceLevel {
         mObjects.add(lObject);
     }
 
-    // public void addJunk(int aX, int aY, String aBitmap, int aRotation, float
-    // aBounce, boolean aDOI, MoveProperties aMove) {
-    // SpaceJunkObject lObject = new SpaceJunkObject(aBitmap, aX, aY, aRotation,
-    // aBounce, aDOI, aMove);
-    // mObjects.add(lObject);
-    // }
-
     public void addBonus(int aX, int aY, String aBitmap, int aCollisionSize, MoveProperties aMove) {
         SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, aX, aY, aCollisionSize, aMove);
         mObjects.add(lObject);
@@ -120,7 +114,7 @@ public class SpaceLevel {
     }
 
     public void updatePhysics(float aElapsed) {
-        if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING) {
+        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
             // calculate gravitational effect for all relevant objects
             updatePhysicsGravity(aElapsed);
         }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.spacemangames.framework.EndGameState;
+import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceGamePoints;
@@ -117,7 +117,7 @@ public class SpaceData {
         int count = mCurrentLevel.mObjects.size();
         for (int i = 0; i < count; i++) {
             SpaceObject lO = mCurrentLevel.mObjects.get(i);
-            Body lBody = lO.createBody(mWorld);
+            lO.createBody(mWorld);
             lO.reset();
         }
 
@@ -129,7 +129,7 @@ public class SpaceData {
     }
 
     public void stepCurrentLevel(float aElapsed) {
-        if (SpaceGameState.getInstance().getState() == SpaceGameState.STATE_FLYING) {
+        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
             // update points
             points.elapse((int) (1000 * aElapsed));
         }
