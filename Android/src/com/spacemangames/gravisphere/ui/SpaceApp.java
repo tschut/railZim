@@ -15,6 +15,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.DebugSettings;
@@ -27,7 +28,7 @@ import com.spacemangames.gravisphere.ui.EndLevelDialogFragment.EndLevelDialogFra
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
-@EActivity
+@EActivity(R.layout.space_layout)
 public class SpaceApp extends FragmentActivity implements ILevelChangedListener {
     public static final int        ACTIVITY_LEVELSELECT = 0;
     public static final int        ACTIVITY_HELP        = 1;
@@ -51,6 +52,9 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     @Bean
     protected PointsUpdateThread   pointsUpdateThread;
+
+    @ViewById
+    SpaceView                      spaceView;
 
     // parse events that occurred. This is called after the physics have been
     // updated
@@ -107,6 +111,9 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     @AfterViews
     protected void startPointsUpdateThread() {
+        GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
+        GameThreadHolder.getThread().setMsgHandler(mMsgHandler);
+
         pointsUpdateThread.start();
     }
 
@@ -122,12 +129,6 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             // we were just launched: set up a new game
             // nothing to do?
             PALManager.getLog().i(TAG, "Normal startup");
-
-            setContentView(R.layout.space_layout);
-
-            SpaceView lSpaceView = (SpaceView) findViewById(R.id.space);
-            GameThreadHolder.getThread().setSurfaceHolder(lSpaceView.getHolder());
-            GameThreadHolder.getThread().setMsgHandler(mMsgHandler);
 
             tracker = GoogleAnalyticsTracker.getInstance();
 
