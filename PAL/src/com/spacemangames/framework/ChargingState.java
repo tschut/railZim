@@ -24,10 +24,16 @@ public class ChargingState {
     public void setChargingCurrent(float x, float y) {
         x = x - chargingStartX;
         y = y - chargingStartY;
-        chargingPower = (float) (Math.sqrt(x * x + y * y) * CHARGING_MULTIPLIER);
+        calculateChargingAngle(x, y);
+        calculateChargingPower(x, y);
+    }
+
+    private void calculateChargingAngle(float x, float y) {
         chargingAngle = (float) Math.atan2(x, y);
-        // if length is longer than this we have to recalculate x,y
-        // coordinates because we're overcharging
+    }
+
+    private void calculateChargingPower(float x, float y) {
+        chargingPower = (float) (Math.sqrt(x * x + y * y) * CHARGING_MULTIPLIER);
         if (chargingPower > MAX_CHARGING_POWER) {
             chargingPower = MAX_CHARGING_POWER;
         }
