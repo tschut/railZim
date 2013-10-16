@@ -22,8 +22,8 @@ public class SpaceGamePoints {
         return points;
     }
 
-    public synchronized void elapse(int aElapsed /* milliseconds */) {
-        totalElapsed += aElapsed;
+    public synchronized void elapse(int elapsedMilliseconds) {
+        totalElapsed += elapsedMilliseconds;
 
         int pointsDiff = (int) ((totalElapsed / 1000f) * POINTS_PER_SECOND);
 
@@ -33,7 +33,7 @@ public class SpaceGamePoints {
             points = 0;
     }
 
-    public synchronized void bonus(int aPoints) {
-        bonusPoints += aPoints;
+    public synchronized void bonus(int scoredBonusPoints) {
+        bonusPoints += scoredBonusPoints;
     }
 }
