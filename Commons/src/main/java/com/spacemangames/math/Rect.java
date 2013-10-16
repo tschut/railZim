@@ -10,19 +10,19 @@ public class Rect {
         this(0, 0, 0, 0);
     }
 
-    public Rect(int aLeft, int aTop, int aRight, int aBottom) {
-        set(aLeft, aTop, aRight, aBottom);
+    public Rect(int left, int top, int right, int bottom) {
+        set(left, top, right, bottom);
     }
 
-    public void set(int aLeft, int aTop, int aRight, int aBottom) {
-        left = aLeft;
-        top = aTop;
-        right = aRight;
-        bottom = aBottom;
+    public void set(int left, int top, int right, int bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
     }
 
-    public void set(Rect aOther) {
-        set(aOther.left, aOther.top, aOther.right, aOther.bottom);
+    public void set(Rect other) {
+        set(other.left, other.top, other.right, other.bottom);
     }
 
     private int center(int small, int big) {
