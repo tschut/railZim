@@ -25,9 +25,9 @@ public class SpaceGamePoints {
     public synchronized void elapse(int aElapsed /* milliseconds */) {
         totalElapsed += aElapsed;
 
-        int mPointsDiff = (int) ((totalElapsed / 1000f) * POINTS_PER_SECOND);
+        int pointsDiff = (int) ((totalElapsed / 1000f) * POINTS_PER_SECOND);
 
-        points = (POINTS_STARTING + bonusPoints) - mPointsDiff;
+        points = (POINTS_STARTING + bonusPoints) - pointsDiff;
 
         if (points < 0)
             points = 0;
