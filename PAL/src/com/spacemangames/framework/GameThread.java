@@ -3,11 +3,10 @@ package com.spacemangames.framework;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceObject;
+import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
-import com.spacemangames.pal.PALManager;
 
 public abstract class GameThread extends Thread {
     public static final String   TAG                       = "GameThread";
@@ -140,8 +139,7 @@ public abstract class GameThread extends Thread {
     protected synchronized void fireSpaceMan() {
         mSpaceData.points.reset();
         SpaceGameState.getInstance().setState(GameState.FLYING);
-        Vector2 speed = SpaceGameState.getInstance().chargingState.getSpaceManSpeed();
-        PALManager.getLog().v(TAG, "setting speed to " + speed.len());
+        PointF speed = SpaceGameState.getInstance().chargingState.getSpaceManSpeed();
         mSpaceData.mCurrentLevel.setSpaceManSpeed(speed);
 
         mViewport.setFocusOnSpaceman(true);

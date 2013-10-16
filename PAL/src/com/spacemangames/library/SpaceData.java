@@ -11,6 +11,7 @@ import com.spacemangames.framework.ILevelChangedListener;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceGamePoints;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.math.PointF;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceData {
@@ -173,7 +174,7 @@ public class SpaceData {
             lSpaceMan.clearPredictionPoints();
     }
 
-    public synchronized void calculatePredictionData(Vector2 aFirePower) {
+    public synchronized void calculatePredictionData(PointF aFirePower) {
         mCurrentLevel.setSpaceManSpeed(aFirePower);
         // now run box2d simulation
         float lSimulatedTime = 0;

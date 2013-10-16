@@ -1,6 +1,6 @@
 package com.spacemangames.framework;
 
-import com.badlogic.gdx.math.Vector2;
+import com.spacemangames.math.PointF;
 
 public class ChargingState {
     private static final int   MAX_CHARGING_POWER  = 150;
@@ -12,10 +12,10 @@ public class ChargingState {
     private float              chargingPower       = 0;
     private float              chargingAngle       = 0;
 
-    private Vector2            spaceManSpeed;
+    private PointF             spaceManSpeed;
 
     public ChargingState() {
-        spaceManSpeed = new Vector2(0, 0);
+        spaceManSpeed = new PointF();
     }
 
     public float chargingPower() {
@@ -44,7 +44,7 @@ public class ChargingState {
         spaceManSpeed.set(x, y);
     }
 
-    public Vector2 getSpaceManSpeed() {
+    public PointF getSpaceManSpeed() {
         return spaceManSpeed;
     }
 

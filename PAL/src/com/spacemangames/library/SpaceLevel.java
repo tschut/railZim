@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.MoveProperties;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.math.PointF;
 import com.spacemangames.pal.IBitmap;
 import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
@@ -108,8 +109,8 @@ public class SpaceLevel {
         mObjects.add(lObject);
     }
 
-    public void setSpaceManSpeed(Vector2 aSpeed) {
-        mSpaceManSpeedBuf.set(aSpeed.x, aSpeed.y);
+    public void setSpaceManSpeed(PointF aFirePower) {
+        mSpaceManSpeedBuf.set(aFirePower.x, aFirePower.y);
         getSpaceManObject().setSpeed(mSpaceManSpeedBuf);
     }
 
