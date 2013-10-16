@@ -3,18 +3,16 @@ package com.spacemangames.framework;
 import com.badlogic.gdx.math.Vector2;
 
 public class ChargingState {
-    public static final int   MAX_CHARGING_POWER  = 150;
-    public static final float CHARGING_MULTIPLIER = 1.3f;
+    private static final int   MAX_CHARGING_POWER  = 150;
+    private static final float CHARGING_MULTIPLIER = 1.3f;
 
-    /** Start of charging gesture */
-    private float             chargingStartX;
-    private float             chargingStartY;
+    private float              chargingStartX;
+    private float              chargingStartY;
 
-    /** Current pos of charging gesture */
-    private float             chargingPower       = 0;
-    private float             chargingAngle       = 0;
+    private float              chargingPower       = 0;
+    private float              chargingAngle       = 0;
 
-    private Vector2           spaceManSpeed;
+    private Vector2            spaceManSpeed;
 
     public ChargingState() {
         spaceManSpeed = new Vector2(0, 0);
