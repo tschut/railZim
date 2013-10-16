@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.spacemangames.framework.MoveProperties;
+import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
@@ -39,7 +39,7 @@ public class SpaceManObject extends SpaceObject {
     public ArrayList<PointF> mPredictionData;
     public int               mLastPrediction;
 
-    public SpaceManObject(String aBitmap, int aX, int aY, String aArrowResource, int aCollisionSize, MoveProperties aMoveProperties) {
+    public SpaceManObject(String aBitmap, int aX, int aY, String aArrowResource, int aCollisionSize, CircularMoveProperties aMoveProperties) {
         super(aBitmap, false, TYPE_SPACEMAN, aX, aY, aCollisionSize, aMoveProperties);
 
         mArrowBitmap = PALManager.getBitmapFactory().createBitmap(aArrowResource, false);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.spacemangames.framework.MoveProperties;
+import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.pal.levelsjson.LevelJson;
 import com.spacemangames.gravisphere.pal.levelsjson.LevelsJson;
@@ -76,7 +76,7 @@ public class AndroidResourceHandler implements IResourceHandler {
 
             level.addBackground(levelJson.getBackground().getColor_inner(), levelJson.getBackground().getColor_outer());
             for (ObjectJson objectJson : levelJson.getObjects()) {
-                MoveProperties moveProperties = new MoveProperties();
+                CircularMoveProperties moveProperties = new CircularMoveProperties();
                 moveProperties.setMove(objectJson.getMove());
                 moveProperties.setDegreesPerSecond(objectJson.getMoveDps());
                 moveProperties.setOffset(objectJson.getMoveOffset());

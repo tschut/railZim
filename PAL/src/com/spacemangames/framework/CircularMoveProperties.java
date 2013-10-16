@@ -2,7 +2,7 @@ package com.spacemangames.framework;
 
 import com.spacemangames.math.PointF;
 
-public class MoveProperties {
+public class CircularMoveProperties implements IMoveProperties {
     private boolean move;
     private int     degreesPerSecond;
     private int     radius;
@@ -12,17 +12,19 @@ public class MoveProperties {
 
     private PointF  currentPosition;
 
-    public MoveProperties() {
+    public CircularMoveProperties() {
         move = false;
         currentPosition = new PointF();
     }
 
+    @Override
     public void reset() {
         elapsedTime = 0.0;
         currentPosition.set(0, 0);
         elapse(0);
     }
 
+    @Override
     public void elapse(double elapsedMilliseconds) {
         if (!move) {
             return;
@@ -34,6 +36,7 @@ public class MoveProperties {
         currentPosition.set((float) (radius * Math.cos(angle)), (float) (radius * Math.sin(angle)));
     }
 
+    @Override
     public PointF getPos() {
         return currentPosition;
     }

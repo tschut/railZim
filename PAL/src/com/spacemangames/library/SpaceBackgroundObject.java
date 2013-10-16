@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import com.spacemangames.framework.MoveProperties;
+import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.framework.SpaceUtil;
 
 public class SpaceBackgroundObject extends SpaceObject {
@@ -79,7 +79,7 @@ public class SpaceBackgroundObject extends SpaceObject {
     private final GradientProperties mGradientProperties   = new GradientProperties();
 
     public SpaceBackgroundObject(String aBackgroundColorInner, String aBackgroundColorOuter, String aSeed) {
-        super(null, false, TYPE_BACKGROUND, 0, 0, 0, new MoveProperties());
+        super(null, false, TYPE_BACKGROUND, 0, 0, 0, new CircularMoveProperties());
 
         mSeed = aSeed;
 

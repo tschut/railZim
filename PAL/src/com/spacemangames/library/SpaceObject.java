@@ -9,7 +9,8 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
-import com.spacemangames.framework.MoveProperties;
+import com.spacemangames.framework.IMoveProperties;
+import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IBitmap;
 import com.spacemangames.pal.IRenderer;
@@ -56,12 +57,12 @@ public abstract class SpaceObject {
 
     protected Rect             mRect;
 
-    protected MoveProperties   mMove;
+    protected CircularMoveProperties   mMove;
     protected MouseJoint       mMouseJoint;
     protected Body             mMouseJointBody;
     private final Vector2      mMoveScratchVect           = new Vector2(0, 0);
 
-    public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, MoveProperties aMove) {
+    public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, CircularMoveProperties aMove) {
         if (aBitmap != null) // objects don't always have a bitmap (e.g.
                              // SpaceBackgroundObject)
             mBitmap = PALManager.getBitmapFactory().createBitmap(aBitmap, lazyLoading);
@@ -297,7 +298,7 @@ public abstract class SpaceObject {
         reset();
     }
 
-    public MoveProperties getMoveProperties() {
+    public IMoveProperties getMoveProperties() {
         return mMove;
     }
 
