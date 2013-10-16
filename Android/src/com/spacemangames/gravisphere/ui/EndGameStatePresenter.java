@@ -9,7 +9,7 @@ public enum EndGameStatePresenter {
     WON_SILVER(R.drawable.star_silver, R.string.end_level_subtitle_won, R.string.end_level_subtitle_won),
     WON_GOLD(R.drawable.star_gold, R.string.end_level_subtitle_won, R.string.end_level_subtitle_won),
     LOST_DIE(R.drawable.star_enabled, R.string.end_level_title_lost_die, R.string.end_level_subtitle_lost_die),
-    LOST_LOST(R.drawable.star_enabled, R.string.end_level_title_lost_lost, R.string.end_level_subtitle_lost_die);
+    LOST_LOST(R.drawable.star_enabled, R.string.end_level_title_lost_lost, R.string.end_level_subtitle_lost_lost);
 
     private int starImageResourceId;
     private int msgResourceId;
