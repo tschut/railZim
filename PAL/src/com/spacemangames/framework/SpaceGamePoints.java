@@ -1,15 +1,12 @@
 package com.spacemangames.framework;
 
 public class SpaceGamePoints {
-    @SuppressWarnings("unused")
-    private static final String TAG               = "SpaceGamePoints";
+    private static final int POINTS_STARTING   = 10000;
+    private static final int POINTS_PER_SECOND = 500;
 
-    public static final int     POINTS_STARTING   = 10000;
-    public static final int     POINTS_PER_SECOND = 500;
-
-    private int                 mPoints;
-    private int                 mBonusPoints;
-    private long                mTotalElapsed;
+    private int              mPoints;
+    private int              mBonusPoints;
+    private long             mTotalElapsed;
 
     public SpaceGamePoints() {
         reset();
