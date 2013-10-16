@@ -8,12 +8,12 @@ public class PointF {
         this(0f, 0f);
     }
 
-    public PointF(float aX, float aY) {
-        set(aX, aY);
+    public PointF(float x, float y) {
+        set(x, y);
     }
 
-    public void set(float aX, float aY) {
-        x = aX;
-        y = aY;
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 }
