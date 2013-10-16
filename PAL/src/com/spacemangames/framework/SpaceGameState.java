@@ -72,15 +72,8 @@ public enum SpaceGameState {
         }
     }
 
-    public synchronized boolean paused() {
+    public boolean paused() {
         return (state == GameState.PAUSED);
-    }
-
-    public void togglePause() {
-        if (state == GameState.PAUSED)
-            setPaused(false);
-        else
-            setPaused(true);
     }
 
     public synchronized float getElapsedTime() {
