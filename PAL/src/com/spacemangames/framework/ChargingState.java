@@ -27,11 +27,11 @@ public class ChargingState {
         chargingStartY = aY;
     }
 
-    public void setChargingCurrent(float aX, float aY) {
-        float lX = aX - chargingStartX;
-        float lY = aY - chargingStartY;
-        chargingPower = (float) (Math.sqrt(lX * lX + lY * lY) * CHARGING_MULTIPLIER);
-        chargingAngle = (float) Math.atan2(lX, lY);
+    public void setChargingCurrent(float x, float y) {
+        x = x - chargingStartX;
+        y = y - chargingStartY;
+        chargingPower = (float) (Math.sqrt(x * x + y * y) * CHARGING_MULTIPLIER);
+        chargingAngle = (float) Math.atan2(x, y);
         // if length is longer than this we have to recalculate x,y
         // coordinates because we're overcharging
         if (chargingPower > MAX_CHARGING_POWER) {
@@ -39,10 +39,9 @@ public class ChargingState {
         }
 
         // we fire in the opposite direction :)
-        lY = -1.0f * (float) Math.cos(chargingAngle) * chargingPower;
-        lX = -1.0f * (float) Math.sin(chargingAngle) * chargingPower;
-        spaceManSpeed.set(lX, lY);
-        // PALManager.getLog().i (TAG, "Speed: " + lX + " " + lY);
+        y = -1.0f * (float) Math.cos(chargingAngle) * chargingPower;
+        x = -1.0f * (float) Math.sin(chargingAngle) * chargingPower;
+        spaceManSpeed.set(x, y);
     }
 
     public Vector2 getSpaceManSpeed() {
