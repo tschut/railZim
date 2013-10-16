@@ -175,11 +175,11 @@ public abstract class SpaceObject {
     }
 
     public void updateMoving(double aElapsed) {
-        if (mMouseJoint == null || !mMove.mMove)
+        if (mMouseJoint == null || !mMove.move)
             return;
 
         mMove.elapse(aElapsed);
-        mMoveScratchVect.set(mMove.getPos());
+        mMoveScratchVect.set(mMove.getPos().x, mMove.getPos().y);
         toBox2DCoords(mMoveScratchVect);
 
         mMoveScratchVect.add(toBox2DCoords(mStartX), toBox2DCoords(mStartY));

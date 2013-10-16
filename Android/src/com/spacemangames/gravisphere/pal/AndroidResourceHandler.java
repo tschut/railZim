@@ -76,10 +76,10 @@ public class AndroidResourceHandler implements IResourceHandler {
             level.addBackground(levelJson.getBackground().getColor_inner(), levelJson.getBackground().getColor_outer());
             for (ObjectJson objectJson : levelJson.getObjects()) {
                 MoveProperties moveProperties = new MoveProperties();
-                moveProperties.mMove = objectJson.getMove();
-                moveProperties.mDPS = objectJson.getMoveDps();
-                moveProperties.mOffset = objectJson.getMoveOffset();
-                moveProperties.mRadius = objectJson.getMoveRadius();
+                moveProperties.move = objectJson.getMove();
+                moveProperties.degreesPerSecond = objectJson.getMoveDps();
+                moveProperties.offset = objectJson.getMoveOffset();
+                moveProperties.radius = objectJson.getMoveRadius();
                 String type = objectJson.getType();
                 int lX = objectJson.getPosx();
                 int lY = objectJson.getPosy();
