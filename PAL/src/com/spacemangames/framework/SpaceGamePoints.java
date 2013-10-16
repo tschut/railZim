@@ -4,36 +4,36 @@ public class SpaceGamePoints {
     private static final int POINTS_STARTING   = 10000;
     private static final int POINTS_PER_SECOND = 500;
 
-    private int              mPoints;
-    private int              mBonusPoints;
-    private long             mTotalElapsed;
+    private int              points;
+    private int              bonusPoints;
+    private long             totalElapsed;
 
     public SpaceGamePoints() {
         reset();
     }
 
     public synchronized void reset() {
-        mPoints = POINTS_STARTING;
-        mBonusPoints = 0;
-        mTotalElapsed = 0;
+        points = POINTS_STARTING;
+        bonusPoints = 0;
+        totalElapsed = 0;
     }
 
     public int getCurrentPoints() {
-        return mPoints;
+        return points;
     }
 
     public synchronized void elapse(int aElapsed /* milliseconds */) {
-        mTotalElapsed += aElapsed;
+        totalElapsed += aElapsed;
 
-        int mPointsDiff = (int) ((mTotalElapsed / 1000f) * POINTS_PER_SECOND);
+        int mPointsDiff = (int) ((totalElapsed / 1000f) * POINTS_PER_SECOND);
 
-        mPoints = (POINTS_STARTING + mBonusPoints) - mPointsDiff;
+        points = (POINTS_STARTING + bonusPoints) - mPointsDiff;
 
-        if (mPoints < 0)
-            mPoints = 0;
+        if (points < 0)
+            points = 0;
     }
 
     public synchronized void bonus(int aPoints) {
-        mBonusPoints += aPoints;
+        bonusPoints += aPoints;
     }
 }
