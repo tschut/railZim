@@ -3,14 +3,14 @@ package com.spacemangames.framework;
 import com.spacemangames.math.PointF;
 
 public class MoveProperties {
-    public boolean move;
-    public int     degreesPerSecond;
-    public int     radius;
-    public int     offset;
+    private boolean move;
+    private int     degreesPerSecond;
+    private int     radius;
+    private int     offset;
 
-    private double elapsedTime;
+    private double  elapsedTime;
 
-    private PointF currentPosition;
+    private PointF  currentPosition;
 
     public MoveProperties() {
         move = false;
@@ -30,13 +30,31 @@ public class MoveProperties {
 
         elapsedTime += elapsedMilliseconds;
 
-        double lX = (radius * Math.cos((offset + elapsedTime * degreesPerSecond) * Math.PI / 180.0));
-        double lY = (radius * Math.sin((offset + elapsedTime * degreesPerSecond) * Math.PI / 180.0));
-
-        currentPosition.set((float) lX, (float) lY);
+        double angle = (offset + elapsedTime * degreesPerSecond) * Math.PI / 180.0;
+        currentPosition.set((float) (radius * Math.cos(angle)), (float) (radius * Math.sin(angle)));
     }
 
     public PointF getPos() {
         return currentPosition;
+    }
+
+    public boolean isMove() {
+        return move;
+    }
+
+    public void setMove(boolean move) {
+        this.move = move;
+    }
+
+    public void setDegreesPerSecond(int degreesPerSecond) {
+        this.degreesPerSecond = degreesPerSecond;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

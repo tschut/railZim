@@ -175,7 +175,7 @@ public abstract class SpaceObject {
     }
 
     public void updateMoving(double aElapsed) {
-        if (mMouseJoint == null || !mMove.move)
+        if (mMouseJoint == null || !mMove.isMove())
             return;
 
         mMove.elapse(aElapsed);

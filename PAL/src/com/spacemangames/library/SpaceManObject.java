@@ -150,7 +150,7 @@ public class SpaceManObject extends SpaceObject {
 
     @Override
     public void setupMouseJoint(World world, BodyDef bd) {
-        if (mMove.move)
+        if (mMove.isMove())
             super.setupMouseJoint(world, bd);
     }
 

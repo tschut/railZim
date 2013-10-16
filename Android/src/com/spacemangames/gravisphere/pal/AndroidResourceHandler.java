@@ -25,6 +25,7 @@ import com.spacemangames.pal.PALManager;
 public class AndroidResourceHandler implements IResourceHandler {
     private static final String TAG = "AndroidResourceHandler";
 
+    @Override
     public void preloadAllLevels(ArrayList<SpaceLevel> aLevels) {
         LevelsJson levelsJson = getLevelsJson(R.raw.defaultlevels);
         preloadLevels(aLevels, levelsJson);
@@ -76,10 +77,10 @@ public class AndroidResourceHandler implements IResourceHandler {
             level.addBackground(levelJson.getBackground().getColor_inner(), levelJson.getBackground().getColor_outer());
             for (ObjectJson objectJson : levelJson.getObjects()) {
                 MoveProperties moveProperties = new MoveProperties();
-                moveProperties.move = objectJson.getMove();
-                moveProperties.degreesPerSecond = objectJson.getMoveDps();
-                moveProperties.offset = objectJson.getMoveOffset();
-                moveProperties.radius = objectJson.getMoveRadius();
+                moveProperties.setMove(objectJson.getMove());
+                moveProperties.setDegreesPerSecond(objectJson.getMoveDps());
+                moveProperties.setOffset(objectJson.getMoveOffset());
+                moveProperties.setRadius(objectJson.getMoveRadius());
                 String type = objectJson.getType();
                 int lX = objectJson.getPosx();
                 int lY = objectJson.getPosy();
