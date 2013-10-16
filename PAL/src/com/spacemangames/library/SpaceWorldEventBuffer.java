@@ -17,6 +17,7 @@ public class SpaceWorldEventBuffer {
     private static final String TAG                  = "SpaceWorldEventBuffer";
 
     private class SpaceContactListener implements ContactListener {
+        @Override
         public void beginContact(Contact contact) {
             SpaceObject lObjectA = (SpaceObject) contact.getFixtureA().getBody().getUserData();
             SpaceObject lObjectB = (SpaceObject) contact.getFixtureB().getBody().getUserData();
@@ -38,7 +39,7 @@ public class SpaceWorldEventBuffer {
                 mEvents.add(EVENT_HIT_ROCKET);
             } else if (lOther.deathOnImpact()) {
                 mEvents.add(EVENT_HIT_DOI_OBJECT);
-            } else if (lOther.mType == SpaceObject.TYPE_BONUS && !SpaceGameState.getInstance().isPredicting()) {
+            } else if (lOther.mType == SpaceObject.TYPE_BONUS && !SpaceGameState.INSTANCE.isPredicting()) {
                 SpaceBonusObject lObject = (SpaceBonusObject) lOther;
                 if (lObject.visible()) {
                     mEvents.add(EVENT_SCORE_BONUS);
@@ -51,6 +52,7 @@ public class SpaceWorldEventBuffer {
             }
         }
 
+        @Override
         public void endContact(Contact contact) {
         }
     }

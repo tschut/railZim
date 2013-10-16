@@ -130,7 +130,7 @@ public class SpaceData {
     }
 
     public void stepCurrentLevel(float aElapsed) {
-        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
+        if (SpaceGameState.INSTANCE.getState() == GameState.FLYING) {
             // update points
             points.elapse((int) (1000 * aElapsed));
         }
@@ -140,7 +140,7 @@ public class SpaceData {
     }
 
     public synchronized void updatePhysics(float aElapsed) {
-        if (!SpaceGameState.getInstance().paused()) {
+        if (!SpaceGameState.INSTANCE.paused()) {
             // now run box2d simulation
             float lTimeCount = aElapsed;
             while (lTimeCount > BOX2D_TIMESTEP) {

@@ -71,7 +71,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
         int points = SpaceData.getInstance().points.getCurrentPoints();
         int best = LevelDbAdapter.getInstance().highScore(SpaceData.getInstance().getCurrentLevelId());
-        EndGameStatePresenter endState = EndGameStatePresenter.valueOfEndGameState(SpaceGameState.getInstance().endState());
+        EndGameStatePresenter endState = EndGameStatePresenter.valueOfEndGameState(SpaceGameState.INSTANCE.endState());
         int imageResource = endState.getStarImageResourceId();
         int titleResource = endState.getTitleResourceId();
         int textResource = endState.getMsgResourceId();
@@ -126,8 +126,8 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (SpaceGameState.getInstance().getState() == GameState.FLYING)
-            SpaceGameState.getInstance().setPaused(true);
+        if (SpaceGameState.INSTANCE.getState() == GameState.FLYING)
+            SpaceGameState.INSTANCE.setPaused(true);
 
         showPauseMenu();
         return true;
@@ -156,8 +156,8 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     @Override
     protected void onPause() {
         PALManager.getLog().i(TAG, "onPause");
-        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
-            SpaceGameState.getInstance().setPaused(true);
+        if (SpaceGameState.INSTANCE.getState() == GameState.FLYING) {
+            SpaceGameState.INSTANCE.setPaused(true);
         }
         GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
         mRestoreLevel = SpaceData.getInstance().getCurrentLevelId();

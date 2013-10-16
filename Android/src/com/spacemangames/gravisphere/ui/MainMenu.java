@@ -95,7 +95,7 @@ public class MainMenu extends Activity {
             GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
             GameThreadHolder.getThread().changeLevel(SpaceLevel.ID_LOADING_SCREEN, true);
             GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
-            SpaceGameState.getInstance().setPaused(false);
+            SpaceGameState.INSTANCE.setPaused(false);
         }
     }
 

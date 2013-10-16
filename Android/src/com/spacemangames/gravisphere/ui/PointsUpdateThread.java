@@ -16,7 +16,7 @@ class PointsUpdateThread extends Thread {
     private final class GameNotStartedPredicate implements Predicate<Void> {
         @Override
         public boolean evaluate(Void object) {
-            return SpaceGameState.getInstance().getState().isStarted();
+            return SpaceGameState.INSTANCE.getState().isStarted();
         }
     }
 

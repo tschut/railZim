@@ -138,8 +138,8 @@ public abstract class GameThread extends Thread {
 
     protected synchronized void fireSpaceMan() {
         mSpaceData.points.reset();
-        SpaceGameState.getInstance().setState(GameState.FLYING);
-        PointF speed = SpaceGameState.getInstance().chargingState.getSpaceManSpeed();
+        SpaceGameState.INSTANCE.setState(GameState.FLYING);
+        PointF speed = SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed();
         mSpaceData.mCurrentLevel.setSpaceManSpeed(speed);
 
         mViewport.setFocusOnSpaceman(true);
@@ -147,12 +147,12 @@ public abstract class GameThread extends Thread {
 
     public void changeLevel(int aIndex, boolean aSpecial) {
         synchronized (getSurfaceLocker()) {
-            SpaceGameState.getInstance().chargingState.reset();
+            SpaceGameState.INSTANCE.chargingState.reset();
             SpaceData.getInstance().resetPredictionData();
             mViewport.resetFocusViewportStatus(false);
             mSpaceData.setCurrentLevel(aIndex, aSpecial);
-            SpaceGameState.getInstance().setState(GameState.NOT_STARTED);
-            SpaceGameState.getInstance().setEndState(EndGameState.NOT_ENDED);
+            SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
+            SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
             mViewport.reset(mSpaceData.mCurrentLevel.startCenterX(), mSpaceData.mCurrentLevel.startCenterY(), mCanvasWidth, mCanvasHeight);
         }
     }

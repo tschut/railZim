@@ -2,19 +2,13 @@ package com.spacemangames.framework;
 
 import com.spacemangames.pal.PALManager;
 
-public class SpaceGameState {
+public enum SpaceGameState {
+    INSTANCE;
+
     private static final String TAG = "SpaceGameState";
 
     private SpaceGameState() {
         state = GameState.INVALID;
-    }
-
-    private static class SingletonHolder {
-        public static final SpaceGameState INSTANCE = new SpaceGameState();
-    }
-
-    public static SpaceGameState getInstance() {
-        return SingletonHolder.INSTANCE;
     }
 
     public ChargingState chargingState = new ChargingState();

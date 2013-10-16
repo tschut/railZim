@@ -53,7 +53,7 @@ public class SpaceGameThread extends GameThread {
 
         super();
         // Start in STATE_LOADING
-        SpaceGameState.getInstance().setState(GameState.LOADING);
+        SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
         mViewport.setFlingSpeed(new Vector2(0, 0));
 
@@ -95,7 +95,7 @@ public class SpaceGameThread extends GameThread {
 
     @Override
     public void run() {
-        SpaceGameState lGameState = SpaceGameState.getInstance();
+        SpaceGameState lGameState = SpaceGameState.INSTANCE;
         long lFpsHelper = 0;
         while (mRun) {
             // handle events that need to run on this thread
@@ -135,7 +135,7 @@ public class SpaceGameThread extends GameThread {
                     mViewport.viewportFollowSpaceman();
                 if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && lGameState.getState() == GameState.CHARGING) {
                     lGameState.setPredicting(true);
-                    mSpaceData.calculatePredictionData(SpaceGameState.getInstance().chargingState.getSpaceManSpeed());
+                    mSpaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
                     lGameState.setPredicting(false);
                 }
                 c = mSurfaceHolder.lockCanvas(null);
@@ -213,7 +213,7 @@ public class SpaceGameThread extends GameThread {
 
     // The actual drawing happens here :)
     private void doDraw(Canvas aCanvas) {
-        if (SpaceGameState.getInstance().getState().isDoneLoading()) {
+        if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
             mRenderer.initialize(aCanvas, mViewportScratch, mViewport.mScreenRect);
             mSpaceData.mCurrentLevel.draw(mRenderer);
         }
@@ -223,8 +223,8 @@ public class SpaceGameThread extends GameThread {
         // check if points have reached zero
         if (SpaceData.getInstance().points.getCurrentPoints() == 0) {
             tracker.trackEvent("out-of-time", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
-            SpaceGameState.getInstance().setPaused(true);
-            SpaceGameState.getInstance().setEndState(EndGameState.LOST_LOST);
+            SpaceGameState.INSTANCE.setPaused(true);
+            SpaceGameState.INSTANCE.setEndState(EndGameState.LOST_LOST);
             mMsgHandler.sendEmptyMessage(0);
         }
 
@@ -234,11 +234,11 @@ public class SpaceGameThread extends GameThread {
             Integer lEvent = lQueue.remove();
             switch (lEvent) {
             case (SpaceWorldEventBuffer.EVENT_HIT_ROCKET):
-                SpaceGameState.getInstance().setPaused(true);
+                SpaceGameState.INSTANCE.setPaused(true);
                 int lCurrentLevelID = SpaceData.getInstance().getCurrentLevelId();
                 int lHighScore = LevelDbAdapter.getInstance().highScore(lCurrentLevelID);
                 int lCurScore = SpaceData.getInstance().points.getCurrentPoints();
-                SpaceGameState.getInstance().setEndState(SpaceData.getInstance().currentLevelWinState(lCurScore));
+                SpaceGameState.INSTANCE.setEndState(SpaceData.getInstance().currentLevelWinState(lCurScore));
                 tracker.trackEvent("win", String.valueOf(lCurrentLevelID), String.valueOf(lCurScore), 0);
 
                 if (lCurScore > lHighScore)
@@ -247,8 +247,8 @@ public class SpaceGameThread extends GameThread {
                 break;
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):
                 tracker.trackEvent("die", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
-                SpaceGameState.getInstance().setPaused(true);
-                SpaceGameState.getInstance().setEndState(EndGameState.LOST_DIE);
+                SpaceGameState.INSTANCE.setPaused(true);
+                SpaceGameState.INSTANCE.setEndState(EndGameState.LOST_DIE);
                 mMsgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_SCORE_BONUS):

@@ -115,7 +115,7 @@ public class SpaceLevel {
     }
 
     public void updatePhysics(float aElapsed) {
-        if (SpaceGameState.getInstance().getState() == GameState.FLYING) {
+        if (SpaceGameState.INSTANCE.getState() == GameState.FLYING) {
             // calculate gravitational effect for all relevant objects
             updatePhysicsGravity(aElapsed);
         }

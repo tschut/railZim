@@ -177,7 +177,7 @@ public class AndroidRenderer implements IRenderer {
     @Override
     public void doDraw(SpaceManObject aObject) {
         // do we need to draw the prediction bitmap?
-        if (SpaceGameState.getInstance().getState() == GameState.CHARGING) {
+        if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
             AndroidBitmap predictionBitmap = (AndroidBitmap) SpaceData.getInstance().mCurrentLevel.mPredictionBitmap;
             Drawable predictionDrawable = predictionBitmap.getDrawable();
 
@@ -195,7 +195,7 @@ public class AndroidRenderer implements IRenderer {
             }
             // set spaceman rotation to reflect direction we're going to shoot
             // in
-            aObject.setRotation(-1 * SpaceGameState.getInstance().chargingState.getAngle());
+            aObject.setRotation(-1 * SpaceGameState.INSTANCE.chargingState.getAngle());
         }
 
         // now use normal drawing function to draw spaceman
