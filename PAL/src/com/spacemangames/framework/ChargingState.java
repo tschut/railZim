@@ -12,12 +12,6 @@ public class ChargingState {
     private float              chargingPower       = 0;
     private float              chargingAngle       = 0;
 
-    private PointF             spaceManSpeed;
-
-    public ChargingState() {
-        spaceManSpeed = new PointF();
-    }
-
     public float chargingPower() {
         return chargingPower;
     }
@@ -37,15 +31,12 @@ public class ChargingState {
         if (chargingPower > MAX_CHARGING_POWER) {
             chargingPower = MAX_CHARGING_POWER;
         }
-
-        // we fire in the opposite direction :)
-        y = -1.0f * (float) Math.cos(chargingAngle) * chargingPower;
-        x = -1.0f * (float) Math.sin(chargingAngle) * chargingPower;
-        spaceManSpeed.set(x, y);
     }
 
     public PointF getSpaceManSpeed() {
-        return spaceManSpeed;
+        float y = -1.0f * (float) Math.cos(chargingAngle) * chargingPower;
+        float x = -1.0f * (float) Math.sin(chargingAngle) * chargingPower;
+        return new PointF(x, y);
     }
 
     public float getAngle() {
@@ -55,6 +46,5 @@ public class ChargingState {
     public void reset() {
         chargingPower = 0;
         chargingAngle = 0;
-        spaceManSpeed.set(0, 0);
     }
 }
