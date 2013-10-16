@@ -10,19 +10,19 @@ public class RectF {
         this(0, 0, 0, 0);
     }
 
-    public RectF(float aLeft, float aTop, float aRight, float aBottom) {
-        set(aLeft, aTop, aRight, aBottom);
+    public RectF(float left, float top, float right, float bottom) {
+        set(left, top, right, bottom);
     }
 
-    public void set(float aLeft, float aTop, float aRight, float aBottom) {
-        left = aLeft;
-        top = aTop;
-        right = aRight;
-        bottom = aBottom;
+    public void set(float left, float top, float right, float bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
     }
 
-    public void set(Rect aOther) {
-        set(aOther.left, aOther.top, aOther.right, aOther.bottom);
+    public void set(Rect other) {
+        set(other.left, other.top, other.right, other.bottom);
     }
 
     private float exactCenter(float small, float big) {
