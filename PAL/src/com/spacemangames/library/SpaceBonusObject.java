@@ -2,14 +2,14 @@ package com.spacemangames.library;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.spacemangames.framework.CircularMoveProperties;
+import com.spacemangames.framework.IMoveProperties;
 import com.spacemangames.pal.IRenderer;
 
 public class SpaceBonusObject extends SpaceObject {
     private boolean mVisible = true;
 
-    public SpaceBonusObject(String aBitmap, int aX, int aY, int aCollisionSize, CircularMoveProperties aMove) {
-        super(aBitmap, false, TYPE_BONUS, aX, aY, aCollisionSize, aMove);
+    public SpaceBonusObject(String aBitmap, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
+        super(aBitmap, false, TYPE_BONUS, aX, aY, aCollisionSize, moveProperties);
     }
 
     @Override

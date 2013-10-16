@@ -1,14 +1,14 @@
 package com.spacemangames.library;
 
-import com.spacemangames.framework.CircularMoveProperties;
+import com.spacemangames.framework.IMoveProperties;
 
 public class SpacePlanetObject extends SpaceObject {
     private boolean mDOI;    // DOI = Death On Impact
     public float    mGravity;
 
     public SpacePlanetObject(String aBitmap, boolean lazyLoading, int aX, int aY, float aGrav, int aCollisionSize, boolean aDOI,
-            CircularMoveProperties aMove) {
-        super(aBitmap, lazyLoading, TYPE_PLANET, aX, aY, aCollisionSize, aMove);
+            IMoveProperties moveProperties) {
+        super(aBitmap, lazyLoading, TYPE_PLANET, aX, aY, aCollisionSize, moveProperties);
 
         mGravity = aGrav;
         mDOI = aDOI;

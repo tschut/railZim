@@ -1,10 +1,10 @@
 package com.spacemangames.library;
 
-import com.spacemangames.framework.CircularMoveProperties;
+import com.spacemangames.framework.IMoveProperties;
 
 public class SpaceRocketObject extends SpaceObject {
-    public SpaceRocketObject(String aBitmap, int aX, int aY, int aCollisionSize, CircularMoveProperties aMove) {
-        super(aBitmap, false, TYPE_ROCKET, aX, aY, aCollisionSize, aMove);
+    public SpaceRocketObject(String aBitmap, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
+        super(aBitmap, false, TYPE_ROCKET, aX, aY, aCollisionSize, moveProperties);
     }
 
     @Override

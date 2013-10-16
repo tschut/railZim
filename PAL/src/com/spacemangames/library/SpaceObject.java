@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.spacemangames.framework.IMoveProperties;
-import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IBitmap;
 import com.spacemangames.pal.IRenderer;
@@ -57,19 +56,19 @@ public abstract class SpaceObject {
 
     protected Rect             mRect;
 
-    protected CircularMoveProperties   mMove;
+    protected IMoveProperties  mMove;
     protected MouseJoint       mMouseJoint;
     protected Body             mMouseJointBody;
     private final Vector2      mMoveScratchVect           = new Vector2(0, 0);
 
-    public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, CircularMoveProperties aMove) {
+    public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
         if (aBitmap != null) // objects don't always have a bitmap (e.g.
                              // SpaceBackgroundObject)
             mBitmap = PALManager.getBitmapFactory().createBitmap(aBitmap, lazyLoading);
         mType = aType;
         mStartX = aX;
         mStartY = aY;
-        mMove = aMove;
+        mMove = moveProperties;
 
         mRect = new Rect();
 
@@ -176,16 +175,15 @@ public abstract class SpaceObject {
     }
 
     public void updateMoving(double aElapsed) {
-        if (mMouseJoint == null || !mMove.isMove())
-            return;
+        if (mMouseJoint != null) {
+            mMove.elapse(aElapsed);
+            mMoveScratchVect.set(mMove.getPos().x, mMove.getPos().y);
+            toBox2DCoords(mMoveScratchVect);
 
-        mMove.elapse(aElapsed);
-        mMoveScratchVect.set(mMove.getPos().x, mMove.getPos().y);
-        toBox2DCoords(mMoveScratchVect);
+            mMoveScratchVect.add(toBox2DCoords(mStartX), toBox2DCoords(mStartY));
 
-        mMoveScratchVect.add(toBox2DCoords(mStartX), toBox2DCoords(mStartY));
-
-        mMouseJoint.setTarget(mMoveScratchVect);
+            mMouseJoint.setTarget(mMoveScratchVect);
+        }
     }
 
     public void updatePositions() {

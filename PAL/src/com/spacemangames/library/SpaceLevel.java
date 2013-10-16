@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.framework.GameState;
-import com.spacemangames.framework.CircularMoveProperties;
+import com.spacemangames.framework.IMoveProperties;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.math.PointF;
 import com.spacemangames.pal.IBitmap;
@@ -88,24 +88,24 @@ public class SpaceLevel {
         return null;
     }
 
-    public void addSpaceMan(int aX, int aY, String aBitmap, String aArrowBitmap, int aCollisionSize, CircularMoveProperties aMoveProperties) {
-        SpaceManObject lObject = new SpaceManObject(aBitmap, aX, aY, aArrowBitmap, aCollisionSize, aMoveProperties);
+    public void addSpaceMan(int aX, int aY, String aBitmap, String aArrowBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceManObject lObject = new SpaceManObject(aBitmap, aX, aY, aArrowBitmap, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 
     public void addPlanet(int aX, int aY, String aBitmap, boolean lazyLoading, float aGrav, int aCollisionSize, boolean aDOI,
-            CircularMoveProperties aMove) {
-        SpacePlanetObject lObject = new SpacePlanetObject(aBitmap, lazyLoading, aX, aY, aGrav, aCollisionSize, aDOI, aMove);
+            IMoveProperties moveProperties) {
+        SpacePlanetObject lObject = new SpacePlanetObject(aBitmap, lazyLoading, aX, aY, aGrav, aCollisionSize, aDOI, moveProperties);
         mObjects.add(lObject);
     }
 
-    public void addRocket(int aX, int aY, String aBitmap, int aCollisionSize, CircularMoveProperties aMove) {
-        SpaceRocketObject lObject = new SpaceRocketObject(aBitmap, aX, aY, aCollisionSize, aMove);
+    public void addRocket(int aX, int aY, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceRocketObject lObject = new SpaceRocketObject(aBitmap, aX, aY, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 
-    public void addBonus(int aX, int aY, String aBitmap, int aCollisionSize, CircularMoveProperties aMove) {
-        SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, aX, aY, aCollisionSize, aMove);
+    public void addBonus(int aX, int aY, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, aX, aY, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 
