@@ -17,12 +17,12 @@ public class PointF {
         this.y = y;
     }
 
-    public void mul(float factor) {
+    public void multiply(float factor) {
         x *= factor;
         y *= factor;
     }
 
-    public float len() {
+    public float length() {
         return (float) Math.sqrt(x * x + y * y);
     }
 }

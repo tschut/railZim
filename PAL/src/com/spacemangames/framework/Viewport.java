@@ -2,13 +2,14 @@ package com.spacemangames.framework;
 
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.library.SpaceData;
+import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class Viewport {
     private static final String TAG                   = Viewport.class.getSimpleName();
 
-    private Vector2             flingSpeed;
+    private PointF              flingSpeed;
     private Rect                viewport;
     private boolean             flinging;
     private boolean             focusOnSpaceman;
@@ -34,17 +35,17 @@ public class Viewport {
         this.prevX = prevX;
         this.prevY = prevY;
 
-        flingSpeed = new Vector2(0, 0);
+        flingSpeed = new PointF();
         viewport = new Rect();
         viewportDragStart = new Vector2(0, 0);
         screenRect = new Rect();
     }
 
-    public Vector2 getFlingSpeed() {
+    public PointF getFlingSpeed() {
         return flingSpeed;
     }
 
-    public void setFlingSpeed(Vector2 flingSpeed) {
+    public void setFlingSpeed(PointF flingSpeed) {
         this.flingSpeed = flingSpeed;
     }
 

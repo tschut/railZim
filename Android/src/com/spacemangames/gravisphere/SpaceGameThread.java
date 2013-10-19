@@ -9,7 +9,6 @@ import android.os.SystemClock;
 import android.util.FloatMath;
 import android.view.SurfaceHolder;
 
-import com.badlogic.gdx.math.Vector2;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.GameState;
@@ -19,6 +18,7 @@ import com.spacemangames.framework.Viewport;
 import com.spacemangames.gravisphere.pal.AndroidRenderer;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
+import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
@@ -55,7 +55,7 @@ public class SpaceGameThread extends GameThread {
         // Start in STATE_LOADING
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
-        mViewport.setFlingSpeed(new Vector2(0, 0));
+        mViewport.setFlingSpeed(new PointF());
 
         mViewportScratch = new Rect();
 
@@ -119,8 +119,8 @@ public class SpaceGameThread extends GameThread {
                 // Are we flinging the canvas?
                 if (mViewport.isFlinging()) {
                     mViewport.moveViewport(mViewport.getFlingSpeed().x * lElapsed, mViewport.getFlingSpeed().y * lElapsed);
-                    mViewport.getFlingSpeed().mul(Viewport.FLING_DAMPING_FACTOR);
-                    if (mViewport.getFlingSpeed().len() < Viewport.FLING_STOP_THRESHOLD)
+                    mViewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
+                    if (mViewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
                         mViewport.setFlinging(false);
                 }
 

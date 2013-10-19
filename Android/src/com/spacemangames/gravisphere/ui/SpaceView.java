@@ -188,7 +188,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             mDragging = false;
             lThread.mViewport.stopViewportDrag();
             long lCurrentTime = System.nanoTime();
-            float lLen = lThread.mViewport.getFlingSpeed().len();
+            float lLen = lThread.mViewport.getFlingSpeed().length();
             if (lLen > MIN_SPEED_FOR_FLING && lCurrentTime - mPreviousTime < MAX_TIME_FOR_FLING) {
                 if (lLen > MAX_FLING_SPEED) {
                     lThread.mViewport.getFlingSpeed().x = (lThread.mViewport.getFlingSpeed().x / lLen) * MAX_FLING_SPEED;

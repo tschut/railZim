@@ -40,36 +40,36 @@ public class PointFTest {
     }
 
     @Test
-    public void testMulOriginPoint() {
+    public void testMultiplyOriginPoint() {
         PointF point = new PointF();
 
-        point.mul(15);
+        point.multiply(15);
 
         Assert.assertEquals(0.0f, point.x);
         Assert.assertEquals(0.0f, point.y);
     }
 
     @Test
-    public void testMul() {
+    public void testMultiply() {
         PointF point = new PointF(1, 1);
 
-        point.mul(15);
+        point.multiply(15);
 
         Assert.assertEquals(15f, point.x, DELTA);
         Assert.assertEquals(15f, point.y, DELTA);
     }
 
     @Test
-    public void testLenNullPoint() {
+    public void testLengthNullPoint() {
         PointF point = new PointF();
 
-        Assert.assertEquals(0f, point.len(), DELTA);
+        Assert.assertEquals(0f, point.length(), DELTA);
     }
 
     @Test
-    public void testLen() {
+    public void testLength() {
         PointF point = new PointF(4, 4);
 
-        Assert.assertEquals(Math.sqrt(32), point.len(), DELTA);
+        Assert.assertEquals(Math.sqrt(32), point.length(), DELTA);
     }
 }
