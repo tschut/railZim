@@ -5,7 +5,7 @@ import com.spacemangames.pal.PALManager;
 public enum SpaceGameState {
     INSTANCE;
 
-    private static final String TAG = "SpaceGameState";
+    private static final String TAG = SpaceGameState.class.getSimpleName();
 
     private SpaceGameState() {
         state = GameState.INVALID;
