@@ -76,17 +76,16 @@ public class Viewport {
         float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasWidth;
         float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasHeight;
         float scale = Math.max(scaleWidth, scaleHeight);
-        PALManager.getLog().i(TAG, "scale: " + scale);
         if (scale > 1) {
             zoomViewport(scale - 1);
         }
 
-        PALManager.getLog().i(TAG, "viewport: " + getViewport().width() + " " + getViewport().height());
+        PALManager.getLog().i(TAG, "viewport: " + viewport.width() + " " + viewport.height());
         setFlinging(false);
     }
 
     public void resetFocusViewportStatus(boolean on) {
-        setFocusOnSpaceman(on);
+        focusOnSpaceman = on;
         focusX = on;
         focusY = on;
         prevX = 0;
@@ -94,18 +93,11 @@ public class Viewport {
     }
 
     public void focusViewportOnSpaceman() {
-        SpaceData data = SpaceData.getInstance();
-        float curX = data.mCurrentLevel.getSpaceManObject().mX;
-        float curY = data.mCurrentLevel.getSpaceManObject().mY;
+        PointF position = SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition();
 
-        synchronized (getViewport()) {
-            float viewCenterX = getViewport().left + getViewport().width() / 2;
-            float viewCenterY = getViewport().top + getViewport().height() / 2;
-
-            int offsetX = Math.round(curX - viewCenterX);
-            int offsetY = Math.round(curY - viewCenterY);
-
-            viewport.offset(offsetX, offsetY);
+        synchronized (viewport) {
+            position.subtract(viewport.center());
+            viewport.offset(position);
         }
 
         setFlinging(false);

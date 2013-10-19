@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.spacemangames.framework.IMoveProperties;
+import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IBitmap;
 import com.spacemangames.pal.IRenderer;
@@ -313,5 +314,9 @@ public abstract class SpaceObject {
 
     public void releaseLazyMemory() {
         mBitmap.releaseLazyMemory();
+    }
+
+    public PointF getPosition() {
+        return new PointF(mX, mY);
     }
 }

@@ -25,6 +25,10 @@ public class Rect {
         set(other.left, other.top, other.right, other.bottom);
     }
 
+    public PointF center() {
+        return new PointF(exactCenterX(), exactCenterY());
+    }
+
     private int center(int small, int big) {
         return small + ((big - small) / 2);
     }
@@ -62,6 +66,10 @@ public class Rect {
         right = right + x;
         top = top + y;
         bottom = bottom + y;
+    }
+
+    public void offset(PointF offset) {
+        offset((int) offset.x, (int) offset.y);
     }
 
     public boolean isEmpty() {

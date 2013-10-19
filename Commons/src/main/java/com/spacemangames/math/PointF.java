@@ -25,4 +25,9 @@ public class PointF {
     public float length() {
         return (float) Math.sqrt(x * x + y * y);
     }
+
+    public void subtract(PointF pointF) {
+        x -= pointF.x;
+        y -= pointF.y;
+    }
 }

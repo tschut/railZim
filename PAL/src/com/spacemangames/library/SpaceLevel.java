@@ -89,7 +89,7 @@ public class SpaceLevel {
     }
 
     public void addSpaceMan(int aX, int aY, String aBitmap, String aArrowBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceManObject lObject = new SpaceManObject(aBitmap, aX, aY, aArrowBitmap, aCollisionSize, moveProperties);
+        SpaceObject lObject = new SpaceManObject(aBitmap, aX, aY, aArrowBitmap, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 

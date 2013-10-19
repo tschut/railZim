@@ -72,4 +72,14 @@ public class PointFTest {
 
         Assert.assertEquals(Math.sqrt(32), point.length(), DELTA);
     }
+
+    @Test
+    public void testSubtract() {
+        PointF point = new PointF(10, 12);
+
+        point.subtract(new PointF(3, 4));
+
+        Assert.assertEquals(7f, point.x, DELTA);
+        Assert.assertEquals(8f, point.y, DELTA);
+    }
 }
