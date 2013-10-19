@@ -39,19 +39,10 @@ public enum SpaceGameState {
     }
 
     public synchronized void setState(GameState state) {
-        if (state == GameState.PAUSED) { // use setPaused (true) for this
-            PALManager.getLog().e(TAG, "Trying to setState(STATE_PAUSED). Use setPaused(true) instead");
-        }
-
         PALManager.getLog().i(TAG, "Changing state from " + state + " to " + state);
 
         updateTimeTick();
-
-        if (state == GameState.PAUSED) {
-            lastState = state;
-        } else {
-            this.state = state;
-        }
+        this.state = state;
     }
 
     public synchronized void setPaused(boolean pause) {
