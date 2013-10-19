@@ -1,19 +1,15 @@
 package com.spacemangames.framework;
 
-import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.math.Rect;
 import com.spacemangames.math.RectF;
 
 public class SpaceUtil {
     private static float SCALE_FOR_RESOLUTION = 1.0f;
 
-    private static RectF SCRATCH_RECTF1      = new RectF();
-    private static RectF SCRATCH_RECTF2      = new RectF();
+    private static float DPI;
 
-    public static float  DPI;
-
-    public static float  BASELINE_WIDTH      = 800f;
-    public static float  BASELINE_HEIGHT     = 480f;
+    public static float  BASELINE_WIDTH       = 800f;
+    public static float  BASELINE_HEIGHT      = 480f;
 
     public static void init(float xDpi, float yDpi) {
         DPI = Math.min(xDpi, yDpi);
@@ -52,7 +48,7 @@ public class SpaceUtil {
         return ((float) out.height() / (float) in.height()) * y;
     }
 
-    public static float transformX(RectF in, RectF out, float x) {
+    private static float transformX(RectF in, RectF out, float x) {
         return (out.width() / in.width()) * (x - in.left);
     }
 
@@ -60,24 +56,11 @@ public class SpaceUtil {
         return ((float) out.width() / (float) in.width()) * (x - in.left);
     }
 
-    public static float transformY(RectF in, RectF out, float y) {
+    private static float transformY(RectF in, RectF out, float y) {
         return (out.height() / in.height()) * (y - in.top);
     }
 
     public static float transformY(Rect in, Rect out, float y) {
         return ((float) out.height() / (float) in.height()) * (y - in.top);
     }
-
-    public static void transformCoordinates(Rect in, Rect out, Vector2 vector) {
-        SCRATCH_RECTF1.set(in);
-        SCRATCH_RECTF2.set(out);
-        transformCoordinates(SCRATCH_RECTF1, SCRATCH_RECTF2, vector);
-    }
-
-    public static void transformCoordinates(RectF in, RectF out, Vector2 vector) {
-        float lTransformedX = transformX(in, out, vector.x);
-        float lTransformedY = transformY(in, out, vector.y);
-        vector.set(lTransformedX, lTransformedY);
-    }
-
 }
