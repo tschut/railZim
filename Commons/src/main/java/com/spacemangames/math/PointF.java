@@ -16,4 +16,9 @@ public class PointF {
         this.x = x;
         this.y = y;
     }
+
+    public void mul(float factor) {
+        x *= factor;
+        y *= factor;
+    }
 }

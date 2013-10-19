@@ -39,4 +39,23 @@ public class PointFTest {
         Assert.assertEquals(7.3, point.y, DELTA);
     }
 
+    @Test
+    public void testMulOriginPoint() {
+        PointF point = new PointF();
+
+        point.mul(15);
+
+        Assert.assertEquals(0.0f, point.x);
+        Assert.assertEquals(0.0f, point.y);
+    }
+
+    @Test
+    public void testMul() {
+        PointF point = new PointF(1, 1);
+
+        point.mul(15);
+
+        Assert.assertEquals(15f, point.x, DELTA);
+        Assert.assertEquals(15f, point.y, DELTA);
+    }
 }
