@@ -1,6 +1,5 @@
 package com.spacemangames.framework;
 
-import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
@@ -18,7 +17,7 @@ public class Viewport {
     private float               prevX;
     private float               prevY;
     private boolean             draggingViewport;
-    private Vector2             viewportDragStart;
+    private PointF              viewportDragStart;
 
     // The screen
     public Rect                 screenRect;
@@ -37,7 +36,7 @@ public class Viewport {
 
         flingSpeed = new PointF();
         viewport = new Rect();
-        viewportDragStart = new Vector2(0, 0);
+        viewportDragStart = new PointF();
         screenRect = new Rect();
     }
 
