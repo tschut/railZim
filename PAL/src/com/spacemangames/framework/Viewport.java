@@ -6,106 +6,76 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class Viewport {
-    public static final String TAG                   = Viewport.class.getSimpleName();
+    private static final String TAG                   = Viewport.class.getSimpleName();
 
-    private Vector2            mFlingSpeed;
-    private Rect               mViewport;
-    /** Used for flinging */
-    private boolean            mFlinging;
-    private boolean            mFocusOnSpaceman;
-    private boolean            mFocusX;
-    private boolean            mFocusY;
-    private float              mPrevX;
-    private float              mPrevY;
-    private boolean            mDraggingViewport;
-    private Vector2            mViewportDragStart;
+    private Vector2             flingSpeed;
+    private Rect                viewport;
+    private boolean             flinging;
+    private boolean             focusOnSpaceman;
+    private boolean             focusX;
+    private boolean             focusY;
+    private float               prevX;
+    private float               prevY;
+    private boolean             draggingViewport;
+    private Vector2             viewportDragStart;
 
     // The screen
-    public Rect                mScreenRect;
+    public Rect                 screenRect;
 
-    public static final int    AUTO_FOCUS_MIN_PIXELS = 3;
-    public static final float  AUTO_FOCUS_DAMPING    = 1.0f;
-    public static final float  FLING_STOP_THRESHOLD  = 10f;
-    public static final float  FLING_DAMPING_FACTOR  = 0.9f;
+    public static final int     AUTO_FOCUS_MIN_PIXELS = 3;
+    public static final float   AUTO_FOCUS_DAMPING    = 1.0f;
+    public static final float   FLING_STOP_THRESHOLD  = 10f;
+    public static final float   FLING_DAMPING_FACTOR  = 0.9f;
 
-    public Viewport(boolean aFocusOnSpaceman, boolean aFocusX, boolean aFocusY, float aPrevX, float aPrevY) {
-        mFocusOnSpaceman = aFocusOnSpaceman;
-        mFocusX = aFocusX;
-        mFocusY = aFocusY;
-        mPrevX = aPrevX;
-        mPrevY = aPrevY;
+    public Viewport(boolean focusOnSpaceman, boolean focusX, boolean focusY, float prevX, float prevY) {
+        this.focusOnSpaceman = focusOnSpaceman;
+        this.focusX = focusX;
+        this.focusY = focusY;
+        this.prevX = prevX;
+        this.prevY = prevY;
 
-        mFlingSpeed = new Vector2(0, 0);
-        mViewport = new Rect();
-        mViewportDragStart = new Vector2(0, 0);
-        mScreenRect = new Rect();
+        flingSpeed = new Vector2(0, 0);
+        viewport = new Rect();
+        viewportDragStart = new Vector2(0, 0);
+        screenRect = new Rect();
     }
 
     public Vector2 getFlingSpeed() {
-        return mFlingSpeed;
+        return flingSpeed;
     }
 
-    public void setFlingSpeed(Vector2 aFlingSpeed) {
-        mFlingSpeed = aFlingSpeed;
+    public void setFlingSpeed(Vector2 flingSpeed) {
+        this.flingSpeed = flingSpeed;
     }
 
     public Rect getViewport() {
-        return mViewport;
-    }
-
-    public void setViewport(Rect aViewport) {
-        mViewport = aViewport;
+        return viewport;
     }
 
     public boolean isFlinging() {
-        return mFlinging;
+        return flinging;
     }
 
-    public void setFlinging(boolean aFlinging) {
-        mFlinging = aFlinging;
+    public void setFlinging(boolean flinging) {
+        this.flinging = flinging;
     }
 
     public boolean isFocusOnSpaceman() {
-        return mFocusOnSpaceman;
+        return focusOnSpaceman;
     }
 
-    public void setFocusOnSpaceman(boolean aFocusOnSpaceman) {
-        mFocusOnSpaceman = aFocusOnSpaceman;
+    public void setFocusOnSpaceman(boolean focusOnSpaceman) {
+        this.focusOnSpaceman = focusOnSpaceman;
     }
 
-    public boolean isFocusX() {
-        return mFocusX;
-    }
-
-    public void setFocusX(boolean aFocusX) {
-        mFocusX = aFocusX;
-    }
-
-    public boolean isFocusY() {
-        return mFocusY;
-    }
-
-    public void setFocusY(boolean aFocusY) {
-        mFocusY = aFocusY;
-    }
-
-    public boolean isDraggingViewport() {
-        return mDraggingViewport;
-    }
-
-    public void setDraggingViewport(boolean aDraggingViewport) {
-        mDraggingViewport = aDraggingViewport;
-    }
-
-    public void reset(int aX, int aY, int aCanvasWidth, int aCanvasHeight) {
-        mScreenRect.set(0, 0, aCanvasWidth, aCanvasHeight);
-        synchronized (mViewport) {
-            mViewport.set(aX - aCanvasWidth / 2, aY - aCanvasHeight / 2, aX + aCanvasWidth / 2, aY + aCanvasHeight / 2);
+    public void reset(int x, int y, int canvasWidth, int canvasHeight) {
+        screenRect.set(0, 0, canvasWidth, canvasHeight);
+        synchronized (viewport) {
+            viewport.set(x - canvasWidth / 2, y - canvasHeight / 2, x + canvasWidth / 2, y + canvasHeight / 2);
         }
-        float scaleWidth = SpaceUtil.BASELINE_WIDTH / aCanvasWidth;
-        float scaleHeight = SpaceUtil.BASELINE_HEIGHT / aCanvasHeight;
+        float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasWidth;
+        float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasHeight;
         float scale = Math.max(scaleWidth, scaleHeight);
-        PALManager.getLog().i(TAG, "viewport: " + getViewport().width() + " " + getViewport().height());
         PALManager.getLog().i(TAG, "scale: " + scale);
         if (scale > 1) {
             zoomViewport(scale - 1);
@@ -115,116 +85,116 @@ public class Viewport {
         setFlinging(false);
     }
 
-    public void resetFocusViewportStatus(boolean aOn) {
-        setFocusOnSpaceman(aOn);
-        setFocusX(aOn);
-        setFocusY(aOn);
-        mPrevX = 0;
-        mPrevY = 0;
+    public void resetFocusViewportStatus(boolean on) {
+        setFocusOnSpaceman(on);
+        focusX = on;
+        focusY = on;
+        prevX = 0;
+        prevY = 0;
     }
 
     public void focusViewportOnSpaceman() {
-        SpaceData lData = SpaceData.getInstance();
-        float lCurX = lData.mCurrentLevel.getSpaceManObject().mX;
-        float lCurY = lData.mCurrentLevel.getSpaceManObject().mY;
+        SpaceData data = SpaceData.getInstance();
+        float curX = data.mCurrentLevel.getSpaceManObject().mX;
+        float curY = data.mCurrentLevel.getSpaceManObject().mY;
 
         synchronized (getViewport()) {
-            float lViewCenterX = getViewport().left + getViewport().width() / 2;
-            float lViewCenterY = getViewport().top + getViewport().height() / 2;
+            float viewCenterX = getViewport().left + getViewport().width() / 2;
+            float viewCenterY = getViewport().top + getViewport().height() / 2;
 
-            int lOffsetX = Math.round(lCurX - lViewCenterX);
-            int lOffsetY = Math.round(lCurY - lViewCenterY);
+            int offsetX = Math.round(curX - viewCenterX);
+            int offsetY = Math.round(curY - viewCenterY);
 
-            mViewport.offset(lOffsetX, lOffsetY);
+            viewport.offset(offsetX, offsetY);
         }
 
         setFlinging(false);
     }
 
     public void viewportFollowSpaceman() {
-        SpaceData lData = SpaceData.getInstance();
-        float lCurX = lData.mCurrentLevel.getSpaceManObject().mX;
-        float lCurY = lData.mCurrentLevel.getSpaceManObject().mY;
+        SpaceData spaceData = SpaceData.getInstance();
+        float curX = spaceData.mCurrentLevel.getSpaceManObject().mX;
+        float curY = spaceData.mCurrentLevel.getSpaceManObject().mY;
 
-        synchronized (mViewport) {
-            float lViewCenterX = mViewport.left + mViewport.width() / 2f;
-            float lViewCenterY = mViewport.top + mViewport.height() / 2f;
+        synchronized (viewport) {
+            float viewCenterX = viewport.left + viewport.width() / 2f;
+            float viewCenterY = viewport.top + viewport.height() / 2f;
 
-            if (mPrevX == 0)
-                mPrevX = lCurX;
-            if (mPrevY == 0)
-                mPrevY = lCurY;
+            if (prevX == 0)
+                prevX = curX;
+            if (prevY == 0)
+                prevY = curY;
 
-            if (isFocusX() == false) {
-                if (mPrevX < lViewCenterX && lCurX >= lViewCenterX || mPrevX > lViewCenterX && lCurX < lViewCenterX) {
-                    setFocusX(true);
+            if (focusX == false) {
+                if (prevX < viewCenterX && curX >= viewCenterX || prevX > viewCenterX && curX < viewCenterX) {
+                    focusX = true;
                 }
             }
-            if (isFocusY() == false) {
-                if (mPrevY < lViewCenterY && lCurY > lViewCenterY || mPrevY > lViewCenterY && lCurY < lViewCenterY) {
-                    setFocusY(true);
+            if (focusY == false) {
+                if (prevY < viewCenterY && curY > viewCenterY || prevY > viewCenterY && curY < viewCenterY) {
+                    focusY = true;
                 }
             }
 
-            float lOffsetX = 0;
-            float lOffsetY = 0;
+            float offsetX = 0;
+            float offsetY = 0;
 
-            if (isFocusX())
-                lOffsetX = Math.round(lCurX - lViewCenterX);
-            if (isFocusY())
-                lOffsetY = Math.round(lCurY - lViewCenterY);
+            if (focusX)
+                offsetX = Math.round(curX - viewCenterX);
+            if (focusY)
+                offsetY = Math.round(curY - viewCenterY);
 
-            float lOffsetXDamped = lOffsetX * AUTO_FOCUS_DAMPING;
-            float lOffsetYDamped = lOffsetY * AUTO_FOCUS_DAMPING;
+            float offsetXDamped = offsetX * AUTO_FOCUS_DAMPING;
+            float offsetYDamped = offsetY * AUTO_FOCUS_DAMPING;
 
-            if (lOffsetX >= AUTO_FOCUS_MIN_PIXELS && lOffsetXDamped < AUTO_FOCUS_MIN_PIXELS)
-                lOffsetXDamped = AUTO_FOCUS_MIN_PIXELS;
-            if (lOffsetY >= AUTO_FOCUS_MIN_PIXELS && lOffsetYDamped < AUTO_FOCUS_MIN_PIXELS)
-                lOffsetYDamped = AUTO_FOCUS_MIN_PIXELS;
+            if (offsetX >= AUTO_FOCUS_MIN_PIXELS && offsetXDamped < AUTO_FOCUS_MIN_PIXELS)
+                offsetXDamped = AUTO_FOCUS_MIN_PIXELS;
+            if (offsetY >= AUTO_FOCUS_MIN_PIXELS && offsetYDamped < AUTO_FOCUS_MIN_PIXELS)
+                offsetYDamped = AUTO_FOCUS_MIN_PIXELS;
 
-            mViewport.offset(Math.round(lOffsetXDamped), Math.round(lOffsetYDamped));
+            viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
         }
 
-        mPrevX = lCurX;
-        mPrevY = lCurY;
+        prevX = curX;
+        prevY = curY;
     }
 
-    public void startViewportDrag(float lX, float lY) {
-        setDraggingViewport(true);
-        mViewportDragStart.set(lX, lY);
+    public void startViewportDrag(float x, float y) {
+        draggingViewport = true;
+        viewportDragStart.set(x, y);
     }
 
-    public void dragViewport(float lX, float lY) {
-        if (isDraggingViewport())
-            moveViewport((mViewportDragStart.x - lX), (mViewportDragStart.y - lY));
+    public void dragViewport(float x, float y) {
+        if (draggingViewport)
+            moveViewport((viewportDragStart.x - x), (viewportDragStart.y - y));
 
-        mViewportDragStart.set(lX, lY);
+        viewportDragStart.set(x, y);
     }
 
-    public void moveViewport(float aX, float aY) {
-        synchronized (mViewport) {
-            mViewport.offset((int) (aX * currentZoom()), (int) (aY * currentZoom()));
+    public void moveViewport(float x, float y) {
+        synchronized (viewport) {
+            viewport.offset((int) (x * currentZoom()), (int) (y * currentZoom()));
         }
     }
 
-    public void zoomViewport(float lZoom) {
-        PALManager.getLog().i(TAG, "lZoom: " + lZoom);
+    public void zoomViewport(float zoom) {
+        PALManager.getLog().i(TAG, "zoom: " + zoom);
         synchronized (getViewport()) {
             // don't zoom in further than the max
-            if (getViewport().width() == mScreenRect.width() && lZoom < 0) {
+            if (viewport.width() == screenRect.width() && zoom < 0) {
                 return;
             }
-            float lVerticalZoom = lZoom * mViewport.height();
-            float lHorizontalZoom = lZoom * mViewport.width();
-            mViewport.bottom += lVerticalZoom / 2.0f;
-            mViewport.top -= lVerticalZoom / 2.0f;
-            mViewport.left -= lHorizontalZoom / 2.0f;
-            mViewport.right += lHorizontalZoom / 2.0f;
+            float verticalZoom = zoom * viewport.height();
+            float horizontalZoom = zoom * viewport.width();
+            viewport.bottom += verticalZoom / 2.0f;
+            viewport.top -= verticalZoom / 2.0f;
+            viewport.left -= horizontalZoom / 2.0f;
+            viewport.right += horizontalZoom / 2.0f;
 
             // we can't zoom in further than the canvas size...
-            if (mViewport.width() < mScreenRect.width() || mViewport.height() < mScreenRect.height()) {
-                mViewport.right = mViewport.left + mScreenRect.width();
-                mViewport.bottom = mViewport.top + mScreenRect.height();
+            if (viewport.width() < screenRect.width() || viewport.height() < screenRect.height()) {
+                viewport.right = viewport.left + screenRect.width();
+                viewport.bottom = viewport.top + screenRect.height();
             }
 
             moveViewport(0, 0); // this will check boundaries
@@ -232,26 +202,20 @@ public class Viewport {
     }
 
     public void stopViewportDrag() {
-        setDraggingViewport(false);
+        draggingViewport = false;
     }
 
-    public float currentZoom() {
-        return (float) getViewport().width() / mScreenRect.width();
+    private float currentZoom() {
+        return (float) getViewport().width() / screenRect.width();
     }
 
     public boolean isValid() {
-        if (mViewport.width() <= 1)
+        if (viewport.width() <= 1)
             return false;
 
-        if (mViewport.width() < mViewport.height())
+        if (viewport.width() < viewport.height())
             return false;
 
         return true;
-    }
-
-    public void invalidate() {
-        synchronized (mViewport) {
-            mViewport.set(0, 0, 0, 0);
-        }
     }
 }

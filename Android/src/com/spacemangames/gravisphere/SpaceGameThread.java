@@ -214,7 +214,7 @@ public class SpaceGameThread extends GameThread {
     // The actual drawing happens here :)
     private void doDraw(Canvas aCanvas) {
         if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
-            mRenderer.initialize(aCanvas, mViewportScratch, mViewport.mScreenRect);
+            mRenderer.initialize(aCanvas, mViewportScratch, mViewport.screenRect);
             mSpaceData.mCurrentLevel.draw(mRenderer);
         }
     }

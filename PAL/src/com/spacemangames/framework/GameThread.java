@@ -53,9 +53,9 @@ public abstract class GameThread extends Thread {
     public boolean hitsSpaceMan(float aX, float aY) {
         float lSpaceManX = 0, lSpaceManY = 0;
         synchronized (mViewport.getViewport()) {
-            lSpaceManX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.mScreenRect,
+            lSpaceManX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.screenRect,
                     mSpaceData.mCurrentLevel.getSpaceManObject().mX);
-            lSpaceManY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.mScreenRect,
+            lSpaceManY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.screenRect,
                     mSpaceData.mCurrentLevel.getSpaceManObject().mY);
         }
 
@@ -72,8 +72,8 @@ public abstract class GameThread extends Thread {
         int lCount = lObjects.size();
         for (int i = 0; i < lCount; ++i) {
             SpaceObject lObject = lObjects.get(i);
-            float lObjectX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.mScreenRect, lObject.mX);
-            float lObjectY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.mScreenRect, lObject.mY);
+            float lObjectX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.screenRect, lObject.mX);
+            float lObjectY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.screenRect, lObject.mY);
             double lDistance = Math.sqrt((aX - lObjectX) * (aX - lObjectX) + (aY - lObjectY) * (aY - lObjectY));
 
             if (lDistance < lObject.getBitmap().getWidth() / 2)
