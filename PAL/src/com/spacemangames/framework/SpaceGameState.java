@@ -74,8 +74,7 @@ public enum SpaceGameState {
     }
 
     public synchronized float getElapsedTime() {
-        long lNow = System.nanoTime();
-        return (lNow - lastTime) / 1000000000f;
+        return (System.nanoTime() - lastTime) / 1000000000f;
     }
 
     public synchronized void updateTimeTick() {
