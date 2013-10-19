@@ -1,7 +1,6 @@
 package com.spacemangames.framework;
 
 import com.spacemangames.math.Rect;
-import com.spacemangames.math.RectF;
 
 public class SpaceUtil {
     private static float SCALE_FOR_RESOLUTION = 1.0f;
@@ -48,16 +47,8 @@ public class SpaceUtil {
         return ((float) out.height() / (float) in.height()) * y;
     }
 
-    private static float transformX(RectF in, RectF out, float x) {
-        return (out.width() / in.width()) * (x - in.left);
-    }
-
     public static float transformX(Rect in, Rect out, float x) {
         return ((float) out.width() / (float) in.width()) * (x - in.left);
-    }
-
-    private static float transformY(RectF in, RectF out, float y) {
-        return (out.height() / in.height()) * (y - in.top);
     }
 
     public static float transformY(Rect in, Rect out, float y) {
