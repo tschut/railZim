@@ -55,20 +55,18 @@ public enum SpaceGameState {
 
     private void unpause() {
         updateTimeTick();
-        if (state != GameState.PAUSED) {
-            PALManager.getLog().i(TAG, "Resuming while not paused, ignoring.");
-        } else {
+        if (state == GameState.PAUSED) {
             PALManager.getLog().i(TAG, "Resuming. Setting state to: " + lastState);
             state = lastState;
         }
     }
 
     private void pause() {
-        PALManager.getLog().i(TAG, "Pausing. Current state: " + state);
         if (state != GameState.PAUSED) {
+            PALManager.getLog().i(TAG, "Pausing. Current state: " + state);
             lastState = state;
+            state = GameState.PAUSED;
         }
-        state = GameState.PAUSED;
     }
 
     public boolean paused() {
