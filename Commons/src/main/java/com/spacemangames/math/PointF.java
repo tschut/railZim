@@ -21,4 +21,8 @@ public class PointF {
         x *= factor;
         y *= factor;
     }
+
+    public float len() {
+        return (float) Math.sqrt(x * x + y * y);
+    }
 }

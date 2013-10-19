@@ -58,4 +58,18 @@ public class PointFTest {
         Assert.assertEquals(15f, point.x, DELTA);
         Assert.assertEquals(15f, point.y, DELTA);
     }
+
+    @Test
+    public void testLenNullPoint() {
+        PointF point = new PointF();
+
+        Assert.assertEquals(0f, point.len(), DELTA);
+    }
+
+    @Test
+    public void testLen() {
+        PointF point = new PointF(4, 4);
+
+        Assert.assertEquals(Math.sqrt(32), point.len(), DELTA);
+    }
 }
