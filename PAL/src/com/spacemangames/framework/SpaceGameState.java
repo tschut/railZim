@@ -30,11 +30,11 @@ public enum SpaceGameState {
         return predicting;
     }
 
-    public synchronized GameState getState() {
+    public GameState getState() {
         return state;
     }
 
-    public synchronized GameState getLastState() {
+    public GameState getLastState() {
         return lastState;
     }
 
