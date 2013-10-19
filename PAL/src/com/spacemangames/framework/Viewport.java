@@ -6,7 +6,7 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class Viewport {
-    public static final String TAG                   = "Viewport";
+    public static final String TAG                   = Viewport.class.getSimpleName();
 
     private Vector2            mFlingSpeed;
     private Rect               mViewport;
