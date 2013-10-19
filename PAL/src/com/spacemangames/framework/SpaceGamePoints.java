@@ -19,18 +19,22 @@ public class SpaceGamePoints {
     }
 
     public int getCurrentPoints() {
+        updatePoints();
+
         return points;
     }
 
     public synchronized void elapse(int elapsedMilliseconds) {
         totalElapsed += elapsedMilliseconds;
+    }
 
+    private void updatePoints() {
         int pointsDiff = (int) ((totalElapsed / 1000f) * POINTS_PER_SECOND);
-
         points = (POINTS_STARTING + bonusPoints) - pointsDiff;
 
-        if (points < 0)
+        if (points < 0) {
             points = 0;
+        }
     }
 
     public synchronized void bonus(int scoredBonusPoints) {
