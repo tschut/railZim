@@ -102,26 +102,25 @@ public class Viewport {
     }
 
     public void viewportFollowSpaceman() {
-        SpaceData spaceData = SpaceData.getInstance();
-        float curX = spaceData.mCurrentLevel.getSpaceManObject().mX;
-        float curY = spaceData.mCurrentLevel.getSpaceManObject().mY;
+        PointF spacemanPosition = SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition();
 
         synchronized (viewport) {
-            float viewCenterX = viewport.left + viewport.width() / 2f;
-            float viewCenterY = viewport.top + viewport.height() / 2f;
+            PointF viewportCenter = viewport.center();
 
             if (prevX == 0)
-                prevX = curX;
+                prevX = spacemanPosition.x;
             if (prevY == 0)
-                prevY = curY;
+                prevY = spacemanPosition.y;
 
-            if (focusX == false) {
-                if (prevX < viewCenterX && curX >= viewCenterX || prevX > viewCenterX && curX < viewCenterX) {
+            if (!focusX) {
+                if (prevX < viewportCenter.x && spacemanPosition.x >= viewportCenter.x || prevX > viewportCenter.x
+                        && spacemanPosition.x < viewportCenter.x) {
                     focusX = true;
                 }
             }
-            if (focusY == false) {
-                if (prevY < viewCenterY && curY > viewCenterY || prevY > viewCenterY && curY < viewCenterY) {
+            if (!focusY) {
+                if (prevY < viewportCenter.y && spacemanPosition.y > viewportCenter.y || prevY > viewportCenter.y
+                        && spacemanPosition.y < viewportCenter.y) {
                     focusY = true;
                 }
             }
@@ -130,9 +129,9 @@ public class Viewport {
             float offsetY = 0;
 
             if (focusX)
-                offsetX = Math.round(curX - viewCenterX);
+                offsetX = Math.round(spacemanPosition.x - viewportCenter.x);
             if (focusY)
-                offsetY = Math.round(curY - viewCenterY);
+                offsetY = Math.round(spacemanPosition.y - viewportCenter.y);
 
             float offsetXDamped = offsetX * AUTO_FOCUS_DAMPING;
             float offsetYDamped = offsetY * AUTO_FOCUS_DAMPING;
@@ -145,8 +144,8 @@ public class Viewport {
             viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
         }
 
-        prevX = curX;
-        prevY = curY;
+        prevX = spacemanPosition.x;
+        prevY = spacemanPosition.y;
     }
 
     public void startViewportDrag(float x, float y) {
