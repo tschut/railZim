@@ -151,7 +151,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             }
             lResult = true;
         } else if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {
-            lThread.mViewport.focusViewportOnSpaceman();
+            lThread.mViewport.focusOnSpaceman();
         } else if (lAction == MotionEvent.ACTION_DOWN && lHitsArrow) { // recenter
                                                                        // on
                                                                        // spaceman

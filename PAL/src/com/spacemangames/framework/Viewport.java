@@ -92,7 +92,7 @@ public class Viewport {
         prevY = 0;
     }
 
-    public void focusViewportOnSpaceman() {
+    public void focusOnSpaceman() {
         PointF position = SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition();
 
         synchronized (viewport) {
