@@ -22,8 +22,7 @@ public abstract class GameThread extends Thread {
     public Viewport              viewport                  = new Viewport();
     protected boolean            redrawOnce                = false;
     protected boolean            requestFireSpaceman       = false;
-    public int                   canvasHeight              = 1;
-    public int                   canvasWidth               = 1;
+    public Rect                  canvasSize                = new Rect(0, 0, 1, 1);
 
     private LinkedList<Runnable> eventQueue;
 
@@ -137,7 +136,7 @@ public abstract class GameThread extends Thread {
             spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
-            viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasWidth, canvasHeight);
+            viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasSize);
         }
     }
 

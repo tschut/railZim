@@ -61,13 +61,13 @@ public class Viewport {
         this.focusOnSpaceman = focusOnSpaceman;
     }
 
-    public void reset(int x, int y, int canvasWidth, int canvasHeight) {
-        screenRect.set(0, 0, canvasWidth, canvasHeight);
+    public void reset(int x, int y, Rect canvasSize) {
+        screenRect.set(canvasSize);
         synchronized (viewport) {
-            viewport.set(x - canvasWidth / 2, y - canvasHeight / 2, x + canvasWidth / 2, y + canvasHeight / 2);
+            viewport.set(x - canvasSize.centerX(), y - canvasSize.centerY(), x + canvasSize.centerX(), y + canvasSize.centerX());
         }
-        float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasWidth;
-        float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasHeight;
+        float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasSize.width();
+        float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasSize.height();
         float scale = Math.max(scaleWidth, scaleHeight);
         if (scale > 1) {
             zoomViewport(scale - 1);

@@ -200,12 +200,12 @@ public class SpaceGameThread extends GameThread {
         PALManager.getLog().i(TAG, "surface size " + width + "x" + height);
         // synchronized to make sure these all change atomically
         synchronized (mSurfaceHolder) {
-            canvasWidth = width;
-            canvasHeight = height;
+            canvasSize.right = width;
+            canvasSize.bottom = height;
             if (spaceData.mCurrentLevel != null) {
-                viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), width, height);
+                viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasSize);
             } else {
-                viewport.reset(viewport.getViewport().centerX(), viewport.getViewport().centerY(), width, height);
+                viewport.reset(viewport.getViewport().centerX(), viewport.getViewport().centerY(), canvasSize);
             }
             redrawOnce();
         }
@@ -261,9 +261,7 @@ public class SpaceGameThread extends GameThread {
     }
 
     public float canvasDiagonal() {
-        int lW = canvasWidth;
-        int lH = canvasHeight;
-        return FloatMath.sqrt(lW * lW + lH * lH);
+        return FloatMath.sqrt(canvasSize.width() * canvasSize.width() + canvasSize.height() * canvasSize.height());
     }
 
     public void setMsgHandler(Handler aMsgHandler) {
