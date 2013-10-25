@@ -55,7 +55,7 @@ public class SpaceGameThread extends GameThread {
         // Start in STATE_LOADING
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
-        mViewport.setFlingSpeed(new PointF());
+        viewport.setFlingSpeed(new PointF());
 
         mViewportScratch = new Rect();
 
@@ -97,17 +97,17 @@ public class SpaceGameThread extends GameThread {
     public void run() {
         SpaceGameState lGameState = SpaceGameState.INSTANCE;
         long lFpsHelper = 0;
-        while (mRun) {
+        while (running) {
             // handle events that need to run on this thread
             runQueue();
 
             Canvas c = null;
 
             boolean viewportValid = false;
-            synchronized (mViewport.getViewport()) {
-                if (mViewport.isValid()) {
+            synchronized (viewport.getViewport()) {
+                if (viewport.isValid()) {
                     viewportValid = true;
-                    mViewportScratch.set(mViewport.getViewport());
+                    mViewportScratch.set(viewport.getViewport());
                 }
             }
 
@@ -117,25 +117,25 @@ public class SpaceGameThread extends GameThread {
                 lGameState.updateTimeTick();
 
                 // Are we flinging the canvas?
-                if (mViewport.isFlinging()) {
-                    mViewport.moveViewport(mViewport.getFlingSpeed().x * lElapsed, mViewport.getFlingSpeed().y * lElapsed);
-                    mViewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
-                    if (mViewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
-                        mViewport.setFlinging(false);
+                if (viewport.isFlinging()) {
+                    viewport.moveViewport(viewport.getFlingSpeed().x * lElapsed, viewport.getFlingSpeed().y * lElapsed);
+                    viewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
+                    if (viewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
+                        viewport.setFlinging(false);
                 }
 
-                if (mRequestFireSpaceman) {
+                if (requestFireSpaceman) {
                     fireSpaceMan();
-                    mRequestFireSpaceman = false;
+                    requestFireSpaceman = false;
                 }
 
                 parseGameEvents();
                 updatePhysics(lElapsed);
-                if (mViewport.isFocusOnSpaceman())
-                    mViewport.viewportFollowSpaceman();
+                if (viewport.isFocusOnSpaceman())
+                    viewport.viewportFollowSpaceman();
                 if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && lGameState.getState() == GameState.CHARGING) {
                     lGameState.setPredicting(true);
-                    mSpaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
+                    spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
                     lGameState.setPredicting(false);
                 }
                 c = mSurfaceHolder.lockCanvas(null);
@@ -161,10 +161,10 @@ public class SpaceGameThread extends GameThread {
                 if (c != null) {
                     mSurfaceHolder.unlockCanvasAndPost(c);
                 }
-            } else if (mRedrawOnce && mSurfaceHolder != null && !mFrozen) {
+            } else if (redrawOnce && mSurfaceHolder != null && !mFrozen) {
                 c = mSurfaceHolder.lockCanvas(null);
                 if (c != null) {
-                    mRedrawOnce = false;
+                    redrawOnce = false;
                     synchronized (mSurfaceHolder) {
                         doDraw(c);
                         mSurfaceHolder.unlockCanvasAndPost(c);
@@ -200,12 +200,12 @@ public class SpaceGameThread extends GameThread {
         PALManager.getLog().i(TAG, "surface size " + width + "x" + height);
         // synchronized to make sure these all change atomically
         synchronized (mSurfaceHolder) {
-            mCanvasWidth = width;
-            mCanvasHeight = height;
-            if (mSpaceData.mCurrentLevel != null) {
-                mViewport.reset(mSpaceData.mCurrentLevel.startCenterX(), mSpaceData.mCurrentLevel.startCenterY(), width, height);
+            canvasWidth = width;
+            canvasHeight = height;
+            if (spaceData.mCurrentLevel != null) {
+                viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), width, height);
             } else {
-                mViewport.reset(mViewport.getViewport().centerX(), mViewport.getViewport().centerY(), width, height);
+                viewport.reset(viewport.getViewport().centerX(), viewport.getViewport().centerY(), width, height);
             }
             redrawOnce();
         }
@@ -214,8 +214,8 @@ public class SpaceGameThread extends GameThread {
     // The actual drawing happens here :)
     private void doDraw(Canvas aCanvas) {
         if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
-            mRenderer.initialize(aCanvas, mViewportScratch, mViewport.screenRect);
-            mSpaceData.mCurrentLevel.draw(mRenderer);
+            mRenderer.initialize(aCanvas, mViewportScratch, viewport.screenRect);
+            spaceData.mCurrentLevel.draw(mRenderer);
         }
     }
 
@@ -261,8 +261,8 @@ public class SpaceGameThread extends GameThread {
     }
 
     public float canvasDiagonal() {
-        int lW = mCanvasWidth;
-        int lH = mCanvasHeight;
+        int lW = canvasWidth;
+        int lH = canvasHeight;
         return FloatMath.sqrt(lW * lW + lH * lH);
     }
 

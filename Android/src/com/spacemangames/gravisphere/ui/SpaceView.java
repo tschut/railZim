@@ -121,7 +121,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         boolean lHitsArrow = lThread.hitsSpaceManArrow(lX, lY);
 
         // reset the focus viewport stuff
-        lThread.mViewport.resetFocusViewportStatus(false);
+        lThread.viewport.resetFocusViewportStatus(false);
 
         // this can be when the user was pinch-zooming and took only one finger
         // off the screen
@@ -151,28 +151,28 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             }
             lResult = true;
         } else if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {
-            lThread.mViewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
+            lThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
         } else if (lAction == MotionEvent.ACTION_DOWN && lHitsArrow) { // recenter
                                                                        // on
                                                                        // spaceman
-            lThread.mViewport.resetFocusViewportStatus(true);
+            lThread.viewport.resetFocusViewportStatus(true);
         } else if (lAction == MotionEvent.ACTION_DOWN) { // about to move the
                                                          // viewport
-            lThread.mViewport.setFlinging(false);
+            lThread.viewport.setFlinging(false);
             mDragStart.set(lX, lY);
-            lThread.mViewport.startViewportDrag(lX, lY);
+            lThread.viewport.startViewportDrag(lX, lY);
             mIndexInVector = ACCUMULATE_COUNT - 1;
             mPreviousLocations.get(mIndexInVector).set(lX, lY);
-            lThread.mViewport.getFlingSpeed().set(0, 0);
+            lThread.viewport.getFlingSpeed().set(0, 0);
             lResult = true;
         } else if (lAction == MotionEvent.ACTION_MOVE) { // moving the viewport
             if (mDragStart.dst(lX, lY) > MIN_MOVE_BEFORE_DRAG || mDragging) {
                 mDragging = true;
-                lThread.mViewport.dragViewport(lX, lY);
+                lThread.viewport.dragViewport(lX, lY);
                 long lCurrentTime = System.nanoTime();
                 float ldT = (float) ((lCurrentTime - mPreviousTime) / 1000000000d);
-                lThread.mViewport.getFlingSpeed().x = (mPreviousLocations.get(mIndexInVector).x - lX) / ldT;
-                lThread.mViewport.getFlingSpeed().y = (mPreviousLocations.get(mIndexInVector).y - lY) / ldT;
+                lThread.viewport.getFlingSpeed().x = (mPreviousLocations.get(mIndexInVector).x - lX) / ldT;
+                lThread.viewport.getFlingSpeed().y = (mPreviousLocations.get(mIndexInVector).y - lY) / ldT;
                 // shift one left
                 for (int i = 0; i < ACCUMULATE_COUNT - 1; i++)
                     mPreviousLocations.get(i).set(mPreviousLocations.get(i + 1));
@@ -186,15 +186,15 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         } else if (lAction == MotionEvent.ACTION_UP) { // done moving the
                                                        // viewport
             mDragging = false;
-            lThread.mViewport.stopViewportDrag();
+            lThread.viewport.stopViewportDrag();
             long lCurrentTime = System.nanoTime();
-            float lLen = lThread.mViewport.getFlingSpeed().length();
+            float lLen = lThread.viewport.getFlingSpeed().length();
             if (lLen > MIN_SPEED_FOR_FLING && lCurrentTime - mPreviousTime < MAX_TIME_FOR_FLING) {
                 if (lLen > MAX_FLING_SPEED) {
-                    lThread.mViewport.getFlingSpeed().x = (lThread.mViewport.getFlingSpeed().x / lLen) * MAX_FLING_SPEED;
-                    lThread.mViewport.getFlingSpeed().y = (lThread.mViewport.getFlingSpeed().y / lLen) * MAX_FLING_SPEED;
+                    lThread.viewport.getFlingSpeed().x = (lThread.viewport.getFlingSpeed().x / lLen) * MAX_FLING_SPEED;
+                    lThread.viewport.getFlingSpeed().y = (lThread.viewport.getFlingSpeed().y / lLen) * MAX_FLING_SPEED;
                 }
-                lThread.mViewport.setFlinging(true);
+                lThread.viewport.setFlinging(true);
             }
             lResult = true;
         }
@@ -226,7 +226,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             float lZoom = mPreviousDist - lDist;
             if (Math.abs(lZoom) > MIN_MOVE_BEFORE_ZOOM || mZooming) {
                 lZoom = (lZoom / GameThreadHolder.getThread().canvasDiagonal());
-                GameThreadHolder.getThread().mViewport.zoomViewport(lZoom);
+                GameThreadHolder.getThread().viewport.zoomViewport(lZoom);
                 mPreviousDist = lDist;
                 mZooming = true;
             }

@@ -13,103 +13,87 @@ public abstract class GameThread extends Thread {
     public static final double   SPACEMAN_HIT_FUZZYNESS    = 1.4;
     public static final double   ARROW_HIT_RADIUS          = 50;
 
-    /**
-     * Start drawing the prediction if mChargingPower >
-     * DRAW_PREDICTION_THRESHOLD
-     */
     public static final float    DRAW_PREDICTION_THRESHOLD = 1f;
 
     public static final int      BONUS_POINTS              = 500;
 
-    /** The data object */
-    protected SpaceData          mSpaceData;
-    /** Indicate whether the surface has been created & is ready to draw */
-    protected boolean            mRun                      = false;
-    public Viewport              mViewport                 = new Viewport();
-    protected boolean            mRedrawOnce               = false;
-    protected boolean            mRequestFireSpaceman      = false;
-    /** Current height of the surface/canvas. */
-    public int                   mCanvasHeight             = 1;
-    /** Current width of the surface/canvas. */
-    public int                   mCanvasWidth              = 1;
+    protected SpaceData          spaceData;
+    protected boolean            running                   = false;
+    public Viewport              viewport                  = new Viewport();
+    protected boolean            redrawOnce                = false;
+    protected boolean            requestFireSpaceman       = false;
+    public int                   canvasHeight              = 1;
+    public int                   canvasWidth               = 1;
 
-    private LinkedList<Runnable> mEventQueue;
+    private LinkedList<Runnable> eventQueue;
 
     protected GameThread() {
-        mSpaceData = SpaceData.getInstance();
-        mEventQueue = new LinkedList<Runnable>();
+        spaceData = SpaceData.getInstance();
+        eventQueue = new LinkedList<Runnable>();
     }
 
     public abstract Object getSurfaceLocker();
 
-    protected void updatePhysics(float aElapsed) {
-        mSpaceData.stepCurrentLevel(aElapsed);
+    protected void updatePhysics(float elapsed) {
+        spaceData.stepCurrentLevel(elapsed);
     }
 
-    public void setRunning(boolean b) {
-        mRun = b;
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
-    public boolean hitsSpaceMan(float aX, float aY) {
-        float lSpaceManX = 0, lSpaceManY = 0;
-        synchronized (mViewport.getViewport()) {
-            lSpaceManX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.screenRect,
-                    mSpaceData.mCurrentLevel.getSpaceManObject().mX);
-            lSpaceManY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.screenRect,
-                    mSpaceData.mCurrentLevel.getSpaceManObject().mY);
+    public boolean hitsSpaceMan(float x, float y) {
+        float spaceManX = 0, spaceManY = 0;
+        synchronized (viewport.getViewport()) {
+            spaceManX = SpaceUtil.transformX(viewport.getViewport(), viewport.screenRect, spaceData.mCurrentLevel.getSpaceManObject().mX);
+            spaceManY = SpaceUtil.transformY(viewport.getViewport(), viewport.screenRect, spaceData.mCurrentLevel.getSpaceManObject().mY);
         }
 
-        double lDistance = Math.sqrt((aX - lSpaceManX) * (aX - lSpaceManX) + (aY - lSpaceManY) * (aY - lSpaceManY));
+        double distance = Math.sqrt((x - spaceManX) * (x - spaceManX) + (y - spaceManY) * (y - spaceManY));
 
-        if (lDistance <= SPACEMAN_HIT_FUZZYNESS * mSpaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth()) {
+        if (distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth()) {
             return true;
         }
         return false;
     }
 
-    public SpaceObject objectUnderCursor(float aX, float aY) {
-        List<SpaceObject> lObjects = mSpaceData.mCurrentLevel.mObjects;
-        int lCount = lObjects.size();
-        for (int i = 0; i < lCount; ++i) {
-            SpaceObject lObject = lObjects.get(i);
-            float lObjectX = SpaceUtil.transformX(mViewport.getViewport(), mViewport.screenRect, lObject.mX);
-            float lObjectY = SpaceUtil.transformY(mViewport.getViewport(), mViewport.screenRect, lObject.mY);
-            double lDistance = Math.sqrt((aX - lObjectX) * (aX - lObjectX) + (aY - lObjectY) * (aY - lObjectY));
+    public SpaceObject objectUnderCursor(float x, float y) {
+        List<SpaceObject> objects = spaceData.mCurrentLevel.mObjects;
+        for (int i = 0; i < objects.size(); ++i) {
+            SpaceObject object = objects.get(i);
+            float objectX = SpaceUtil.transformX(viewport.getViewport(), viewport.screenRect, object.mX);
+            float objectY = SpaceUtil.transformY(viewport.getViewport(), viewport.screenRect, object.mY);
+            double distance = Math.sqrt((x - objectX) * (x - objectX) + (y - objectY) * (y - objectY));
 
-            if (lDistance < lObject.getBitmap().getWidth() / 2)
-                return lObject;
+            if (distance < object.getBitmap().getWidth() / 2)
+                return object;
         }
-        // no object under cursor, return null
         return null;
     }
 
-    public boolean hitsSpaceManArrow(float aX, float aY) {
-        Rect lArrowRect = mSpaceData.mCurrentLevel.getSpaceManObject().getArrowData().mRect;
-        if (lArrowRect.isEmpty())
+    public boolean hitsSpaceManArrow(float x, float y) {
+        Rect arrowRect = spaceData.mCurrentLevel.getSpaceManObject().getArrowData().mRect;
+        if (arrowRect.isEmpty())
             return false;
 
-        float lArrowX = lArrowRect.exactCenterX();
-        float lArrowY = lArrowRect.exactCenterY();
+        float arrowX = arrowRect.exactCenterX();
+        float arrowY = arrowRect.exactCenterY();
 
-        double lDistance = Math.sqrt((aX - lArrowX) * (aX - lArrowX) + (aY - lArrowY) * (aY - lArrowY));
+        double distance = Math.sqrt((x - arrowX) * (x - arrowX) + (y - arrowY) * (y - arrowY));
 
-        if (lDistance <= ARROW_HIT_RADIUS) {
-            return true;
-        }
-
-        return false;
+        return distance <= ARROW_HIT_RADIUS;
     }
 
     // returns immediately!
     public void postRunnable(Runnable runnable) {
-        synchronized (mEventQueue) {
-            mEventQueue.add(runnable);
+        synchronized (eventQueue) {
+            eventQueue.add(runnable);
         }
     }
 
     public void postSyncRunnable(Runnable runnable) {
         postRunnable(runnable);
-        while (mEventQueue.contains(runnable)) {
+        while (eventQueue.contains(runnable)) {
             try {
                 sleep(100);
             } catch (InterruptedException e) {
@@ -119,9 +103,9 @@ public abstract class GameThread extends Thread {
     }
 
     protected void runQueue() {
-        synchronized (mEventQueue) {
-            while (mEventQueue.size() > 0) {
-                Runnable runnable = mEventQueue.remove();
+        synchronized (eventQueue) {
+            while (eventQueue.size() > 0) {
+                Runnable runnable = eventQueue.remove();
                 if (runnable != null)
                     runnable.run();
             }
@@ -129,48 +113,44 @@ public abstract class GameThread extends Thread {
     }
 
     public void redrawOnce() {
-        mRedrawOnce = true;
+        redrawOnce = true;
     }
 
     public synchronized void requestFireSpaceman() {
-        mRequestFireSpaceman = true;
+        requestFireSpaceman = true;
     }
 
     protected synchronized void fireSpaceMan() {
-        mSpaceData.points.reset();
+        spaceData.points.reset();
         SpaceGameState.INSTANCE.setState(GameState.FLYING);
         PointF speed = SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed();
-        mSpaceData.mCurrentLevel.setSpaceManSpeed(speed);
+        spaceData.mCurrentLevel.setSpaceManSpeed(speed);
 
-        mViewport.setFocusOnSpaceman(true);
+        viewport.setFocusOnSpaceman(true);
     }
 
-    public void changeLevel(int aIndex, boolean aSpecial) {
+    public void changeLevel(int index, boolean isSpecial) {
         synchronized (getSurfaceLocker()) {
             SpaceGameState.INSTANCE.chargingState.reset();
             SpaceData.getInstance().resetPredictionData();
-            mViewport.resetFocusViewportStatus(false);
-            mSpaceData.setCurrentLevel(aIndex, aSpecial);
+            viewport.resetFocusViewportStatus(false);
+            spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
-            mViewport.reset(mSpaceData.mCurrentLevel.startCenterX(), mSpaceData.mCurrentLevel.startCenterY(), mCanvasWidth, mCanvasHeight);
+            viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasWidth, canvasHeight);
         }
-    }
-
-    public void loadPrevLevel() {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() - 1, false);
     }
 
     public void loadNextLevel() {
         changeLevel(SpaceData.getInstance().getCurrentLevelId() + 1, false);
     }
 
-    public void loadPrevLevel(boolean aSpecial) {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() - 1, aSpecial);
+    public void loadPrevLevel(boolean isSpecial) {
+        changeLevel(SpaceData.getInstance().getCurrentLevelId() - 1, isSpecial);
     }
 
-    public void loadNextLevel(boolean aSpecial) {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() + 1, aSpecial);
+    public void loadNextLevel(boolean isSpecial) {
+        changeLevel(SpaceData.getInstance().getCurrentLevelId() + 1, isSpecial);
     }
 
     public void reloadCurrentLevel() {
