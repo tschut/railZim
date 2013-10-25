@@ -1,10 +1,8 @@
 package com.spacemangames.framework;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import com.spacemangames.library.SpaceData;
-import com.spacemangames.library.SpaceObject;
 import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 
@@ -46,20 +44,6 @@ public abstract class GameThread extends Thread {
         double distance = spacemanPosition.distanceTo(new PointF(x, y));
 
         return distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth();
-    }
-
-    public SpaceObject objectUnderCursor(float x, float y) {
-        List<SpaceObject> objects = spaceData.mCurrentLevel.mObjects;
-        for (int i = 0; i < objects.size(); ++i) {
-            SpaceObject object = objects.get(i);
-            float objectX = SpaceUtil.transformX(viewport.getViewport(), viewport.screenRect, object.mX);
-            float objectY = SpaceUtil.transformY(viewport.getViewport(), viewport.screenRect, object.mY);
-            double distance = Math.sqrt((x - objectX) * (x - objectX) + (y - objectY) * (y - objectY));
-
-            if (distance < object.getBitmap().getWidth() / 2)
-                return object;
-        }
-        return null;
     }
 
     public boolean hitsSpaceManArrow(float x, float y) {
