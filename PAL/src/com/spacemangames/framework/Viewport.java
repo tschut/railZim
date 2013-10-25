@@ -155,7 +155,7 @@ public class Viewport {
     }
 
     public void zoomViewport(float zoom) {
-        if (viewport.width() >= screenRect.width() && zoom < 0) {
+        if (viewport.width() <= screenRect.width() && zoom < 0) {
             return;
         }
 
