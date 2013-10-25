@@ -25,7 +25,7 @@ public abstract class GameThread extends Thread {
     protected SpaceData          mSpaceData;
     /** Indicate whether the surface has been created & is ready to draw */
     protected boolean            mRun                      = false;
-    public Viewport              mViewport                 = new Viewport(false, false, false, 0, 0);
+    public Viewport              mViewport                 = new Viewport();
     protected boolean            mRedrawOnce               = false;
     protected boolean            mRequestFireSpaceman      = false;
     /** Current height of the surface/canvas. */
