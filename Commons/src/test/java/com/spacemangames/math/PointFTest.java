@@ -92,4 +92,13 @@ public class PointFTest {
         Assert.assertEquals(7f, point.x, DELTA);
         Assert.assertEquals(8f, point.y, DELTA);
     }
+
+    @Test
+    public void testDistanceTo() {
+        PointF point1 = new PointF(3, 4);
+        PointF point2 = new PointF(-4, 5);
+
+        Assert.assertEquals(Math.sqrt(50), point1.distanceTo(point2), DELTA);
+        Assert.assertEquals(Math.sqrt(50), point2.distanceTo(point1), DELTA);
+    }
 }

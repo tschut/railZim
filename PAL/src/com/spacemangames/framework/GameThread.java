@@ -22,7 +22,7 @@ public abstract class GameThread extends Thread {
     public Viewport              viewport                  = new Viewport();
     protected boolean            redrawOnce                = false;
     protected boolean            requestFireSpaceman       = false;
-    public Rect                  canvasSize                = new Rect(0, 0, 1, 1);
+    protected Rect               canvasSize                = new Rect(0, 0, 1, 1);
 
     private LinkedList<Runnable> eventQueue;
 
@@ -42,18 +42,10 @@ public abstract class GameThread extends Thread {
     }
 
     public boolean hitsSpaceMan(float x, float y) {
-        float spaceManX = 0, spaceManY = 0;
-        synchronized (viewport.getViewport()) {
-            spaceManX = SpaceUtil.transformX(viewport.getViewport(), viewport.screenRect, spaceData.mCurrentLevel.getSpaceManObject().mX);
-            spaceManY = SpaceUtil.transformY(viewport.getViewport(), viewport.screenRect, spaceData.mCurrentLevel.getSpaceManObject().mY);
-        }
+        PointF spacemanPosition = viewport.toScreenCoordinates(spaceData.mCurrentLevel.getSpaceManObject().getPosition());
+        double distance = spacemanPosition.distanceTo(new PointF(x, y));
 
-        double distance = Math.sqrt((x - spaceManX) * (x - spaceManX) + (y - spaceManY) * (y - spaceManY));
-
-        if (distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth()) {
-            return true;
-        }
-        return false;
+        return distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth();
     }
 
     public SpaceObject objectUnderCursor(float x, float y) {

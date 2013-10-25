@@ -1,5 +1,6 @@
 package com.spacemangames.framework;
 
+import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 
 public class SpaceUtil {
@@ -53,5 +54,9 @@ public class SpaceUtil {
 
     public static float transformY(Rect in, Rect out, float y) {
         return ((float) out.height() / (float) in.height()) * (y - in.top);
+    }
+
+    public static PointF transform(Rect in, Rect out, PointF point) {
+        return new PointF(transformX(in, out, point.x), transformY(in, out, point.y));
     }
 }

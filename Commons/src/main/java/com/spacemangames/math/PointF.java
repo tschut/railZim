@@ -34,4 +34,10 @@ public class PointF {
     public void set(PointF other) {
         set(other.x, other.y);
     }
+
+    public double distanceTo(PointF point2) {
+        PointF temp = new PointF(x, y);
+        temp.subtract(point2);
+        return temp.length();
+    }
 }

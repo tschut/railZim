@@ -192,4 +192,8 @@ public class Viewport {
 
         return true;
     }
+
+    public PointF toScreenCoordinates(PointF spacemanPosition) {
+        return SpaceUtil.transform(viewport, screenRect, spacemanPosition);
+    }
 }
