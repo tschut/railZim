@@ -106,16 +106,12 @@ public class Viewport {
                 previousFocusPoint.y = spacemanPosition.y;
 
             if (!focusX) {
-                if (previousFocusPoint.x < viewportCenter.x && spacemanPosition.x >= viewportCenter.x
-                        || previousFocusPoint.x > viewportCenter.x && spacemanPosition.x < viewportCenter.x) {
-                    focusX = true;
-                }
+                focusX = (previousFocusPoint.x < viewportCenter.x && spacemanPosition.x >= viewportCenter.x || previousFocusPoint.x > viewportCenter.x
+                        && spacemanPosition.x < viewportCenter.x);
             }
             if (!focusY) {
-                if (previousFocusPoint.y < viewportCenter.y && spacemanPosition.y > viewportCenter.y
-                        || previousFocusPoint.y > viewportCenter.y && spacemanPosition.y < viewportCenter.y) {
-                    focusY = true;
-                }
+                focusY = (previousFocusPoint.y < viewportCenter.y && spacemanPosition.y > viewportCenter.y || previousFocusPoint.y > viewportCenter.y
+                        && spacemanPosition.y < viewportCenter.y);
             }
 
             float offsetX = 0;
