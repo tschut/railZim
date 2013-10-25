@@ -49,9 +49,9 @@ public class SpaceGameThread extends GameThread {
 
     private final GoogleAnalyticsTracker tracker;
 
-    public SpaceGameThread() {
+    public SpaceGameThread(SpaceData spaceData) {
 
-        super();
+        super(spaceData);
         // Start in STATE_LOADING
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 

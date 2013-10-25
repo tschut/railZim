@@ -27,8 +27,8 @@ public abstract class GameThread extends Thread {
 
     private LinkedList<Runnable> eventQueue;
 
-    protected GameThread() {
-        spaceData = SpaceData.getInstance();
+    protected GameThread(SpaceData spaceData) {
+        this.spaceData = spaceData;
         eventQueue = new LinkedList<Runnable>();
     }
 
@@ -132,7 +132,7 @@ public abstract class GameThread extends Thread {
     public void changeLevel(int index, boolean isSpecial) {
         synchronized (getSurfaceLocker()) {
             SpaceGameState.INSTANCE.chargingState.reset();
-            SpaceData.getInstance().resetPredictionData();
+            spaceData.resetPredictionData();
             viewport.resetFocusViewportStatus(false);
             spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
@@ -142,18 +142,18 @@ public abstract class GameThread extends Thread {
     }
 
     public void loadNextLevel() {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() + 1, false);
+        changeLevel(spaceData.getCurrentLevelId() + 1, false);
     }
 
     public void loadPrevLevel(boolean isSpecial) {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() - 1, isSpecial);
+        changeLevel(spaceData.getCurrentLevelId() - 1, isSpecial);
     }
 
     public void loadNextLevel(boolean isSpecial) {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId() + 1, isSpecial);
+        changeLevel(spaceData.getCurrentLevelId() + 1, isSpecial);
     }
 
     public void reloadCurrentLevel() {
-        changeLevel(SpaceData.getInstance().getCurrentLevelId(), false);
+        changeLevel(spaceData.getCurrentLevelId(), false);
     }
 }
