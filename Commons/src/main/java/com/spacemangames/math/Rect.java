@@ -2,8 +2,8 @@ package com.spacemangames.math;
 
 public class Rect {
     public int left;
-    public int right;
     public int top;
+    public int right;
     public int bottom;
 
     public Rect() {

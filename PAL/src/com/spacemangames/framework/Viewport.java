@@ -64,7 +64,7 @@ public class Viewport {
     public void reset(int x, int y, Rect canvasSize) {
         screenRect.set(canvasSize);
         synchronized (viewport) {
-            viewport.set(x - canvasSize.centerX(), y - canvasSize.centerY(), x + canvasSize.centerX(), y + canvasSize.centerX());
+            viewport.set(x - canvasSize.centerX(), y - canvasSize.centerY(), x + canvasSize.centerX(), y + canvasSize.centerY());
         }
         float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasSize.width();
         float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasSize.height();
