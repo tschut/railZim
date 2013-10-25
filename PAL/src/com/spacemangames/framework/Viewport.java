@@ -12,13 +12,12 @@ public class Viewport {
     private Rect                viewport;
     private boolean             flinging;
     private boolean             focusOnSpaceman;
-    private boolean             focusX;
-    private boolean             focusY;
+    private Boolean             focusX                = new Boolean(false);
+    private Boolean             focusY                = new Boolean(false);
     private PointF              previousFocusPoint;
     private boolean             draggingViewport;
     private PointF              viewportDragStart;
 
-    // The screen
     public Rect                 screenRect;
 
     public static final int     AUTO_FOCUS_MIN_PIXELS = 3;
@@ -100,40 +99,41 @@ public class Viewport {
         synchronized (viewport) {
             PointF viewportCenter = viewport.center();
 
-            if (previousFocusPoint.x == 0)
-                previousFocusPoint.x = spacemanPosition.x;
-            if (previousFocusPoint.y == 0)
-                previousFocusPoint.y = spacemanPosition.y;
-
-            if (!focusX) {
-                focusX = (previousFocusPoint.x < viewportCenter.x && spacemanPosition.x >= viewportCenter.x || previousFocusPoint.x > viewportCenter.x
-                        && spacemanPosition.x < viewportCenter.x);
-            }
-            if (!focusY) {
-                focusY = (previousFocusPoint.y < viewportCenter.y && spacemanPosition.y > viewportCenter.y || previousFocusPoint.y > viewportCenter.y
-                        && spacemanPosition.y < viewportCenter.y);
-            }
-
-            float offsetX = 0;
-            float offsetY = 0;
-
-            if (focusX)
-                offsetX = Math.round(spacemanPosition.x - viewportCenter.x);
-            if (focusY)
-                offsetY = Math.round(spacemanPosition.y - viewportCenter.y);
-
-            float offsetXDamped = offsetX * AUTO_FOCUS_DAMPING;
-            float offsetYDamped = offsetY * AUTO_FOCUS_DAMPING;
-
-            if (offsetX >= AUTO_FOCUS_MIN_PIXELS && offsetXDamped < AUTO_FOCUS_MIN_PIXELS)
-                offsetXDamped = AUTO_FOCUS_MIN_PIXELS;
-            if (offsetY >= AUTO_FOCUS_MIN_PIXELS && offsetYDamped < AUTO_FOCUS_MIN_PIXELS)
-                offsetYDamped = AUTO_FOCUS_MIN_PIXELS;
+            initializePreviousFocusPosition(spacemanPosition);
+            float offsetXDamped = calculateOffsetToFollowSpaceman(focusX, previousFocusPoint.x, spacemanPosition.x, viewportCenter.x);
+            float offsetYDamped = calculateOffsetToFollowSpaceman(focusY, previousFocusPoint.y, spacemanPosition.y, viewportCenter.y);
 
             viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
         }
 
         previousFocusPoint.set(spacemanPosition);
+    }
+
+    private float calculateOffsetToFollowSpaceman(Boolean focus, float previousFocusPoint, float spacemanPosition, float viewportCenter) {
+        float result = 0;
+        if (!focus) {
+            focus = (previousFocusPoint < viewportCenter && spacemanPosition >= viewportCenter || previousFocusPoint > viewportCenter
+                    && spacemanPosition < viewportCenter);
+        }
+
+        float offset = 0;
+        if (focus) {
+            offset = Math.round(spacemanPosition - viewportCenter);
+
+            result = offset * AUTO_FOCUS_DAMPING;
+            if (offset >= AUTO_FOCUS_MIN_PIXELS && result < AUTO_FOCUS_MIN_PIXELS) {
+                result = AUTO_FOCUS_MIN_PIXELS;
+            }
+        }
+
+        return result;
+    }
+
+    private void initializePreviousFocusPosition(PointF spacemanPosition) {
+        if (previousFocusPoint.x == 0)
+            previousFocusPoint.x = spacemanPosition.x;
+        if (previousFocusPoint.y == 0)
+            previousFocusPoint.y = spacemanPosition.y;
     }
 
     public void startViewportDrag(float x, float y) {
