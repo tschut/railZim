@@ -9,7 +9,7 @@ import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 
 public abstract class GameThread extends Thread {
-    public static final String   TAG                       = "GameThread";
+    public static final String   TAG                       = GameThread.class.getSimpleName();
     public static final double   SPACEMAN_HIT_FUZZYNESS    = 1.4;
     public static final double   ARROW_HIT_RADIUS          = 50;
 
