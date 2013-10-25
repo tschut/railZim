@@ -155,10 +155,9 @@ public class Viewport {
     }
 
     public void zoomViewport(float zoom) {
-        PALManager.getLog().i(TAG, "zoom: " + zoom);
-        synchronized (getViewport()) {
+        synchronized (viewport) {
             // don't zoom in further than the max
-            if (viewport.width() == screenRect.width() && zoom < 0) {
+            if (viewport.width() >= screenRect.width() && zoom < 0) {
                 return;
             }
             float verticalZoom = zoom * viewport.height();
@@ -183,7 +182,7 @@ public class Viewport {
     }
 
     private float currentZoom() {
-        return (float) getViewport().width() / screenRect.width();
+        return (float) viewport.width() / screenRect.width();
     }
 
     public boolean isValid() {
