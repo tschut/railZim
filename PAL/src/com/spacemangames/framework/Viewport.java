@@ -155,26 +155,24 @@ public class Viewport {
     }
 
     public void zoomViewport(float zoom) {
-        synchronized (viewport) {
-            // don't zoom in further than the max
-            if (viewport.width() >= screenRect.width() && zoom < 0) {
-                return;
-            }
-            float verticalZoom = zoom * viewport.height();
-            float horizontalZoom = zoom * viewport.width();
-            viewport.bottom += verticalZoom / 2.0f;
-            viewport.top -= verticalZoom / 2.0f;
-            viewport.left -= horizontalZoom / 2.0f;
-            viewport.right += horizontalZoom / 2.0f;
+        if (viewport.width() >= screenRect.width() && zoom < 0) {
+            return;
+        }
 
-            // we can't zoom in further than the canvas size...
-            if (viewport.width() < screenRect.width() || viewport.height() < screenRect.height()) {
+        synchronized (viewport) {
+            viewport.scale(zoom);
+
+            if (viewportAboveMaximumZoomLevel()) {
                 viewport.right = viewport.left + screenRect.width();
                 viewport.bottom = viewport.top + screenRect.height();
             }
 
-            moveViewport(0, 0); // this will check boundaries
+            moveViewport(0, 0);
         }
+    }
+
+    private boolean viewportAboveMaximumZoomLevel() {
+        return viewport.width() < screenRect.width() || viewport.height() < screenRect.height();
     }
 
     public void stopViewportDrag() {

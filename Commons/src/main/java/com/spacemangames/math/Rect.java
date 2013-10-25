@@ -72,6 +72,15 @@ public class Rect {
         offset((int) offset.x, (int) offset.y);
     }
 
+    public void scale(float scale) {
+        float verticalZoom = scale * height();
+        float horizontalZoom = scale * width();
+        bottom += verticalZoom / 2.0f;
+        top -= verticalZoom / 2.0f;
+        left -= horizontalZoom / 2.0f;
+        right += horizontalZoom / 2.0f;
+    }
+
     public boolean isEmpty() {
         return left >= right || top >= bottom;
     }
