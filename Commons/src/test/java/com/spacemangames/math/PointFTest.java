@@ -40,6 +40,16 @@ public class PointFTest {
     }
 
     @Test
+    public void testSetPoint() {
+        PointF point = new PointF();
+
+        point.set(new PointF(23.4f, -7.3f));
+
+        Assert.assertEquals(23.4, point.x, DELTA);
+        Assert.assertEquals(-7.3, point.y, DELTA);
+    }
+
+    @Test
     public void testMultiplyOriginPoint() {
         PointF point = new PointF();
 

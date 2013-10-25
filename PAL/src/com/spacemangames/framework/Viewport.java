@@ -14,8 +14,7 @@ public class Viewport {
     private boolean             focusOnSpaceman;
     private boolean             focusX;
     private boolean             focusY;
-    private float               prevX;
-    private float               prevY;
+    private PointF              previousFocusPoint;
     private boolean             draggingViewport;
     private PointF              viewportDragStart;
 
@@ -27,16 +26,11 @@ public class Viewport {
     public static final float   FLING_STOP_THRESHOLD  = 10f;
     public static final float   FLING_DAMPING_FACTOR  = 0.9f;
 
-    public Viewport(boolean focusOnSpaceman, boolean focusX, boolean focusY, float prevX, float prevY) {
-        this.focusOnSpaceman = focusOnSpaceman;
-        this.focusX = focusX;
-        this.focusY = focusY;
-        this.prevX = prevX;
-        this.prevY = prevY;
-
+    public Viewport() {
         flingSpeed = new PointF();
         viewport = new Rect();
         viewportDragStart = new PointF();
+        previousFocusPoint = new PointF();
         screenRect = new Rect();
     }
 
@@ -88,8 +82,7 @@ public class Viewport {
         focusOnSpaceman = on;
         focusX = on;
         focusY = on;
-        prevX = 0;
-        prevY = 0;
+        previousFocusPoint.set(0, 0);
     }
 
     public void focusOn(PointF position) {
@@ -107,20 +100,20 @@ public class Viewport {
         synchronized (viewport) {
             PointF viewportCenter = viewport.center();
 
-            if (prevX == 0)
-                prevX = spacemanPosition.x;
-            if (prevY == 0)
-                prevY = spacemanPosition.y;
+            if (previousFocusPoint.x == 0)
+                previousFocusPoint.x = spacemanPosition.x;
+            if (previousFocusPoint.y == 0)
+                previousFocusPoint.y = spacemanPosition.y;
 
             if (!focusX) {
-                if (prevX < viewportCenter.x && spacemanPosition.x >= viewportCenter.x || prevX > viewportCenter.x
-                        && spacemanPosition.x < viewportCenter.x) {
+                if (previousFocusPoint.x < viewportCenter.x && spacemanPosition.x >= viewportCenter.x
+                        || previousFocusPoint.x > viewportCenter.x && spacemanPosition.x < viewportCenter.x) {
                     focusX = true;
                 }
             }
             if (!focusY) {
-                if (prevY < viewportCenter.y && spacemanPosition.y > viewportCenter.y || prevY > viewportCenter.y
-                        && spacemanPosition.y < viewportCenter.y) {
+                if (previousFocusPoint.y < viewportCenter.y && spacemanPosition.y > viewportCenter.y
+                        || previousFocusPoint.y > viewportCenter.y && spacemanPosition.y < viewportCenter.y) {
                     focusY = true;
                 }
             }
@@ -144,8 +137,7 @@ public class Viewport {
             viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
         }
 
-        prevX = spacemanPosition.x;
-        prevY = spacemanPosition.y;
+        previousFocusPoint.set(spacemanPosition);
     }
 
     public void startViewportDrag(float x, float y) {

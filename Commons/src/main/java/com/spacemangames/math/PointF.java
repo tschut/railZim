@@ -30,4 +30,8 @@ public class PointF {
         x -= pointF.x;
         y -= pointF.y;
     }
+
+    public void set(PointF other) {
+        set(other.x, other.y);
+    }
 }
