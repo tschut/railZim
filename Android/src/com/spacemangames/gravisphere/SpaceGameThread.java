@@ -22,6 +22,13 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceGameThread extends GameThread {
+    public class FireSpacemanRunnable implements Runnable {
+        @Override
+        public void run() {
+            fireSpaceMan();
+        }
+    }
+
     public static final String           TAG                = SpaceGameThread.class.getSimpleName();
 
     public static final float            MIN_FRAME_TIME     = 0.033f;                               // in
@@ -91,32 +98,13 @@ public class SpaceGameThread extends GameThread {
             runQueue();
 
             Canvas canvas = null;
+            boolean viewportValid = safeCopyViewport(viewportCopy);
 
-            boolean viewportValid = false;
-            synchronized (viewport.getViewport()) {
-                if (viewport.isValid()) {
-                    viewportValid = true;
-                    viewportCopy.set(viewport.getViewport());
-                }
-            }
-
-            if (!gameState.paused() && viewportValid && !frozen) {
+            if (runRegularFrame(gameState, viewportValid)) {
                 long loopStart = System.nanoTime();
-                float elapsed = gameState.getElapsedTime();
-                gameState.updateTimeTick();
+                float elapsed = getElapsedTimeSinceLastFrame(gameState);
 
-                // Are we flinging the canvas?
-                if (viewport.isFlinging()) {
-                    viewport.moveViewport(viewport.getFlingSpeed().x * elapsed, viewport.getFlingSpeed().y * elapsed);
-                    viewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
-                    if (viewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
-                        viewport.setFlinging(false);
-                }
-
-                if (requestFireSpaceman) {
-                    fireSpaceMan();
-                    requestFireSpaceman = false;
-                }
+                updateViewportFling(elapsed);
 
                 parseGameEvents();
                 updatePhysics(elapsed);
@@ -172,6 +160,37 @@ public class SpaceGameThread extends GameThread {
             }
         }
         PALManager.getLog().i(TAG, "Thread ended...");
+    }
+
+    private void updateViewportFling(float elapsed) {
+        // Are we flinging the canvas?
+        if (viewport.isFlinging()) {
+            viewport.moveViewport(viewport.getFlingSpeed().x * elapsed, viewport.getFlingSpeed().y * elapsed);
+            viewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
+            if (viewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
+                viewport.setFlinging(false);
+        }
+    }
+
+    private float getElapsedTimeSinceLastFrame(SpaceGameState gameState) {
+        float elapsed = gameState.getElapsedTime();
+        gameState.updateTimeTick();
+        return elapsed;
+    }
+
+    private boolean runRegularFrame(SpaceGameState gameState, boolean viewportValid) {
+        return !gameState.paused() && viewportValid && !frozen;
+    }
+
+    private boolean safeCopyViewport(Rect viewportCopy) {
+        boolean result = false;
+        synchronized (viewport.getViewport()) {
+            if (viewport.isValid()) {
+                result = true;
+                viewportCopy.set(viewport.getViewport());
+            }
+        }
+        return result;
     }
 
     /* Callback invoked when the surface dimensions change. */

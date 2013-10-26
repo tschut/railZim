@@ -147,7 +147,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
                 SpaceGameState.INSTANCE.chargingState.setChargingCurrent(lX, lY);
             } else if (lAction == MotionEvent.ACTION_UP) {
                 SpaceGameState.INSTANCE.chargingState.setChargingCurrent(lX, lY);
-                lThread.requestFireSpaceman();
+                lThread.postRunnable(lThread.new FireSpacemanRunnable());
             }
             lResult = true;
         } else if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {

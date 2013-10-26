@@ -41,7 +41,6 @@ public enum SpaceGameState {
     public synchronized void setState(GameState state) {
         PALManager.getLog().i(TAG, "Changing state from " + state + " to " + state);
 
-        updateTimeTick();
         this.state = state;
     }
 

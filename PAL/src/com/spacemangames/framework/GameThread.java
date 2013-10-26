@@ -19,7 +19,6 @@ public abstract class GameThread extends Thread {
     protected boolean            running                   = false;
     public Viewport              viewport                  = new Viewport();
     protected boolean            redrawOnce                = false;
-    protected boolean            requestFireSpaceman       = false;
     protected Rect               canvasSize                = new Rect(0, 0, 1, 1);
 
     private LinkedList<Runnable> eventQueue;
@@ -88,11 +87,7 @@ public abstract class GameThread extends Thread {
         redrawOnce = true;
     }
 
-    public synchronized void requestFireSpaceman() {
-        requestFireSpaceman = true;
-    }
-
-    protected synchronized void fireSpaceMan() {
+    protected void fireSpaceMan() {
         spaceData.points.reset();
         SpaceGameState.INSTANCE.setState(GameState.FLYING);
         PointF speed = SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed();
