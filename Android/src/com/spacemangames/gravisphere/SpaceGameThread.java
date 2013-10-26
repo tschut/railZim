@@ -32,8 +32,6 @@ public class SpaceGameThread extends GameThread {
                                                                                                      // fps)
     public static final float            MAX_FRAME_TIME     = 0.100f;
 
-    private final Rect                   viewportScratch;
-
     private SurfaceHolder                surfaceHolder;
     private final Object                 dummySurfaceHolder = new Object();
 
@@ -52,7 +50,6 @@ public class SpaceGameThread extends GameThread {
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
         viewport.setFlingSpeed(new PointF());
-        viewportScratch = new Rect();
         renderer = new AndroidRenderer();
         tracker = GoogleAnalyticsTracker.getInstance();
     }
@@ -89,9 +86,8 @@ public class SpaceGameThread extends GameThread {
     @Override
     public void run() {
         SpaceGameState gameState = SpaceGameState.INSTANCE;
-        long fpsHelper = 0;
+        Rect viewportCopy = new Rect();
         while (running) {
-            // handle events that need to run on this thread
             runQueue();
 
             Canvas canvas = null;
@@ -100,7 +96,7 @@ public class SpaceGameThread extends GameThread {
             synchronized (viewport.getViewport()) {
                 if (viewport.isValid()) {
                     viewportValid = true;
-                    viewportScratch.set(viewport.getViewport());
+                    viewportCopy.set(viewport.getViewport());
                 }
             }
 
@@ -136,7 +132,7 @@ public class SpaceGameThread extends GameThread {
                 if (canvas != null) {
                     synchronized (surfaceHolder) {
                         try {
-                            doDraw(canvas);
+                            doDraw(canvas, viewportCopy);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -148,9 +144,6 @@ public class SpaceGameThread extends GameThread {
                 if (upToHere < MIN_FRAME_TIME)
                     SystemClock.sleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
 
-                // PALManager.getLog().v (TAG, "FPS: " + 1f /
-                // ((System.nanoTime() - lFpsHelper) / 1000000000d));
-                fpsHelper = System.nanoTime();
                 // now blit to the screen
                 if (canvas != null) {
                     surfaceHolder.unlockCanvasAndPost(canvas);
@@ -160,7 +153,7 @@ public class SpaceGameThread extends GameThread {
                 if (canvas != null) {
                     redrawOnce = false;
                     synchronized (surfaceHolder) {
-                        doDraw(canvas);
+                        doDraw(canvas, viewportCopy);
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 } else {
@@ -196,9 +189,9 @@ public class SpaceGameThread extends GameThread {
         }
     }
 
-    private void doDraw(Canvas canvas) {
+    private void doDraw(Canvas canvas, Rect viewportRect) {
         if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
-            renderer.initialize(canvas, viewportScratch, viewport.screenRect);
+            renderer.initialize(canvas, viewportRect, viewport.screenRect);
             spaceData.mCurrentLevel.draw(renderer);
         }
     }
