@@ -10,6 +10,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.library.SpaceData;
+import com.spacemangames.util.ThreadUtils;
 
 @EBean
 class PointsUpdateThread extends Thread {
@@ -39,21 +40,12 @@ class PointsUpdateThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            sleepUntil(new GameNotStartedPredicate(), 100);
-            sleepUntil(new FrameTimeElapsedPredicate(), (long) ((SpaceGameThread.MIN_FRAME_TIME - elapsedTime()) * 1000));
+            ThreadUtils.sleepUntil(new GameNotStartedPredicate(), 100, null);
+            ThreadUtils.sleepUntil(new FrameTimeElapsedPredicate(), (long) ((SpaceGameThread.MIN_FRAME_TIME - elapsedTime()) * 1000), null);
 
             lastTime = System.nanoTime();
 
             updatePointsView();
-        }
-    }
-
-    private void sleepUntil(Predicate<Void> predicate, long sleepTime) {
-        while (!predicate.evaluate(null)) {
-            try {
-                sleep(sleepTime);
-            } catch (InterruptedException e) {
-            }
         }
     }
 
