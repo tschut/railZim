@@ -11,4 +11,12 @@ public class ThreadUtils {
             }
         }
     }
+
+    public static void silentSleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

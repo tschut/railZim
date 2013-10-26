@@ -3,7 +3,6 @@ package com.spacemangames.gravisphere;
 import java.util.Queue;
 
 import android.graphics.Canvas;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.FloatMath;
@@ -23,102 +22,96 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceGameThread extends GameThread {
-    public static final String           TAG                 = "SpaceGameThread";
-    // maximum frame rate
-    public static final float            MIN_FRAME_TIME      = 0.033f;           // in
-                                                                                  // seconds
-                                                                                  // (0.033
-                                                                                  // =
-                                                                                  // 30
-                                                                                  // fps)
-    public static final float            MAX_FRAME_TIME      = 0.100f;
+    public static final String           TAG                = SpaceGameThread.class.getSimpleName();
 
-    private final Rect                   mViewportScratch;
+    public static final float            MIN_FRAME_TIME     = 0.033f;                               // in
+                                                                                                     // seconds
+                                                                                                     // (0.033
+                                                                                                     // =
+                                                                                                     // 30
+                                                                                                     // fps)
+    public static final float            MAX_FRAME_TIME     = 0.100f;
 
-    /** Handle to the surface manager object we interact with */
-    private SurfaceHolder                mSurfaceHolder;
-    private final Object                 mDummySurfaceHolder = new Object();
+    private final Rect                   viewportScratch;
+
+    private SurfaceHolder                surfaceHolder;
+    private final Object                 dummySurfaceHolder = new Object();
 
     // used to message the ui thread
-    private Handler                      mMsgHandler;
+    private Handler                      msgHandler;
 
     // The rendering engine
-    private final AndroidRenderer        mRenderer;
+    private final AndroidRenderer        renderer;
 
-    private boolean                      mFrozen             = false;
+    private boolean                      frozen             = false;
 
     private final GoogleAnalyticsTracker tracker;
 
     public SpaceGameThread(SpaceData spaceData) {
-
         super(spaceData);
-        // Start in STATE_LOADING
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
         viewport.setFlingSpeed(new PointF());
-
-        mViewportScratch = new Rect();
-
-        mRenderer = new AndroidRenderer();
-
+        viewportScratch = new Rect();
+        renderer = new AndroidRenderer();
         tracker = GoogleAnalyticsTracker.getInstance();
     }
 
-    public void setSurfaceHolder(SurfaceHolder aSurfaceHolder) {
-        if (mSurfaceHolder != null) {
-            synchronized (mSurfaceHolder) {
-                mSurfaceHolder = aSurfaceHolder;
+    public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
+        if (surfaceHolder != null) {
+            synchronized (surfaceHolder) {
+                this.surfaceHolder = surfaceHolder;
             }
         } else {
-            mSurfaceHolder = aSurfaceHolder;
+            this.surfaceHolder = surfaceHolder;
         }
     }
 
     @Override
     public Object getSurfaceLocker() {
-        if (mSurfaceHolder != null) {
-            return (Object) mSurfaceHolder;
+        if (surfaceHolder != null) {
+            return (Object) surfaceHolder;
         } else {
-            return mDummySurfaceHolder;
+            return dummySurfaceHolder;
         }
     }
 
     public void freeze() {
         PALManager.getLog().v(TAG, "Freezing thread");
-        mFrozen = true;
+        frozen = true;
     }
 
     public void unfreeze() {
         PALManager.getLog().v(TAG, "Unfreezing thread");
-        mFrozen = false;
+        frozen = false;
     }
 
     @Override
     public void run() {
-        SpaceGameState lGameState = SpaceGameState.INSTANCE;
-        long lFpsHelper = 0;
+        SpaceGameState gameState = SpaceGameState.INSTANCE;
+        long fpsHelper = 0;
         while (running) {
             // handle events that need to run on this thread
             runQueue();
 
-            Canvas c = null;
+            Canvas canvas = null;
 
             boolean viewportValid = false;
             synchronized (viewport.getViewport()) {
                 if (viewport.isValid()) {
                     viewportValid = true;
-                    mViewportScratch.set(viewport.getViewport());
+                    viewportScratch.set(viewport.getViewport());
                 }
             }
 
-            if (!lGameState.paused() && viewportValid && !mFrozen) {
-                long lLoopStart = System.nanoTime();
-                float lElapsed = lGameState.getElapsedTime();
-                lGameState.updateTimeTick();
+            if (!gameState.paused() && viewportValid && !frozen) {
+                long loopStart = System.nanoTime();
+                float elapsed = gameState.getElapsedTime();
+                gameState.updateTimeTick();
 
                 // Are we flinging the canvas?
                 if (viewport.isFlinging()) {
-                    viewport.moveViewport(viewport.getFlingSpeed().x * lElapsed, viewport.getFlingSpeed().y * lElapsed);
+                    viewport.moveViewport(viewport.getFlingSpeed().x * elapsed, viewport.getFlingSpeed().y * elapsed);
                     viewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
                     if (viewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
                         viewport.setFlinging(false);
@@ -130,19 +123,20 @@ public class SpaceGameThread extends GameThread {
                 }
 
                 parseGameEvents();
-                updatePhysics(lElapsed);
-                if (viewport.isFocusOnSpaceman())
+                updatePhysics(elapsed);
+                if (viewport.isFocusOnSpaceman()) {
                     viewport.viewportFollowSpaceman();
-                if (lGameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && lGameState.getState() == GameState.CHARGING) {
-                    lGameState.setPredicting(true);
-                    spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
-                    lGameState.setPredicting(false);
                 }
-                c = mSurfaceHolder.lockCanvas(null);
-                if (c != null) {
-                    synchronized (mSurfaceHolder) {
+                if (gameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && gameState.getState() == GameState.CHARGING) {
+                    gameState.setPredicting(true);
+                    spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
+                    gameState.setPredicting(false);
+                }
+                canvas = surfaceHolder.lockCanvas(null);
+                if (canvas != null) {
+                    synchronized (surfaceHolder) {
                         try {
-                            doDraw(c);
+                            doDraw(canvas);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -150,24 +144,24 @@ public class SpaceGameThread extends GameThread {
                 }
 
                 // if we have any time to spare in this frame we can sleep now
-                double upToHere = (System.nanoTime() - lLoopStart) / 1000000000d;
+                double upToHere = (System.nanoTime() - loopStart) / 1000000000d;
                 if (upToHere < MIN_FRAME_TIME)
                     SystemClock.sleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
 
                 // PALManager.getLog().v (TAG, "FPS: " + 1f /
                 // ((System.nanoTime() - lFpsHelper) / 1000000000d));
-                lFpsHelper = System.nanoTime();
+                fpsHelper = System.nanoTime();
                 // now blit to the screen
-                if (c != null) {
-                    mSurfaceHolder.unlockCanvasAndPost(c);
+                if (canvas != null) {
+                    surfaceHolder.unlockCanvasAndPost(canvas);
                 }
-            } else if (redrawOnce && mSurfaceHolder != null && !mFrozen) {
-                c = mSurfaceHolder.lockCanvas(null);
-                if (c != null) {
+            } else if (redrawOnce && surfaceHolder != null && !frozen) {
+                canvas = surfaceHolder.lockCanvas(null);
+                if (canvas != null) {
                     redrawOnce = false;
-                    synchronized (mSurfaceHolder) {
-                        doDraw(c);
-                        mSurfaceHolder.unlockCanvasAndPost(c);
+                    synchronized (surfaceHolder) {
+                        doDraw(canvas);
+                        surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 } else {
                     try {
@@ -187,19 +181,10 @@ public class SpaceGameThread extends GameThread {
         PALManager.getLog().i(TAG, "Thread ended...");
     }
 
-    // Save game state
-    public Bundle saveState(Bundle map) {
-        if (map != null) {
-            // TODO Implement this ???
-        }
-        return map;
-    }
-
     /* Callback invoked when the surface dimensions change. */
     public void setSurfaceSize(int width, int height) {
         PALManager.getLog().i(TAG, "surface size " + width + "x" + height);
-        // synchronized to make sure these all change atomically
-        synchronized (mSurfaceHolder) {
+        synchronized (surfaceHolder) {
             canvasSize.right = width;
             canvasSize.bottom = height;
             if (spaceData.mCurrentLevel != null) {
@@ -211,11 +196,10 @@ public class SpaceGameThread extends GameThread {
         }
     }
 
-    // The actual drawing happens here :)
-    private void doDraw(Canvas aCanvas) {
+    private void doDraw(Canvas canvas) {
         if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
-            mRenderer.initialize(aCanvas, mViewportScratch, viewport.screenRect);
-            spaceData.mCurrentLevel.draw(mRenderer);
+            renderer.initialize(canvas, viewportScratch, viewport.screenRect);
+            spaceData.mCurrentLevel.draw(renderer);
         }
     }
 
@@ -225,7 +209,7 @@ public class SpaceGameThread extends GameThread {
             tracker.trackEvent("out-of-time", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
             SpaceGameState.INSTANCE.setPaused(true);
             SpaceGameState.INSTANCE.setEndState(EndGameState.LOST_LOST);
-            mMsgHandler.sendEmptyMessage(0);
+            msgHandler.sendEmptyMessage(0);
         }
 
         // check world events
@@ -243,13 +227,13 @@ public class SpaceGameThread extends GameThread {
 
                 if (lCurScore > lHighScore)
                     LevelDbAdapter.getInstance().updateHighScore(lCurrentLevelID, lCurScore);
-                mMsgHandler.sendEmptyMessage(0);
+                msgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):
                 tracker.trackEvent("die", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
                 SpaceGameState.INSTANCE.setPaused(true);
                 SpaceGameState.INSTANCE.setEndState(EndGameState.LOST_DIE);
-                mMsgHandler.sendEmptyMessage(0);
+                msgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_SCORE_BONUS):
                 SpaceData.getInstance().points.bonus(BONUS_POINTS);
@@ -264,7 +248,7 @@ public class SpaceGameThread extends GameThread {
         return FloatMath.sqrt(canvasSize.width() * canvasSize.width() + canvasSize.height() * canvasSize.height());
     }
 
-    public void setMsgHandler(Handler aMsgHandler) {
-        mMsgHandler = aMsgHandler;
+    public void setMsgHandler(Handler msgHandler) {
+        this.msgHandler = msgHandler;
     }
 }
