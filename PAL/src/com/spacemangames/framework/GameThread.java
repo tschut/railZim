@@ -51,10 +51,7 @@ public abstract class GameThread extends Thread {
         if (arrowRect.isEmpty())
             return false;
 
-        float arrowX = arrowRect.exactCenterX();
-        float arrowY = arrowRect.exactCenterY();
-
-        double distance = Math.sqrt((x - arrowX) * (x - arrowX) + (y - arrowY) * (y - arrowY));
+        double distance = arrowRect.center().distanceTo(new PointF(x, y));
 
         return distance <= ARROW_HIT_RADIUS;
     }
