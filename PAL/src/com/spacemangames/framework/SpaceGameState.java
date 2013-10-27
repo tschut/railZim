@@ -72,7 +72,7 @@ public enum SpaceGameState {
         return (state == GameState.PAUSED);
     }
 
-    public synchronized float getElapsedTime() {
+    private float getElapsedTime() {
         return (System.nanoTime() - lastTime) / 1000000000f;
     }
 
@@ -86,5 +86,11 @@ public enum SpaceGameState {
 
     public EndGameState endState() {
         return endState;
+    }
+
+    public synchronized float tick() {
+        float elapsed = getElapsedTime();
+        updateTimeTick();
+        return elapsed;
     }
 }

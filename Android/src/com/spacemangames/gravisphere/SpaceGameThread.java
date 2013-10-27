@@ -4,7 +4,6 @@ import java.util.Queue;
 
 import android.graphics.Canvas;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.FloatMath;
 import android.view.SurfaceHolder;
 
@@ -13,13 +12,13 @@ import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.GameThread;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.framework.Viewport;
 import com.spacemangames.gravisphere.pal.AndroidRenderer;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
 import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
+import com.spacemangames.util.ThreadUtils;
 
 public class SpaceGameThread extends GameThread {
     public class FireSpacemanRunnable implements Runnable {
@@ -94,49 +93,30 @@ public class SpaceGameThread extends GameThread {
     public void run() {
         SpaceGameState gameState = SpaceGameState.INSTANCE;
         Rect viewportCopy = new Rect();
+        gameState.updateTimeTick();
         while (running) {
             runQueue();
 
-            Canvas canvas = null;
             boolean viewportValid = safeCopyViewport(viewportCopy);
 
-            if (runRegularFrame(gameState, viewportValid)) {
+            if (shouldRunRegularFrame(gameState, viewportValid)) {
                 long loopStart = System.nanoTime();
-                float elapsed = getElapsedTimeSinceLastFrame(gameState);
-
-                updateViewportFling(elapsed);
+                float elapsed = gameState.tick();
 
                 parseGameEvents();
                 updatePhysics(elapsed);
-                viewport.update();
+                viewport.update(elapsed);
+                updatePrediction(gameState);
 
-                if (gameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && gameState.getState() == GameState.CHARGING) {
-                    gameState.setPredicting(true);
-                    spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
-                    gameState.setPredicting(false);
-                }
-                canvas = surfaceHolder.lockCanvas(null);
-                if (canvas != null) {
-                    synchronized (surfaceHolder) {
-                        try {
-                            doDraw(canvas, viewportCopy);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                Canvas canvas = drawToCanvas(viewportCopy);
 
-                // if we have any time to spare in this frame we can sleep now
-                double upToHere = (System.nanoTime() - loopStart) / 1000000000d;
-                if (upToHere < MIN_FRAME_TIME)
-                    SystemClock.sleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
+                sleepUntilFrameFilled(loopStart);
 
-                // now blit to the screen
                 if (canvas != null) {
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
-            } else if (redrawOnce && surfaceHolder != null && !frozen) {
-                canvas = surfaceHolder.lockCanvas(null);
+            } else if (shouldRedrawOnce()) {
+                Canvas canvas = surfaceHolder.lockCanvas(null);
                 if (canvas != null) {
                     redrawOnce = false;
                     synchronized (surfaceHolder) {
@@ -144,41 +124,48 @@ public class SpaceGameThread extends GameThread {
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 } else {
-                    try {
-                        sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    ThreadUtils.silentSleep(10);
                 }
             } else {
+                ThreadUtils.silentSleep(100);
+            }
+        }
+    }
+
+    private boolean shouldRedrawOnce() {
+        return redrawOnce && surfaceHolder != null && !frozen;
+    }
+
+    private boolean shouldRunRegularFrame(SpaceGameState gameState, boolean viewportValid) {
+        return !gameState.paused() && viewportValid && !frozen;
+    }
+
+    private Canvas drawToCanvas(Rect viewportCopy) {
+        Canvas canvas = surfaceHolder.lockCanvas(null);
+        if (canvas != null) {
+            synchronized (surfaceHolder) {
                 try {
-                    sleep(100); // sleep 50 ms to save battery
-                } catch (InterruptedException e) {
+                    doDraw(canvas, viewportCopy);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        PALManager.getLog().i(TAG, "Thread ended...");
+        return canvas;
     }
 
-    private void updateViewportFling(float elapsed) {
-        // Are we flinging the canvas?
-        if (viewport.isFlinging()) {
-            viewport.moveViewport(viewport.getFlingSpeed().x * elapsed, viewport.getFlingSpeed().y * elapsed);
-            viewport.getFlingSpeed().multiply(Viewport.FLING_DAMPING_FACTOR);
-            if (viewport.getFlingSpeed().length() < Viewport.FLING_STOP_THRESHOLD)
-                viewport.setFlinging(false);
+    private void sleepUntilFrameFilled(long loopStart) {
+        double upToHere = (System.nanoTime() - loopStart) / 1000000000d;
+        if (upToHere < MIN_FRAME_TIME)
+            ThreadUtils.silentSleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
+    }
+
+    private void updatePrediction(SpaceGameState gameState) {
+        if (gameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && gameState.getState() == GameState.CHARGING) {
+            gameState.setPredicting(true);
+            spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
+            gameState.setPredicting(false);
         }
-    }
-
-    private float getElapsedTimeSinceLastFrame(SpaceGameState gameState) {
-        float elapsed = gameState.getElapsedTime();
-        gameState.updateTimeTick();
-        return elapsed;
-    }
-
-    private boolean runRegularFrame(SpaceGameState gameState, boolean viewportValid) {
-        return !gameState.paused() && viewportValid && !frozen;
     }
 
     private boolean safeCopyViewport(Rect viewportCopy) {
@@ -192,16 +179,14 @@ public class SpaceGameThread extends GameThread {
         return result;
     }
 
-    /* Callback invoked when the surface dimensions change. */
     public void setSurfaceSize(int width, int height) {
         PALManager.getLog().i(TAG, "surface size " + width + "x" + height);
         synchronized (surfaceHolder) {
-            canvasSize.right = width;
-            canvasSize.bottom = height;
+            canvasSize.set(0, 0, width, height);
             if (spaceData.mCurrentLevel != null) {
-                viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasSize);
+                viewport.reset(spaceData.mCurrentLevel.startCenter(), canvasSize);
             } else {
-                viewport.reset(viewport.getViewport().centerX(), viewport.getViewport().centerY(), canvasSize);
+                viewport.reset(viewport.getViewport().center(), canvasSize);
             }
             redrawOnce();
         }

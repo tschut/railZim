@@ -104,7 +104,7 @@ public abstract class GameThread extends Thread {
             spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
-            viewport.reset(spaceData.mCurrentLevel.startCenterX(), spaceData.mCurrentLevel.startCenterY(), canvasSize);
+            viewport.reset(spaceData.mCurrentLevel.startCenter(), canvasSize);
         }
     }
 

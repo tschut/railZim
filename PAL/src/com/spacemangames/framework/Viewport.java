@@ -20,10 +20,10 @@ public class Viewport {
 
     public Rect                 screenRect;
 
-    public static final int     AUTO_FOCUS_MIN_PIXELS = 3;
-    public static final float   AUTO_FOCUS_DAMPING    = 1.0f;
-    public static final float   FLING_STOP_THRESHOLD  = 10f;
-    public static final float   FLING_DAMPING_FACTOR  = 0.9f;
+    private static final int    AUTO_FOCUS_MIN_PIXELS = 3;
+    private static final float  AUTO_FOCUS_DAMPING    = 1.0f;
+    private static final float  FLING_STOP_THRESHOLD  = 10f;
+    private static final float  FLING_DAMPING_FACTOR  = 0.9f;
 
     public Viewport() {
         flingSpeed = new PointF();
@@ -61,11 +61,10 @@ public class Viewport {
         this.focusOnSpaceman = focusOnSpaceman;
     }
 
-    public void reset(int x, int y, Rect canvasSize) {
+    public void reset(PointF center, Rect canvasSize) {
         screenRect.set(canvasSize);
-        synchronized (viewport) {
-            viewport.set(x - canvasSize.centerX(), y - canvasSize.centerY(), x + canvasSize.centerX(), y + canvasSize.centerY());
-        }
+        viewport.set(canvasSize);
+        viewport.offset((int) -center.x / 2, (int) -center.y / 2);
         float scaleWidth = SpaceUtil.BASELINE_WIDTH / canvasSize.width();
         float scaleHeight = SpaceUtil.BASELINE_HEIGHT / canvasSize.height();
         float scale = Math.max(scaleWidth, scaleHeight);
@@ -85,10 +84,8 @@ public class Viewport {
     }
 
     public void focusOn(PointF position) {
-        synchronized (viewport) {
-            position.subtract(viewport.center());
-            viewport.offset(position);
-        }
+        position.subtract(viewport.center());
+        viewport.offset(position);
 
         setFlinging(false);
     }
@@ -96,15 +93,13 @@ public class Viewport {
     public void viewportFollowSpaceman() {
         PointF spacemanPosition = SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition();
 
-        synchronized (viewport) {
-            PointF viewportCenter = viewport.center();
+        PointF viewportCenter = viewport.center();
 
-            initializePreviousFocusPosition(spacemanPosition);
-            float offsetXDamped = calculateOffsetToFollowSpaceman(focusX, previousFocusPoint.x, spacemanPosition.x, viewportCenter.x);
-            float offsetYDamped = calculateOffsetToFollowSpaceman(focusY, previousFocusPoint.y, spacemanPosition.y, viewportCenter.y);
+        initializePreviousFocusPosition(spacemanPosition);
+        float offsetXDamped = calculateOffsetToFollowSpaceman(focusX, previousFocusPoint.x, spacemanPosition.x, viewportCenter.x);
+        float offsetYDamped = calculateOffsetToFollowSpaceman(focusY, previousFocusPoint.y, spacemanPosition.y, viewportCenter.y);
 
-            viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
-        }
+        viewport.offset(Math.round(offsetXDamped), Math.round(offsetYDamped));
 
         previousFocusPoint.set(spacemanPosition);
     }
@@ -149,9 +144,7 @@ public class Viewport {
     }
 
     public void moveViewport(float x, float y) {
-        synchronized (viewport) {
-            viewport.offset((int) (x * currentZoom()), (int) (y * currentZoom()));
-        }
+        viewport.offset((int) (x * currentZoom()), (int) (y * currentZoom()));
     }
 
     public void zoomViewport(float zoom) {
@@ -159,16 +152,14 @@ public class Viewport {
             return;
         }
 
-        synchronized (viewport) {
-            viewport.scale(zoom);
+        viewport.scale(zoom);
 
-            if (viewportAboveMaximumZoomLevel()) {
-                viewport.right = viewport.left + screenRect.width();
-                viewport.bottom = viewport.top + screenRect.height();
-            }
-
-            moveViewport(0, 0);
+        if (viewportAboveMaximumZoomLevel()) {
+            viewport.right = viewport.left + screenRect.width();
+            viewport.bottom = viewport.top + screenRect.height();
         }
+
+        moveViewport(0, 0);
     }
 
     private boolean viewportAboveMaximumZoomLevel() {
@@ -197,9 +188,17 @@ public class Viewport {
         return SpaceUtil.transform(viewport, screenRect, spacemanPosition);
     }
 
-    public void update() {
+    public void update(float elapsed) {
         if (focusOnSpaceman) {
             viewportFollowSpaceman();
+        }
+
+        if (flinging) {
+            moveViewport(flingSpeed.x * elapsed, flingSpeed.y * elapsed);
+            flingSpeed.multiply(FLING_DAMPING_FACTOR);
+            if (flingSpeed.length() < FLING_STOP_THRESHOLD) {
+                flinging = false;
+            }
         }
     }
 }

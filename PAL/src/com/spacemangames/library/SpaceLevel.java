@@ -194,6 +194,10 @@ public class SpaceLevel {
         return mStartY;
     }
 
+    public PointF startCenter() {
+        return new PointF(mStartX, mStartY);
+    }
+
     public void setPredictionBitmap(String aResource) {
         mPredictionBitmap = PALManager.getBitmapFactory().createBitmap(aResource, false);
     }
