@@ -39,7 +39,7 @@ public class HelpActivity extends Activity {
         PALManager.getLog().v(TAG, "OnClick PrevButton");
         if (SpaceData.getInstance().mCurrentLevel.mId == SpaceLevel.ID_HELP1) {
             SpaceView spaceview = (SpaceView) findViewById(R.id.space);
-            spaceview.mIgnoreFocusChange = true;
+            spaceview.ignoreFocusChange = true;
             finish();
         } else {
             GameThreadHolder.getThread().loadPrevLevel(true);

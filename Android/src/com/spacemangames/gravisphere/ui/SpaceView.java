@@ -22,8 +22,8 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String MTAG                 = "SpaceView";
 
     /** Used to have an offset while dragging the view around */
-    private Vector2             mDragStart;
-    private boolean             mDragging            = false;
+    private Vector2             dragStart;
+    private boolean             dragging             = false;
     private static final int    MIN_MOVE_BEFORE_DRAG = 20;               // pixels
     /** Variables used to implement flinging */
     private static final int    MIN_SPEED_FOR_FLING  = 100;              // 100
@@ -32,64 +32,60 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
     private static final long   MAX_TIME_FOR_FLING   = 300 * 1000 * 1000; // 300
                                                                           // milliseconds
     private static final int    ACCUMULATE_COUNT     = 3;
-    private long                mPreviousTime;
-    private Vector<Vector2>     mPreviousLocations;
-    private int                 mIndexInVector;
+    private long                previousTime;
+    private Vector<Vector2>     previousLocations;
+    private int                 indexInVector;
     /** Variables used to implement pinch-zoom */
     private static final int    MIN_MOVE_BEFORE_ZOOM = 20;               // pixels
-    private float               mPreviousDist;
-    private boolean             mZooming;
+    private float               previousDist;
+    private boolean             zooming;
 
     // if this is true all input is ignored
-    private boolean             mIgnoreInput         = false;
+    private boolean             ignoreInput          = false;
 
-    public boolean              mIgnoreFocusChange   = false;
+    public boolean              ignoreFocusChange    = false;
 
-    public SpaceView(Context aContext, AttributeSet aAttrs) {
-        super(aContext, aAttrs);
+    public SpaceView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-        // variable init
-        mDragStart = new Vector2();
-        mPreviousLocations = new Vector<Vector2>();
+        dragStart = new Vector2();
+        previousLocations = new Vector<Vector2>();
         for (int i = 0; i < ACCUMULATE_COUNT; i++) {
-            mPreviousLocations.add(new Vector2(0, 0));
+            previousLocations.add(new Vector2(0, 0));
         }
 
         setFocusable(true); // make sure we get key events
 
-        SurfaceHolder lHolder = getHolder();
-        lHolder.addCallback(this);
+        getHolder().addCallback(this);
     }
 
-    // Put the game on pause if the window loses focus
     @Override
-    public void onWindowFocusChanged(boolean aHasWindowFocus) {
-        if (mIgnoreFocusChange)
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        if (ignoreFocusChange)
             return;
 
-        SpaceGameState aState = SpaceGameState.INSTANCE;
-        if (!aHasWindowFocus) {
-            aState.setPaused(true);
-            aState.chargingState.reset();
+        SpaceGameState gameState = SpaceGameState.INSTANCE;
+        if (!hasWindowFocus) {
+            gameState.setPaused(true);
+            gameState.chargingState.reset();
         } else {
-            aState.setPaused(false);
+            gameState.setPaused(false);
         }
     }
 
-    public void ignoreInput(boolean aIgnore) {
-        mIgnoreInput = aIgnore;
+    public void ignoreInput(boolean ignore) {
+        ignoreInput = ignore;
     }
 
-    // Capture touch screen input
     @Override
-    public boolean onTouchEvent(MotionEvent aEvent) {
-        if (mIgnoreInput)
+    public boolean onTouchEvent(MotionEvent event) {
+        if (ignoreInput)
             return false;
 
         if (GameThreadHolder.getThread() == null)
             return false;
 
-        SpaceGameThread lThread = GameThreadHolder.getThread();
+        SpaceGameThread gameThread = GameThreadHolder.getThread();
         GameState state = SpaceGameState.INSTANCE.getState();
 
         if (state == GameState.LOADED) {
@@ -103,152 +99,150 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // check for multi-touch input
-        if (aEvent.getPointerCount() > 1) {
+        if (event.getPointerCount() > 1) {
             if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
                 SpaceGameState.INSTANCE.chargingState.reset();
                 SpaceData.getInstance().resetPredictionData();
                 SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             }
-            handleMultitouchEvent(aEvent);
+            handleMultitouchEvent(event);
             return true;
         }
 
-        int lAction = aEvent.getAction();
-        float lX = aEvent.getX();
-        float lY = aEvent.getY(); // Y is inverted
-        boolean lResult = false;
-        boolean lHitsSpaceMan = lThread.hitsSpaceMan(lX, lY);
-        boolean lHitsArrow = lThread.hitsSpaceManArrow(lX, lY);
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        boolean result = false;
+        boolean hitsSpaceMan = gameThread.hitsSpaceMan(x, y);
+        boolean hitsArrow = gameThread.hitsSpaceManArrow(x, y);
 
         // reset the focus viewport stuff
-        lThread.viewport.resetFocusViewportStatus(false);
+        gameThread.viewport.resetFocusViewportStatus(false);
 
         // this can be when the user was pinch-zooming and took only one finger
         // off the screen
-        if (mZooming) {
-            lAction = MotionEvent.ACTION_UP;
-            lHitsSpaceMan = false;
-            mZooming = false;
+        if (zooming) {
+            action = MotionEvent.ACTION_UP;
+            hitsSpaceMan = false;
+            zooming = false;
         }
 
         // This means we are starting with the charging (if this is on the
         // location of spaceman)
-        if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsSpaceMan) {
-            lX = SpaceUtil.resolutionScale(lX);
-            lY = SpaceUtil.resolutionScale(lY);
+        if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsSpaceMan) {
+            x = SpaceUtil.resolutionScale(x);
+            y = SpaceUtil.resolutionScale(y);
             SpaceGameState.INSTANCE.setState(GameState.CHARGING);
-            SpaceGameState.INSTANCE.chargingState.setChargingStart(lX, lY);
-            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(lX, lY);
-            lResult = true;
+            SpaceGameState.INSTANCE.chargingState.setChargingStart(x, y);
+            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            result = true;
         } else if (state == GameState.CHARGING) {
-            lX = SpaceUtil.resolutionScale(lX);
-            lY = SpaceUtil.resolutionScale(lY);
-            if (lAction == MotionEvent.ACTION_MOVE) {
-                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(lX, lY);
-            } else if (lAction == MotionEvent.ACTION_UP) {
-                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(lX, lY);
-                lThread.postRunnable(lThread.new FireSpacemanRunnable());
+            x = SpaceUtil.resolutionScale(x);
+            y = SpaceUtil.resolutionScale(y);
+            if (action == MotionEvent.ACTION_MOVE) {
+                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            } else if (action == MotionEvent.ACTION_UP) {
+                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+                gameThread.postRunnable(gameThread.new FireSpacemanRunnable());
             }
-            lResult = true;
-        } else if (state == GameState.NOT_STARTED && lAction == MotionEvent.ACTION_DOWN && lHitsArrow) {
-            lThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
-        } else if (lAction == MotionEvent.ACTION_DOWN && lHitsArrow) { // recenter
-                                                                       // on
-                                                                       // spaceman
-            lThread.viewport.resetFocusViewportStatus(true);
-        } else if (lAction == MotionEvent.ACTION_DOWN) { // about to move the
-                                                         // viewport
-            lThread.viewport.setFlinging(false);
-            mDragStart.set(lX, lY);
-            lThread.viewport.startViewportDrag(lX, lY);
-            mIndexInVector = ACCUMULATE_COUNT - 1;
-            mPreviousLocations.get(mIndexInVector).set(lX, lY);
-            lThread.viewport.getFlingSpeed().set(0, 0);
-            lResult = true;
-        } else if (lAction == MotionEvent.ACTION_MOVE) { // moving the viewport
-            if (mDragStart.dst(lX, lY) > MIN_MOVE_BEFORE_DRAG || mDragging) {
-                mDragging = true;
-                lThread.viewport.dragViewport(lX, lY);
-                long lCurrentTime = System.nanoTime();
-                float ldT = (float) ((lCurrentTime - mPreviousTime) / 1000000000d);
-                lThread.viewport.getFlingSpeed().x = (mPreviousLocations.get(mIndexInVector).x - lX) / ldT;
-                lThread.viewport.getFlingSpeed().y = (mPreviousLocations.get(mIndexInVector).y - lY) / ldT;
+            result = true;
+        } else if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsArrow) {
+            gameThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
+        } else if (action == MotionEvent.ACTION_DOWN && hitsArrow) { // recenter
+                                                                     // on
+                                                                     // spaceman
+            gameThread.viewport.resetFocusViewportStatus(true);
+        } else if (action == MotionEvent.ACTION_DOWN) { // about to move the
+                                                        // viewport
+            gameThread.viewport.setFlinging(false);
+            dragStart.set(x, y);
+            gameThread.viewport.startViewportDrag(x, y);
+            indexInVector = ACCUMULATE_COUNT - 1;
+            previousLocations.get(indexInVector).set(x, y);
+            gameThread.viewport.getFlingSpeed().set(0, 0);
+            result = true;
+        } else if (action == MotionEvent.ACTION_MOVE) { // moving the viewport
+            if (dragStart.dst(x, y) > MIN_MOVE_BEFORE_DRAG || dragging) {
+                dragging = true;
+                gameThread.viewport.dragViewport(x, y);
+                long currentTime = System.nanoTime();
+                float dT = (float) ((currentTime - previousTime) / 1000000000d);
+                gameThread.viewport.getFlingSpeed().x = (previousLocations.get(indexInVector).x - x) / dT;
+                gameThread.viewport.getFlingSpeed().y = (previousLocations.get(indexInVector).y - y) / dT;
                 // shift one left
-                for (int i = 0; i < ACCUMULATE_COUNT - 1; i++)
-                    mPreviousLocations.get(i).set(mPreviousLocations.get(i + 1));
-                mPreviousLocations.get(mIndexInVector).set(lX, lY);
-                mPreviousTime = lCurrentTime;
-                mIndexInVector--;
-                if (mIndexInVector < 0)
-                    mIndexInVector = 0;
-            }
-            lResult = true;
-        } else if (lAction == MotionEvent.ACTION_UP) { // done moving the
-                                                       // viewport
-            mDragging = false;
-            lThread.viewport.stopViewportDrag();
-            long lCurrentTime = System.nanoTime();
-            float lLen = lThread.viewport.getFlingSpeed().length();
-            if (lLen > MIN_SPEED_FOR_FLING && lCurrentTime - mPreviousTime < MAX_TIME_FOR_FLING) {
-                if (lLen > MAX_FLING_SPEED) {
-                    lThread.viewport.getFlingSpeed().x = (lThread.viewport.getFlingSpeed().x / lLen) * MAX_FLING_SPEED;
-                    lThread.viewport.getFlingSpeed().y = (lThread.viewport.getFlingSpeed().y / lLen) * MAX_FLING_SPEED;
+                for (int i = 0; i < ACCUMULATE_COUNT - 1; i++) {
+                    previousLocations.get(i).set(previousLocations.get(i + 1));
                 }
-                lThread.viewport.setFlinging(true);
+                previousLocations.get(indexInVector).set(x, y);
+                previousTime = currentTime;
+                indexInVector--;
+                if (indexInVector < 0) {
+                    indexInVector = 0;
+                }
             }
-            lResult = true;
+            result = true;
+        } else if (action == MotionEvent.ACTION_UP) { // done moving the
+                                                      // viewport
+            dragging = false;
+            gameThread.viewport.stopViewportDrag();
+            long currentTime = System.nanoTime();
+            float len = gameThread.viewport.getFlingSpeed().length();
+            if (len > MIN_SPEED_FOR_FLING && currentTime - previousTime < MAX_TIME_FOR_FLING) {
+                if (len > MAX_FLING_SPEED) {
+                    gameThread.viewport.getFlingSpeed().x = (gameThread.viewport.getFlingSpeed().x / len) * MAX_FLING_SPEED;
+                    gameThread.viewport.getFlingSpeed().y = (gameThread.viewport.getFlingSpeed().y / len) * MAX_FLING_SPEED;
+                }
+                gameThread.viewport.setFlinging(true);
+            }
+            result = true;
         }
 
-        return lResult;
+        return result;
     }
 
-    private void handleMultitouchEvent(MotionEvent aEvent) {
-        int pointerCount = aEvent.getPointerCount();
+    private void handleMultitouchEvent(MotionEvent event) {
+        int pointerCount = event.getPointerCount();
         PALManager.getLog().i(MTAG, "Multitouch event. Pointers: " + pointerCount);
 
         if (pointerCount != 2)
             return;
 
-        float dx = Math.abs(aEvent.getX(0) - aEvent.getX(1));
-        float dy = Math.abs(aEvent.getY(0) - aEvent.getY(1));
-        float lDist = FloatMath.sqrt(dx * dx + dy * dy);
+        float dx = Math.abs(event.getX(0) - event.getX(1));
+        float dy = Math.abs(event.getY(0) - event.getY(1));
+        float dist = FloatMath.sqrt(dx * dx + dy * dy);
 
-        switch (aEvent.getAction()) {
+        switch (event.getAction()) {
         case MotionEvent.ACTION_POINTER_1_DOWN: // either the first
         case MotionEvent.ACTION_POINTER_2_DOWN: // or second pointer has gone
                                                 // down
             PALManager.getLog().i(MTAG, "Action down");
-            mZooming = false;
-            mPreviousDist = lDist;
+            zooming = false;
+            previousDist = dist;
             break;
         case MotionEvent.ACTION_MOVE:
             PALManager.getLog().i(MTAG, "Action move");
-            float lZoom = mPreviousDist - lDist;
-            if (Math.abs(lZoom) > MIN_MOVE_BEFORE_ZOOM || mZooming) {
-                lZoom = (lZoom / GameThreadHolder.getThread().canvasDiagonal());
-                GameThreadHolder.getThread().viewport.zoomViewport(lZoom);
-                mPreviousDist = lDist;
-                mZooming = true;
+            float zoom = previousDist - dist;
+            if (Math.abs(zoom) > MIN_MOVE_BEFORE_ZOOM || zooming) {
+                zoom = (zoom / GameThreadHolder.getThread().canvasDiagonal());
+                GameThreadHolder.getThread().viewport.zoomViewport(zoom);
+                previousDist = dist;
+                zooming = true;
             }
         default:
-            PALManager.getLog().i(MTAG, "Action: " + aEvent.getAction());
+            PALManager.getLog().i(MTAG, "Action: " + event.getAction());
         }
     }
 
-    /* Callback invoked when the surface dimensions change. */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         GameThreadHolder.getThread().setSurfaceSize(width, height);
     }
 
-    // Called when the surface has been destroyed
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        // TODO need to do something here?
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        // TODO need to do something here?
     }
 }
