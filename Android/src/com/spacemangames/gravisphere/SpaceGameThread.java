@@ -199,8 +199,8 @@ public class SpaceGameThread extends GameThread {
         }
     }
 
+    // TODO move this to a separate class?
     private void parseGameEvents() {
-        // check if points have reached zero
         if (SpaceData.getInstance().points.getCurrentPoints() == 0) {
             tracker.trackEvent("out-of-time", String.valueOf(SpaceData.getInstance().getCurrentLevelId()), "", 0);
             SpaceGameState.INSTANCE.setPaused(true);
@@ -208,21 +208,20 @@ public class SpaceGameThread extends GameThread {
             msgHandler.sendEmptyMessage(0);
         }
 
-        // check world events
-        Queue<Integer> lQueue = SpaceWorldEventBuffer.getInstance().mEvents;
-        while (lQueue.size() > 0) {
-            Integer lEvent = lQueue.remove();
-            switch (lEvent) {
+        Queue<Integer> queue = SpaceWorldEventBuffer.getInstance().mEvents;
+        while (queue.size() > 0) {
+            Integer event = queue.remove();
+            switch (event) {
             case (SpaceWorldEventBuffer.EVENT_HIT_ROCKET):
                 SpaceGameState.INSTANCE.setPaused(true);
-                int lCurrentLevelID = SpaceData.getInstance().getCurrentLevelId();
-                int lHighScore = LevelDbAdapter.getInstance().highScore(lCurrentLevelID);
-                int lCurScore = SpaceData.getInstance().points.getCurrentPoints();
-                SpaceGameState.INSTANCE.setEndState(SpaceData.getInstance().currentLevelWinState(lCurScore));
-                tracker.trackEvent("win", String.valueOf(lCurrentLevelID), String.valueOf(lCurScore), 0);
+                int currentLevelID = SpaceData.getInstance().getCurrentLevelId();
+                int highScore = LevelDbAdapter.getInstance().highScore(currentLevelID);
+                int curScore = SpaceData.getInstance().points.getCurrentPoints();
+                SpaceGameState.INSTANCE.setEndState(SpaceData.getInstance().currentLevelWinState(curScore));
+                tracker.trackEvent("win", String.valueOf(currentLevelID), String.valueOf(curScore), 0);
 
-                if (lCurScore > lHighScore)
-                    LevelDbAdapter.getInstance().updateHighScore(lCurrentLevelID, lCurScore);
+                if (curScore > highScore)
+                    LevelDbAdapter.getInstance().updateHighScore(currentLevelID, curScore);
                 msgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):
