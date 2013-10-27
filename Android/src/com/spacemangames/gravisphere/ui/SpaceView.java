@@ -79,19 +79,12 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (ignoreInput)
+        if (inputShouldBeIgnored()) {
             return false;
-
-        if (GameThreadHolder.getThread() == null)
-            return false;
+        }
 
         SpaceGameThread gameThread = GameThreadHolder.getThread();
         GameState state = SpaceGameState.INSTANCE.getState();
-
-        if (state == GameState.LOADED) {
-            SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
-            return true;
-        }
 
         // only process input if we're in the right state
         if (state != GameState.CHARGING && state != GameState.FLYING && state != GameState.NOT_STARTED) {
@@ -100,11 +93,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
 
         // check for multi-touch input
         if (event.getPointerCount() > 1) {
-            if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
-                SpaceGameState.INSTANCE.chargingState.reset();
-                SpaceData.getInstance().resetPredictionData();
-                SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
-            }
+            interruptCharging();
             handleMultitouchEvent(event);
             return true;
         }
@@ -148,12 +137,9 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             result = true;
         } else if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsArrow) {
             gameThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
-        } else if (action == MotionEvent.ACTION_DOWN && hitsArrow) { // recenter
-                                                                     // on
-                                                                     // spaceman
+        } else if (action == MotionEvent.ACTION_DOWN && hitsArrow) {
             gameThread.viewport.resetFocusViewportStatus(true);
-        } else if (action == MotionEvent.ACTION_DOWN) { // about to move the
-                                                        // viewport
+        } else if (action == MotionEvent.ACTION_DOWN) {
             gameThread.viewport.setFlinging(false);
             dragStart.set(x, y);
             gameThread.viewport.startViewportDrag(x, y);
@@ -181,8 +167,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
             result = true;
-        } else if (action == MotionEvent.ACTION_UP) { // done moving the
-                                                      // viewport
+        } else if (action == MotionEvent.ACTION_UP) {
             dragging = false;
             gameThread.viewport.stopViewportDrag();
             long currentTime = System.nanoTime();
@@ -198,6 +183,18 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         return result;
+    }
+
+    private void interruptCharging() {
+        if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
+            SpaceGameState.INSTANCE.chargingState.reset();
+            SpaceData.getInstance().resetPredictionData();
+            SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
+        }
+    }
+
+    private boolean inputShouldBeIgnored() {
+        return ignoreInput || GameThreadHolder.getThread() == null;
     }
 
     private void handleMultitouchEvent(MotionEvent event) {

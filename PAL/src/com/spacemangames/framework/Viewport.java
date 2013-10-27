@@ -76,10 +76,10 @@ public class Viewport {
         setFlinging(false);
     }
 
-    public void resetFocusViewportStatus(boolean on) {
-        focusOnSpaceman = on;
-        focusX = on;
-        focusY = on;
+    public void resetFocusViewportStatus(boolean focusOnSpaceman) {
+        this.focusOnSpaceman = focusOnSpaceman;
+        focusX = focusOnSpaceman;
+        focusY = focusOnSpaceman;
         previousFocusPoint.set(0, 0);
     }
 
