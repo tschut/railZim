@@ -108,9 +108,8 @@ public class SpaceGameThread extends GameThread {
 
                 parseGameEvents();
                 updatePhysics(elapsed);
-                if (viewport.isFocusOnSpaceman()) {
-                    viewport.viewportFollowSpaceman();
-                }
+                viewport.update();
+
                 if (gameState.chargingState.chargingPower() > DRAW_PREDICTION_THRESHOLD && gameState.getState() == GameState.CHARGING) {
                     gameState.setPredicting(true);
                     spaceData.calculatePredictionData(SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed());
