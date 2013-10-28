@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -18,35 +20,39 @@ import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
-class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String MTAG                 = "SpaceView";
+class SpaceView extends SurfaceView implements SurfaceHolder.Callback, OnScaleGestureListener {
+    private static final String  MTAG                 = "SpaceView";
 
     /** Used to have an offset while dragging the view around */
-    private Vector2             dragStart;
-    private boolean             dragging             = false;
-    private static final int    MIN_MOVE_BEFORE_DRAG = 20;               // pixels
+    private Vector2              dragStart;
+    private boolean              dragging             = false;
+    private static final int     MIN_MOVE_BEFORE_DRAG = 20;               // pixels
     /** Variables used to implement flinging */
-    private static final int    MIN_SPEED_FOR_FLING  = 100;              // 100
-                                                                          // pixels/second
-    private static final int    MAX_FLING_SPEED      = 2000;
-    private static final long   MAX_TIME_FOR_FLING   = 300 * 1000 * 1000; // 300
-                                                                          // milliseconds
-    private static final int    ACCUMULATE_COUNT     = 3;
-    private long                previousTime;
-    private Vector<Vector2>     previousLocations;
-    private int                 indexInVector;
+    private static final int     MIN_SPEED_FOR_FLING  = 100;              // 100
+                                                                           // pixels/second
+    private static final int     MAX_FLING_SPEED      = 2000;
+    private static final long    MAX_TIME_FOR_FLING   = 300 * 1000 * 1000; // 300
+                                                                           // milliseconds
+    private static final int     ACCUMULATE_COUNT     = 3;
+    private long                 previousTime;
+    private Vector<Vector2>      previousLocations;
+    private int                  indexInVector;
     /** Variables used to implement pinch-zoom */
-    private static final int    MIN_MOVE_BEFORE_ZOOM = 20;               // pixels
-    private float               previousDist;
-    private boolean             zooming;
+    private static final int     MIN_MOVE_BEFORE_ZOOM = 20;               // pixels
+    private float                previousDist;
+    private boolean              zooming;
+
+    private ScaleGestureDetector scaleGestureDetector;
 
     // if this is true all input is ignored
-    private boolean             ignoreInput          = false;
+    private boolean              ignoreInput          = false;
 
-    public boolean              ignoreFocusChange    = false;
+    public boolean               ignoreFocusChange    = false;
 
     public SpaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        scaleGestureDetector = new ScaleGestureDetector(context, this);
 
         dragStart = new Vector2();
         previousLocations = new Vector<Vector2>();
@@ -82,6 +88,8 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         if (inputShouldBeIgnored()) {
             return false;
         }
+
+        scaleGestureDetector.onTouchEvent(event);
 
         SpaceGameThread gameThread = GameThreadHolder.getThread();
         GameState state = SpaceGameState.INSTANCE.getState();
@@ -241,5 +249,21 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+    }
+
+    @Override
+    public boolean onScale(ScaleGestureDetector detector) {
+        return true;
+    }
+
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector detector) {
+        zooming = true;
+        return true;
+    }
+
+    @Override
+    public void onScaleEnd(ScaleGestureDetector detector) {
+        zooming = false;
     }
 }
