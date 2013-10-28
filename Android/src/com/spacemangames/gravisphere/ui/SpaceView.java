@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
@@ -18,28 +17,24 @@ import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.library.SpaceData;
-import com.spacemangames.pal.PALManager;
 
 class SpaceView extends SurfaceView implements SurfaceHolder.Callback, OnScaleGestureListener {
-    private static final String  MTAG                 = "SpaceView";
+    private static final String  MTAG                 = SpaceView.class.getSimpleName();
 
     /** Used to have an offset while dragging the view around */
     private Vector2              dragStart;
     private boolean              dragging             = false;
-    private static final int     MIN_MOVE_BEFORE_DRAG = 20;               // pixels
+    private static final int     MIN_MOVE_BEFORE_DRAG = 20;                             // pixels
     /** Variables used to implement flinging */
-    private static final int     MIN_SPEED_FOR_FLING  = 100;              // 100
-                                                                           // pixels/second
+    private static final int     MIN_SPEED_FOR_FLING  = 100;                            // 100
+                                                                                         // pixels/second
     private static final int     MAX_FLING_SPEED      = 2000;
-    private static final long    MAX_TIME_FOR_FLING   = 300 * 1000 * 1000; // 300
-                                                                           // milliseconds
+    private static final long    MAX_TIME_FOR_FLING   = 300 * 1000 * 1000;              // 300
+                                                                                         // milliseconds
     private static final int     ACCUMULATE_COUNT     = 3;
     private long                 previousTime;
     private Vector<Vector2>      previousLocations;
     private int                  indexInVector;
-    /** Variables used to implement pinch-zoom */
-    private static final int     MIN_MOVE_BEFORE_ZOOM = 20;               // pixels
-    private float                previousDist;
     private boolean              zooming;
 
     private ScaleGestureDetector scaleGestureDetector;
@@ -102,7 +97,6 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback, OnScaleGe
         // check for multi-touch input
         if (event.getPointerCount() > 1) {
             interruptCharging();
-            handleMultitouchEvent(event);
             return true;
         }
 
@@ -205,39 +199,6 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback, OnScaleGe
         return ignoreInput || GameThreadHolder.getThread() == null;
     }
 
-    private void handleMultitouchEvent(MotionEvent event) {
-        int pointerCount = event.getPointerCount();
-        PALManager.getLog().i(MTAG, "Multitouch event. Pointers: " + pointerCount);
-
-        if (pointerCount != 2)
-            return;
-
-        float dx = Math.abs(event.getX(0) - event.getX(1));
-        float dy = Math.abs(event.getY(0) - event.getY(1));
-        float dist = FloatMath.sqrt(dx * dx + dy * dy);
-
-        switch (event.getAction()) {
-        case MotionEvent.ACTION_POINTER_1_DOWN: // either the first
-        case MotionEvent.ACTION_POINTER_2_DOWN: // or second pointer has gone
-                                                // down
-            PALManager.getLog().i(MTAG, "Action down");
-            zooming = false;
-            previousDist = dist;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            PALManager.getLog().i(MTAG, "Action move");
-            float zoom = previousDist - dist;
-            if (Math.abs(zoom) > MIN_MOVE_BEFORE_ZOOM || zooming) {
-                zoom = (zoom / GameThreadHolder.getThread().canvasDiagonal());
-                GameThreadHolder.getThread().viewport.zoomViewport(zoom);
-                previousDist = dist;
-                zooming = true;
-            }
-        default:
-            PALManager.getLog().i(MTAG, "Action: " + event.getAction());
-        }
-    }
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         GameThreadHolder.getThread().setSurfaceSize(width, height);
@@ -253,6 +214,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback, OnScaleGe
 
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
+        GameThreadHolder.getThread().viewport.zoomViewport(-(detector.getScaleFactor() - 1));
         return true;
     }
 
