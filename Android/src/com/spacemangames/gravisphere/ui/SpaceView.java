@@ -13,7 +13,6 @@ import android.view.SurfaceView;
 import com.badlogic.gdx.math.Vector2;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.library.SpaceData;
@@ -119,11 +118,6 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsSpaceMan) {
             result = true;
         } else if (state == GameState.CHARGING) {
-            x = SpaceUtil.resolutionScale(x);
-            y = SpaceUtil.resolutionScale(y);
-            if (action == MotionEvent.ACTION_MOVE) {
-                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
-            }
             result = true;
         } else if (action == MotionEvent.ACTION_DOWN) {
             gameThread.viewport.setFlinging(false);

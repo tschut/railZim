@@ -47,8 +47,18 @@ public class GestureListener implements OnGestureListener {
     }
 
     @Override
-    public boolean onScroll(MotionEvent event, MotionEvent arg1, float distanceX, float distanceY) {
-        return false;
+    public boolean onScroll(MotionEvent event, MotionEvent event2, float distanceX, float distanceY) {
+        boolean result = false;
+        GameState state = SpaceGameState.INSTANCE.getState();
+
+        if (state == GameState.CHARGING) {
+            float x = SpaceUtil.resolutionScale(event2.getX());
+            float y = SpaceUtil.resolutionScale(event2.getY());
+            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            result = true;
+        }
+
+        return result;
     }
 
     @Override
