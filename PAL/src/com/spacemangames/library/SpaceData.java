@@ -15,7 +15,7 @@ import com.spacemangames.math.PointF;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceData {
-    public static final String                   TAG                    = "SpaceData";
+    public static final String                   TAG                    = SpaceData.class.getSimpleName();
 
     public static final float                    BOX2D_TIMESTEP         = 1.0f / 60.0f;                        // 60
                                                                                                                 // fps
