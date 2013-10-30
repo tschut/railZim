@@ -93,6 +93,9 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         gestureDetector.onTouchEvent(event);
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            gestureListener.onUp(event);
+        }
 
         SpaceGameThread gameThread = GameThreadHolder.getThread();
         GameState state = SpaceGameState.INSTANCE.getState();
@@ -120,9 +123,6 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             y = SpaceUtil.resolutionScale(y);
             if (action == MotionEvent.ACTION_MOVE) {
                 SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
-            } else if (action == MotionEvent.ACTION_UP) {
-                SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
-                gameThread.postRunnable(gameThread.new FireSpacemanRunnable());
             }
             result = true;
         } else if (action == MotionEvent.ACTION_DOWN) {

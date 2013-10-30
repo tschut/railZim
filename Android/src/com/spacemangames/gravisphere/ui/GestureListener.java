@@ -53,11 +53,27 @@ public class GestureListener implements OnGestureListener {
 
     @Override
     public void onShowPress(MotionEvent event) {
+        // not used
     }
 
     @Override
     public boolean onSingleTapUp(MotionEvent event) {
+        // not used
         return false;
     }
 
+    public boolean onUp(MotionEvent event) {
+        boolean result = false;
+        GameState state = SpaceGameState.INSTANCE.getState();
+
+        if (state == GameState.CHARGING) {
+            float x = SpaceUtil.resolutionScale(event.getX());
+            float y = SpaceUtil.resolutionScale(event.getY());
+            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            GameThreadHolder.getThread().postRunnable(GameThreadHolder.getThread().new FireSpacemanRunnable());
+            result = true;
+        }
+
+        return result;
+    }
 }
