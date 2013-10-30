@@ -11,6 +11,8 @@ import com.spacemangames.library.SpaceData;
 
 public class GestureListener implements OnGestureListener {
 
+    private static final float FLING_MULTIPLICATION_FACTOR = 0.2f;
+
     @Override
     public boolean onDown(MotionEvent event) {
         boolean result = false;
@@ -37,8 +39,12 @@ public class GestureListener implements OnGestureListener {
     }
 
     @Override
-    public boolean onFling(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
-        return false;
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        GameThreadHolder.getThread().viewport.getFlingSpeed().set(-velocityX * FLING_MULTIPLICATION_FACTOR,
+                -velocityY * FLING_MULTIPLICATION_FACTOR);
+        GameThreadHolder.getThread().viewport.setFlinging(true);
+
+        return true;
     }
 
     @Override
@@ -56,6 +62,8 @@ public class GestureListener implements OnGestureListener {
             float y = SpaceUtil.resolutionScale(event2.getY());
             SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
             result = true;
+        } else {
+            GameThreadHolder.getThread().viewport.moveViewport(distanceX, distanceY);
         }
 
         return result;
