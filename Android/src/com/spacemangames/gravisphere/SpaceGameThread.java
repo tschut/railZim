@@ -4,7 +4,6 @@ import java.util.Queue;
 
 import android.graphics.Canvas;
 import android.os.Handler;
-import android.util.FloatMath;
 import android.view.SurfaceHolder;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -238,7 +237,7 @@ public class SpaceGameThread extends GameThread {
     }
 
     public float canvasDiagonal() {
-        return FloatMath.sqrt(canvasSize.width() * canvasSize.width() + canvasSize.height() * canvasSize.height());
+        return (float) Math.sqrt(canvasSize.width() * canvasSize.width() + canvasSize.height() * canvasSize.height());
     }
 
     public void setMsgHandler(Handler msgHandler) {
