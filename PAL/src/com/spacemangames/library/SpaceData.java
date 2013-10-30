@@ -17,286 +17,234 @@ import com.spacemangames.pal.PALManager;
 public class SpaceData {
     public static final String                   TAG                    = SpaceData.class.getSimpleName();
 
-    public static final float                    BOX2D_TIMESTEP         = 1.0f / 60.0f;                        // 60
-                                                                                                                // fps
+    public static final float                    BOX2D_TIMESTEP         = 1.0f / 60.0f;
 
-    public static final float                    BOX2D_PREDICT_TIMESTEP = 1.0f / 60.0f;                        // 30
-                                                                                                                // fps
-    public static final float                    PREDICTION_STEP        = 1.0f / 10f;                          // 5
-                                                                                                                // per
-                                                                                                                // second
+    public static final float                    BOX2D_PREDICT_TIMESTEP = 1.0f / 60.0f;
+    public static final float                    PREDICTION_STEP        = 1.0f / 10f;
+    public static final float                    BOX2D_SPEEDUP          = 1.0f;
 
-    public static final float                    BOX2D_SPEEDUP          = 1.0f;                                // simulate
-                                                                                                                // x
-                                                                                                                // times
-                                                                                                                // the
-                                                                                                                // real
-                                                                                                                // time
-    public static final int                      BOX2D_POS_ITER         = 4;                                   // 10
-                                                                                                                // =
-                                                                                                                // suggested
-                                                                                                                // by
-                                                                                                                // manual
-    public static final int                      BOX2D_VEL_ITER         = 2;                                   // 10
-                                                                                                                // =
-                                                                                                                // suggested
-                                                                                                                // by
-                                                                                                                // manual
+    // box2d manual suggest 10 and 10 for these
+    public static final int                      BOX2D_POS_ITER         = 4;
+    public static final int                      BOX2D_VEL_ITER         = 2;
 
     public static final int                      PREDICT_SECONDS        = 1;
 
-    /** All levels loaded end up here */
-    public ArrayList<SpaceLevel>                 mLevels;
+    public ArrayList<SpaceLevel>                 levels;
 
-    /** except these special ones :) */
-    public ArrayList<SpaceLevel>                 mSpecialLevels;
+    public ArrayList<SpaceLevel>                 specialLevels;
 
-    /** This is the current level */
-    public SpaceLevel                            mCurrentLevel;
+    public SpaceLevel                            currentLevel;
 
-    /** Boolean indicating if preloading is finished */
-    public boolean                               mPreloadingDone;
+    public boolean                               preloadingDone;
 
-    /** Box2D stuff */
-    private World                                mWorld;
+    private World                                world;
 
-    /** Object that keeps track of the points scored for the current level */
     public SpaceGamePoints                       points;
 
-    /** List of listeners for loading done event */
-    private final HashSet<ILoadingDoneListener>  mLoadingDoneListeners  = new HashSet<ILoadingDoneListener>();
-    /** List of listeners for change level event */
-    private final HashSet<ILevelChangedListener> mLevelChangedListeners = new HashSet<ILevelChangedListener>();
+    private final HashSet<ILoadingDoneListener>  loadingDoneListeners   = new HashSet<ILoadingDoneListener>();
+    private final HashSet<ILevelChangedListener> levelChangedListeners  = new HashSet<ILevelChangedListener>();
 
     private SpaceData() {
-        mPreloadingDone = false;
-        mLevels = new ArrayList<SpaceLevel>();
-        mSpecialLevels = new ArrayList<SpaceLevel>();
+        preloadingDone = false;
+        levels = new ArrayList<SpaceLevel>();
+        specialLevels = new ArrayList<SpaceLevel>();
         points = new SpaceGamePoints();
     }
 
-    // Singleton holder
     private static class SingletonHolder {
         public static final SpaceData INSTANCE = new SpaceData();
     }
 
-    // Singleton access
     public static SpaceData getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
     public World getWorld() {
-        return mWorld;
+        return world;
     }
 
-    public void setCurrentLevel(int aIndex, boolean aSpecial) {
-        // create a world without gravity
-        mWorld = new World(new Vector2(0.0f, 0.0f), true);
-        mWorld.setAutoClearForces(true);
-        mWorld.setContactListener(SpaceWorldEventBuffer.getInstance().getContactListener());
+    public void setCurrentLevel(int index, boolean special) {
+        world = new World(new Vector2(0.0f, 0.0f), true);
+        world.setAutoClearForces(true);
+        world.setContactListener(SpaceWorldEventBuffer.getInstance().getContactListener());
 
-        // reset the current level (if there is one), we may clean up resources
-        // there
-        if (mCurrentLevel != null) {
-            mCurrentLevel.releaseLazyMemory();
-            mCurrentLevel.reset();
+        if (currentLevel != null) {
+            currentLevel.releaseLazyMemory();
+            currentLevel.reset();
         }
 
-        // set the current level
-        if (aSpecial) {
-            mCurrentLevel = mSpecialLevels.get(aIndex);
+        if (special) {
+            currentLevel = specialLevels.get(index);
         } else {
-            mCurrentLevel = mLevels.get(aIndex);
+            currentLevel = levels.get(index);
         }
-        mCurrentLevel.reset();
-        // mCurrentLevel.dump();
+        currentLevel.reset();
 
-        // reset points
         points.reset();
 
         // create bodies for all objects
-        int count = mCurrentLevel.mObjects.size();
+        int count = currentLevel.mObjects.size();
         for (int i = 0; i < count; i++) {
-            SpaceObject lO = mCurrentLevel.mObjects.get(i);
-            lO.createBody(mWorld);
-            lO.reset();
+            SpaceObject object = currentLevel.mObjects.get(i);
+            object.createBody(world);
+            object.reset();
         }
 
-        // request garbage collection
-        System.gc();
-
-        // notify listeners
-        invokeLevelChangedListeners(aIndex, aSpecial);
+        invokeLevelChangedListeners(index, special);
     }
 
-    public void stepCurrentLevel(float aElapsed) {
+    public void stepCurrentLevel(float elapsed) {
         if (SpaceGameState.INSTANCE.getState() == GameState.FLYING) {
-            // update points
-            points.elapse((int) (1000 * aElapsed));
+            points.elapse((int) (1000 * elapsed));
         }
 
-        // update physics
-        updatePhysics(aElapsed);
+        updatePhysics(elapsed);
     }
 
-    public synchronized void updatePhysics(float aElapsed) {
+    public synchronized void updatePhysics(float elapsed) {
         if (!SpaceGameState.INSTANCE.paused()) {
-            // now run box2d simulation
-            float lTimeCount = aElapsed;
-            while (lTimeCount > BOX2D_TIMESTEP) {
-                mCurrentLevel.updatePhysics(BOX2D_TIMESTEP);
-                mWorld.step(BOX2D_TIMESTEP * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
-                lTimeCount -= BOX2D_TIMESTEP;
+            float timeCount = elapsed;
+            while (timeCount > BOX2D_TIMESTEP) {
+                currentLevel.updatePhysics(BOX2D_TIMESTEP);
+                world.step(BOX2D_TIMESTEP * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
+                timeCount -= BOX2D_TIMESTEP;
 
                 if (SpaceWorldEventBuffer.getInstance().forceStopEventHappened())
                     return;
             }
 
-            if (lTimeCount > 0) {
-                mCurrentLevel.updatePhysics(lTimeCount);
-                mWorld.step(lTimeCount * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
+            if (timeCount > 0) {
+                currentLevel.updatePhysics(timeCount);
+                world.step(timeCount * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
             }
 
-            int count = mCurrentLevel.mObjects.size();
+            int count = currentLevel.mObjects.size();
             for (int i = 0; i < count; i++) {
-                SpaceObject lObj = mCurrentLevel.mObjects.get(i);
-                lObj.updatePositions();
+                SpaceObject object = currentLevel.mObjects.get(i);
+                object.updatePositions();
             }
         }
     }
 
     public synchronized void resetPredictionData() {
-        if (mCurrentLevel == null)
+        if (currentLevel == null)
             return;
 
-        SpaceManObject lSpaceMan = mCurrentLevel.getSpaceManObject();
-        if (lSpaceMan != null)
-            lSpaceMan.clearPredictionPoints();
+        SpaceManObject spaceMan = currentLevel.getSpaceManObject();
+        if (spaceMan != null)
+            spaceMan.clearPredictionPoints();
     }
 
-    public synchronized void calculatePredictionData(PointF aFirePower) {
-        mCurrentLevel.setSpaceManSpeed(aFirePower);
+    public synchronized void calculatePredictionData(PointF firePower) {
+        currentLevel.setSpaceManSpeed(firePower);
         // now run box2d simulation
-        float lSimulatedTime = 0;
-        float lSinceLastPredictionStep = 0;
+        float simulatedTime = 0;
+        float sinceLastPredictionStep = 0;
         int predictionIndex = 0;
 
-        SpaceManObject lSpaceMan = mCurrentLevel.getSpaceManObject();
+        SpaceManObject spaceMan = currentLevel.getSpaceManObject();
         resetPredictionData();
-        while (lSimulatedTime <= PREDICT_SECONDS) {
-            mCurrentLevel.updatePhysicsGravity(BOX2D_PREDICT_TIMESTEP);
+        while (simulatedTime <= PREDICT_SECONDS) {
+            currentLevel.updatePhysicsGravity(BOX2D_PREDICT_TIMESTEP);
 
-            mWorld.step(BOX2D_PREDICT_TIMESTEP * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
-            lSimulatedTime += BOX2D_PREDICT_TIMESTEP;
-            lSinceLastPredictionStep += BOX2D_PREDICT_TIMESTEP;
+            world.step(BOX2D_PREDICT_TIMESTEP * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
+            simulatedTime += BOX2D_PREDICT_TIMESTEP;
+            sinceLastPredictionStep += BOX2D_PREDICT_TIMESTEP;
 
             if (SpaceWorldEventBuffer.getInstance().forceStopEventHappened()) {
                 SpaceWorldEventBuffer.getInstance().clear();
                 break;
             }
 
-            lSpaceMan.updatePositions();
-            if (lSinceLastPredictionStep >= PREDICTION_STEP) {
-                lSinceLastPredictionStep = 0;
-                lSpaceMan.setPredictionPoint(predictionIndex);
+            spaceMan.updatePositions();
+            if (sinceLastPredictionStep >= PREDICTION_STEP) {
+                sinceLastPredictionStep = 0;
+                spaceMan.setPredictionPoint(predictionIndex);
                 ++predictionIndex;
             }
         }
-        lSpaceMan.reset();
-    }
-
-    public void Dump() {
-        int lCount = mLevels.size();
-        PALManager.getLog().i(TAG, "*************** Dumping level data ***************");
-        for (int i = 0; i < lCount; i++) {
-            PALManager.getLog().i(TAG, "Dumping level " + (i + 1) + " of " + lCount);
-            mLevels.get(i).dump();
-        }
-        PALManager.getLog().i(TAG, "************* Dumping level data done ************");
+        spaceMan.reset();
     }
 
     public void preloadAllLevels() {
-        PALManager.getResourceHandler().preloadAllLevels(mLevels);
-        mCurrentLevel = mLevels.get(0);
-        // done!
-        // Dump results for debugging
-        // Dump();
+        PALManager.getResourceHandler().preloadAllLevels(levels);
+        currentLevel = levels.get(0);
     }
 
     public void setLoadingDone() {
-        mPreloadingDone = true;
+        preloadingDone = true;
         invokeLoadingDoneListeners();
     }
 
     public void setMainMenuLevel() {
-        mCurrentLevel = mSpecialLevels.get(0);
+        currentLevel = specialLevels.get(0);
     }
 
     public int getCurrentLevelId() {
-        return mCurrentLevel.mId;
+        return currentLevel.mId;
     }
 
     public int getLastLevelId() {
-        return mLevels.get(mLevels.size() - 1).mId;
+        return levels.get(levels.size() - 1).mId;
     }
 
-    public EndGameState currentLevelWinState(int aPoints) {
-        if (aPoints < mCurrentLevel.silver()) {
+    public EndGameState currentLevelWinState(int points) {
+        if (points < currentLevel.silver()) {
             return EndGameState.WON_BRONZE;
-        } else if (aPoints < mCurrentLevel.gold()) {
+        } else if (points < currentLevel.gold()) {
             return EndGameState.WON_SILVER;
         } else {
             return EndGameState.WON_GOLD;
         }
     }
 
-    public EndGameState levelStarColor(int aLevel, int aPoints) {
-        SpaceLevel level = mLevels.get(aLevel);
-        if (aPoints >= level.gold()) {
+    public EndGameState levelStarColor(int levelIndex, int points) {
+        SpaceLevel level = levels.get(levelIndex);
+        if (points >= level.gold()) {
             return EndGameState.WON_GOLD;
-        } else if (aPoints >= level.silver()) {
+        } else if (points >= level.silver()) {
             return EndGameState.WON_SILVER;
         } else {
             return EndGameState.WON_BRONZE;
         }
     }
 
-    public void addLoadingDoneListener(ILoadingDoneListener aListener) {
-        synchronized (mLoadingDoneListeners) {
-            mLoadingDoneListeners.add(aListener);
+    public void addLoadingDoneListener(ILoadingDoneListener listener) {
+        synchronized (loadingDoneListeners) {
+            loadingDoneListeners.add(listener);
         }
     }
 
-    public void addLevelChangedListener(ILevelChangedListener aListener) {
-        synchronized (mLevelChangedListeners) {
-            mLevelChangedListeners.add(aListener);
+    public void addLevelChangedListener(ILevelChangedListener listener) {
+        synchronized (levelChangedListeners) {
+            levelChangedListeners.add(listener);
         }
     }
 
-    public void remLoadingDoneListener(ILoadingDoneListener aListener) {
-        synchronized (mLoadingDoneListeners) {
-            mLoadingDoneListeners.remove(aListener);
+    public void remLoadingDoneListener(ILoadingDoneListener listener) {
+        synchronized (loadingDoneListeners) {
+            loadingDoneListeners.remove(listener);
         }
     }
 
-    public void remLevelChangedListener(ILevelChangedListener aListener) {
-        synchronized (mLevelChangedListeners) {
-            mLevelChangedListeners.remove(aListener);
+    public void remLevelChangedListener(ILevelChangedListener listener) {
+        synchronized (levelChangedListeners) {
+            levelChangedListeners.remove(listener);
         }
     }
 
     private void invokeLoadingDoneListeners() {
-        synchronized (mLoadingDoneListeners) {
-            for (ILoadingDoneListener list : mLoadingDoneListeners) {
+        synchronized (loadingDoneListeners) {
+            for (ILoadingDoneListener list : loadingDoneListeners) {
                 list.loadingDone();
             }
         }
     }
 
-    private void invokeLevelChangedListeners(int aNewLevelID, boolean aSpecial) {
-        synchronized (mLevelChangedListeners) {
-            for (ILevelChangedListener list : mLevelChangedListeners) {
-                list.LevelChanged(aNewLevelID, aSpecial);
+    private void invokeLevelChangedListeners(int newLevelID, boolean special) {
+        synchronized (levelChangedListeners) {
+            for (ILevelChangedListener list : levelChangedListeners) {
+                list.LevelChanged(newLevelID, special);
             }
         }
     }

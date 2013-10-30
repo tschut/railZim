@@ -39,14 +39,14 @@ public abstract class GameThread extends Thread {
     }
 
     public boolean hitsSpaceMan(float x, float y) {
-        PointF spacemanPosition = viewport.toScreenCoordinates(spaceData.mCurrentLevel.getSpaceManObject().getPosition());
+        PointF spacemanPosition = viewport.toScreenCoordinates(spaceData.currentLevel.getSpaceManObject().getPosition());
         double distance = spacemanPosition.distanceTo(new PointF(x, y));
 
-        return distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.mCurrentLevel.getSpaceManObject().getBitmap().getWidth();
+        return distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.currentLevel.getSpaceManObject().getBitmap().getWidth();
     }
 
     public boolean hitsSpaceManArrow(float x, float y) {
-        Rect arrowRect = spaceData.mCurrentLevel.getSpaceManObject().getArrowData().mRect;
+        Rect arrowRect = spaceData.currentLevel.getSpaceManObject().getArrowData().mRect;
         if (arrowRect.isEmpty())
             return false;
 
@@ -91,7 +91,7 @@ public abstract class GameThread extends Thread {
         spaceData.points.reset();
         SpaceGameState.INSTANCE.setState(GameState.FLYING);
         PointF speed = SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed();
-        spaceData.mCurrentLevel.setSpaceManSpeed(speed);
+        spaceData.currentLevel.setSpaceManSpeed(speed);
 
         viewport.setFocusOnSpaceman(true);
     }
@@ -104,7 +104,7 @@ public abstract class GameThread extends Thread {
             spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
-            viewport.reset(spaceData.mCurrentLevel.startCenter(), canvasSize);
+            viewport.reset(spaceData.currentLevel.startCenter(), canvasSize);
         }
     }
 

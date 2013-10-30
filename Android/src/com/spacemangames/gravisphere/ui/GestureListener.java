@@ -29,10 +29,10 @@ public class GestureListener implements OnGestureListener {
             SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
             result = true;
         } else if (state == GameState.NOT_STARTED && hitsArrow) {
-            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().mCurrentLevel.startCenter());
+            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().currentLevel.startCenter());
             result = true;
         } else if (hitsArrow) {
-            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
+            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().currentLevel.getSpaceManObject().getPosition());
             result = true;
         }
 

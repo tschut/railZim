@@ -33,7 +33,7 @@ public class AndroidResourceHandler implements IResourceHandler {
         preloadLevels(aLevels, levelsJson);
 
         LevelsJson specials = getLevelsJson(R.raw.speciallevels);
-        preloadLevels(SpaceData.getInstance().mSpecialLevels, specials);
+        preloadLevels(SpaceData.getInstance().specialLevels, specials);
     }
 
     public LevelsJson getLevelsJson(int resource) {

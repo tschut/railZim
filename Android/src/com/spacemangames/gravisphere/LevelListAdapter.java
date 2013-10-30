@@ -40,12 +40,12 @@ public class LevelListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return SpaceData.getInstance().mLevels.size();
+        return SpaceData.getInstance().levels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return SpaceData.getInstance().mLevels.get(position);
+        return SpaceData.getInstance().levels.get(position);
     }
 
     @Override

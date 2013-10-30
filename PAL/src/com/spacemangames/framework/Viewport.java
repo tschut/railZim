@@ -75,7 +75,7 @@ public class Viewport {
     }
 
     public void viewportFollowSpaceman() {
-        PointF spacemanPosition = SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition();
+        PointF spacemanPosition = SpaceData.getInstance().currentLevel.getSpaceManObject().getPosition();
 
         PointF viewportCenter = viewport.center();
 

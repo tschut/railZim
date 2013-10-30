@@ -180,8 +180,8 @@ public class SpaceGameThread extends GameThread {
         PALManager.getLog().i(TAG, "surface size " + width + "x" + height);
         synchronized (surfaceHolder) {
             canvasSize.set(0, 0, width, height);
-            if (spaceData.mCurrentLevel != null) {
-                viewport.reset(spaceData.mCurrentLevel.startCenter(), canvasSize);
+            if (spaceData.currentLevel != null) {
+                viewport.reset(spaceData.currentLevel.startCenter(), canvasSize);
             } else {
                 viewport.reset(viewport.getViewport().center(), canvasSize);
             }
@@ -192,7 +192,7 @@ public class SpaceGameThread extends GameThread {
     private void doDraw(Canvas canvas, Rect viewportRect) {
         if (SpaceGameState.INSTANCE.getState().isDoneLoading()) {
             renderer.initialize(canvas, viewportRect, viewport.screenRect);
-            spaceData.mCurrentLevel.draw(renderer);
+            spaceData.currentLevel.draw(renderer);
         }
     }
 
