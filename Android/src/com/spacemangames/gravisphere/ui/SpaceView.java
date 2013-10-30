@@ -107,7 +107,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         float y = event.getY();
         boolean result = false;
         boolean hitsSpaceMan = gameThread.hitsSpaceMan(x, y);
-        boolean hitsArrow = gameThread.hitsSpaceManArrow(x, y);
+        // boolean hitsArrow = gameThread.hitsSpaceManArrow(x, y);
 
         // reset the focus viewport stuff
         gameThread.viewport.resetFocusViewportStatus(false);
@@ -115,11 +115,11 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         // This means we are starting with the charging (if this is on the
         // location of spaceman)
         if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsSpaceMan) {
-            x = SpaceUtil.resolutionScale(x);
-            y = SpaceUtil.resolutionScale(y);
-            SpaceGameState.INSTANCE.setState(GameState.CHARGING);
-            SpaceGameState.INSTANCE.chargingState.setChargingStart(x, y);
-            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            // x = SpaceUtil.resolutionScale(x);
+            // y = SpaceUtil.resolutionScale(y);
+            // SpaceGameState.INSTANCE.setState(GameState.CHARGING);
+            // SpaceGameState.INSTANCE.chargingState.setChargingStart(x, y);
+            // SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
             result = true;
         } else if (state == GameState.CHARGING) {
             x = SpaceUtil.resolutionScale(x);
@@ -131,10 +131,11 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
                 gameThread.postRunnable(gameThread.new FireSpacemanRunnable());
             }
             result = true;
-        } else if (state == GameState.NOT_STARTED && action == MotionEvent.ACTION_DOWN && hitsArrow) {
-            gameThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
-        } else if (action == MotionEvent.ACTION_DOWN && hitsArrow) {
-            gameThread.viewport.resetFocusViewportStatus(true);
+            // } else if (state == GameState.NOT_STARTED && action ==
+            // MotionEvent.ACTION_DOWN && hitsArrow) {
+            // gameThread.viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
+            // } else if (action == MotionEvent.ACTION_DOWN && hitsArrow) {
+            // gameThread.viewport.resetFocusViewportStatus(true);
         } else if (action == MotionEvent.ACTION_DOWN) {
             gameThread.viewport.setFlinging(false);
             dragStart.set(x, y);

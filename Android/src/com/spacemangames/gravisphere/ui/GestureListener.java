@@ -3,11 +3,37 @@ package com.spacemangames.gravisphere.ui;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 
+import com.spacemangames.framework.GameState;
+import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.framework.SpaceUtil;
+import com.spacemangames.gravisphere.GameThreadHolder;
+import com.spacemangames.library.SpaceData;
+
 public class GestureListener implements OnGestureListener {
 
     @Override
     public boolean onDown(MotionEvent event) {
-        return false;
+        boolean result = false;
+        boolean hitsSpaceMan = GameThreadHolder.getThread().hitsSpaceMan(event.getX(), event.getY());
+        boolean hitsArrow = GameThreadHolder.getThread().hitsSpaceManArrow(event.getX(), event.getY());
+        GameState state = SpaceGameState.INSTANCE.getState();
+
+        if (state == GameState.NOT_STARTED && hitsSpaceMan) {
+            float x = SpaceUtil.resolutionScale(event.getX());
+            float y = SpaceUtil.resolutionScale(event.getY());
+            SpaceGameState.INSTANCE.setState(GameState.CHARGING);
+            SpaceGameState.INSTANCE.chargingState.setChargingStart(x, y);
+            SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
+            result = true;
+        } else if (state == GameState.NOT_STARTED && hitsArrow) {
+            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().mCurrentLevel.startCenter());
+            result = true;
+        } else if (hitsArrow) {
+            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().mCurrentLevel.getSpaceManObject().getPosition());
+            result = true;
+        }
+
+        return result;
     }
 
     @Override
