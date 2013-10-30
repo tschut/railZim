@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -33,6 +34,9 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
     private Vector<Vector2>      previousLocations;
     private int                  indexInVector;
 
+    private GestureDetector      gestureDetector;
+    private GestureListener      gestureListener      = new GestureListener();
+
     private ScaleGestureDetector scaleGestureDetector;
     private ScaleGestureListener scaleGestureListener = new ScaleGestureListener();
 
@@ -45,6 +49,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
         super(context, attrs);
 
         scaleGestureDetector = new ScaleGestureDetector(context, scaleGestureListener);
+        gestureDetector = new GestureDetector(context, gestureListener);
 
         dragStart = new Vector2();
         previousLocations = new Vector<Vector2>();
@@ -86,6 +91,8 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
             interruptCharging();
             return true;
         }
+
+        gestureDetector.onTouchEvent(event);
 
         SpaceGameThread gameThread = GameThreadHolder.getThread();
         GameState state = SpaceGameState.INSTANCE.getState();
