@@ -15,7 +15,6 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.pal.AndroidRenderer;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
-import com.spacemangames.math.PointF;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 import com.spacemangames.util.ThreadUtils;
@@ -55,7 +54,6 @@ public class SpaceGameThread extends GameThread {
         super(spaceData);
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
-        viewport.setFlingSpeed(new PointF());
         renderer = new AndroidRenderer();
         tracker = GoogleAnalyticsTracker.getInstance();
     }

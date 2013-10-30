@@ -8,6 +8,7 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.library.SpaceData;
+import com.spacemangames.math.PointF;
 
 public class GestureListener implements OnGestureListener {
 
@@ -40,9 +41,8 @@ public class GestureListener implements OnGestureListener {
 
     @Override
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-        GameThreadHolder.getThread().viewport.getFlingSpeed().set(-velocityX * FLING_MULTIPLICATION_FACTOR,
-                -velocityY * FLING_MULTIPLICATION_FACTOR);
-        GameThreadHolder.getThread().viewport.setFlinging(true);
+        PointF flingSpeed = new PointF(-velocityX * FLING_MULTIPLICATION_FACTOR, -velocityY * FLING_MULTIPLICATION_FACTOR);
+        GameThreadHolder.getThread().viewport.setFlinging(flingSpeed);
 
         return true;
     }

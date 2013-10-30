@@ -15,8 +15,6 @@ public class Viewport {
     private Boolean             focusX                = new Boolean(false);
     private Boolean             focusY                = new Boolean(false);
     private PointF              previousFocusPoint;
-    private boolean             draggingViewport;
-    private PointF              viewportDragStart;
 
     public Rect                 screenRect;
 
@@ -26,31 +24,18 @@ public class Viewport {
     private static final float  FLING_DAMPING_FACTOR  = 0.9f;
 
     public Viewport() {
-        flingSpeed = new PointF();
         viewport = new Rect();
-        viewportDragStart = new PointF();
         previousFocusPoint = new PointF();
         screenRect = new Rect();
     }
 
-    public PointF getFlingSpeed() {
-        return flingSpeed;
-    }
-
-    public void setFlingSpeed(PointF flingSpeed) {
+    public void setFlinging(PointF flingSpeed) {
         this.flingSpeed = flingSpeed;
+        flinging = true;
     }
 
     public Rect getViewport() {
         return viewport;
-    }
-
-    public boolean isFlinging() {
-        return flinging;
-    }
-
-    public void setFlinging(boolean flinging) {
-        this.flinging = flinging;
     }
 
     public boolean isFocusOnSpaceman() {
@@ -73,7 +58,7 @@ public class Viewport {
         }
 
         PALManager.getLog().i(TAG, "viewport: " + viewport.width() + " " + viewport.height());
-        setFlinging(false);
+        flinging = false;
     }
 
     public void resetFocusViewportStatus(boolean focusOnSpaceman) {
@@ -86,8 +71,7 @@ public class Viewport {
     public void focusOn(PointF position) {
         position.subtract(viewport.center());
         viewport.offset(position);
-
-        setFlinging(false);
+        flinging = false;
     }
 
     public void viewportFollowSpaceman() {
@@ -131,18 +115,6 @@ public class Viewport {
             previousFocusPoint.y = spacemanPosition.y;
     }
 
-    public void startViewportDrag(float x, float y) {
-        draggingViewport = true;
-        viewportDragStart.set(x, y);
-    }
-
-    public void dragViewport(float x, float y) {
-        if (draggingViewport)
-            moveViewport((viewportDragStart.x - x), (viewportDragStart.y - y));
-
-        viewportDragStart.set(x, y);
-    }
-
     public void moveViewport(float x, float y) {
         viewport.offset((int) (x * currentZoom()), (int) (y * currentZoom()));
     }
@@ -164,10 +136,6 @@ public class Viewport {
 
     private boolean viewportAboveMaximumZoomLevel() {
         return viewport.width() < screenRect.width() || viewport.height() < screenRect.height();
-    }
-
-    public void stopViewportDrag() {
-        draggingViewport = false;
     }
 
     private float currentZoom() {
