@@ -26,8 +26,6 @@ public abstract class SpaceObject {
     public ObjectType          type;
 
     private PointF             startPosition;
-    // private float startX;
-    // private float startY;
 
     public float               x;
     public float               y;
