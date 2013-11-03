@@ -25,10 +25,8 @@ public abstract class SpaceObject {
 
     public ObjectType          type;
 
-    private PointF             startPosition;
-
-    public float               x;
-    public float               y;
+    private PointF             startPosition              = new PointF();
+    public PointF              position                   = new PointF();
 
     protected Body             body;
 
@@ -47,7 +45,7 @@ public abstract class SpaceObject {
             this.bitmap = PALManager.getBitmapFactory().createBitmap(bitmap, lazyLoading);
         }
         this.type = type;
-        this.startPosition = startPosition;
+        this.startPosition.set(startPosition);
         move = moveProperties;
 
         rect = new Rect();
@@ -83,6 +81,11 @@ public abstract class SpaceObject {
         return false;
     }
 
+    private PointF toBox2DCoords(PointF in) {
+        in.multiply(1.0f / BOX2D_SCALE_FACTOR);
+        return in;
+    }
+
     private float toBox2DCoords(float in) {
         return in / BOX2D_SCALE_FACTOR;
     }
@@ -100,8 +103,7 @@ public abstract class SpaceObject {
     }
 
     public void reset() {
-        x = startPosition.x;
-        y = startPosition.y;
+        position.set(startPosition);
         move.reset();
         if (body != null) {
             synchronized (body) {
@@ -129,9 +131,8 @@ public abstract class SpaceObject {
 
     public void updatePositions() {
         synchronized (body) {
-            Vector2 position = fromBox2DCoords(body.getPosition());
-            x = position.x;
-            y = position.y;
+            Vector2 box2dPosition = fromBox2DCoords(body.getPosition());
+            position.set(box2dPosition.x, box2dPosition.y);
         }
     }
 
@@ -145,9 +146,8 @@ public abstract class SpaceObject {
     }
 
     public Rect getRect() {
-        float halfWidth = bitmap.getWidth() / 2.0f;
-        float halfHeight = bitmap.getHeight() / 2.0f;
-        rect.set((int) (x - halfWidth), (int) (y - halfHeight), (int) (x + halfWidth), (int) (y + halfHeight));
+        rect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        rect.offset(position);
         return rect;
     }
 
@@ -207,18 +207,17 @@ public abstract class SpaceObject {
     private BodyDef createBodyDef() {
         BodyDef bd = new BodyDef();
         bd.allowSleep = false;
-        bd.position.set(getStartX(), getStartY());
+        PointF position = getStart();
+        bd.position.set(new Vector2(position.x, position.y));
         bd.angle = 0;
 
         return bd;
     }
 
-    private float getStartX() {
-        return toBox2DCoords(x + move.getPos().x);
-    }
-
-    private float getStartY() {
-        return toBox2DCoords(y + move.getPos().y);
+    private PointF getStart() {
+        PointF result = new PointF(position);
+        result.add(move.getPos());
+        return toBox2DCoords(result);
     }
 
     public Body getBody() {
@@ -234,6 +233,6 @@ public abstract class SpaceObject {
     }
 
     public PointF getPosition() {
-        return new PointF(x, y);
+        return position;
     }
 }

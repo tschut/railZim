@@ -22,9 +22,6 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IRenderer;
 
 public class AndroidRenderer implements IRenderer {
-    @SuppressWarnings("unused")
-    private static final String         TAG          = "AndroidRenderer";
-
     private boolean                     mInitialized = false;
 
     private Canvas                      mCanvas;
@@ -85,8 +82,8 @@ public class AndroidRenderer implements IRenderer {
 
         float lRotation = (float) (aObject.getBody().getAngle() * (180.0f / Math.PI));
 
-        float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.x);
-        float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.y);
+        float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.position.x);
+        float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.position.y);
         float lW = SpaceUtil.scaleX(mViewport, mScreen, lBitmap.getWidth());
         float lH = SpaceUtil.scaleY(mViewport, mScreen, lBitmap.getHeight());
 

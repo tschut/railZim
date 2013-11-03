@@ -73,8 +73,8 @@ public class SpaceManObject extends SpaceObject {
 
         mScratchRect.set(aScreen);
 
-        float lX = SpaceUtil.transformX(aViewport, aScreen, x);
-        float lY = SpaceUtil.transformY(aViewport, aScreen, y);
+        float lX = SpaceUtil.transformX(aViewport, aScreen, position.x);
+        float lY = SpaceUtil.transformY(aViewport, aScreen, position.y);
 
         // these are in canvas coordinates!
         float lArrowCenterX = 0, lArrowCenterY = 0;
@@ -164,7 +164,7 @@ public class SpaceManObject extends SpaceObject {
     }
 
     public void setPredictionPoint(int predictionIndex) {
-        mPredictionData.get(predictionIndex).set(x, y);
+        mPredictionData.get(predictionIndex).set(position);
         mLastPrediction++;
     }
 

@@ -8,6 +8,10 @@ public class PointF {
         this(0f, 0f);
     }
 
+    public PointF(PointF other) {
+        this(other.x, other.y);
+    }
+
     public PointF(float x, float y) {
         set(x, y);
     }
@@ -24,6 +28,11 @@ public class PointF {
 
     public float length() {
         return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public void add(PointF pointF) {
+        x += pointF.x;
+        y += pointF.y;
     }
 
     public void subtract(PointF pointF) {

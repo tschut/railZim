@@ -94,6 +94,16 @@ public class PointFTest {
     }
 
     @Test
+    public void testAdd() {
+        PointF point = new PointF(10, 12);
+
+        point.add(new PointF(3, 4));
+
+        Assert.assertEquals(13f, point.x, DELTA);
+        Assert.assertEquals(16f, point.y, DELTA);
+    }
+
+    @Test
     public void testDistanceTo() {
         PointF point1 = new PointF(3, 4);
         PointF point2 = new PointF(-4, 5);
