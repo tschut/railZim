@@ -11,13 +11,13 @@ public class SpaceRocketObject extends SpaceObject {
     public void updateMoving(double aElapsed) {
         float angle;
 
-        float curX = mMove.getPos().x;
-        float curY = mMove.getPos().y;
+        float curX = move.getPos().x;
+        float curY = move.getPos().y;
 
         super.updateMoving(aElapsed);
 
-        float newX = mMove.getPos().x;
-        float newY = mMove.getPos().y;
+        float newX = move.getPos().x;
+        float newY = move.getPos().y;
 
         if (curX == newX && curY == newY) {
             angle = 0;
@@ -25,8 +25,8 @@ public class SpaceRocketObject extends SpaceObject {
             angle = (float) Math.PI / 2f + (float) Math.atan2(newY - curY, newX - curX);
         }
 
-        if (mBody != null) {
-            mBody.setTransform(mBody.getPosition(), angle);
+        if (body != null) {
+            body.setTransform(body.getPosition(), angle);
         }
     }
 }

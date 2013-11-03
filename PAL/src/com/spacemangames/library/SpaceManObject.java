@@ -81,8 +81,8 @@ public class SpaceManObject extends SpaceObject {
 
         mScratchRect.set(aScreen);
 
-        float lX = SpaceUtil.transformX(aViewport, aScreen, mX);
-        float lY = SpaceUtil.transformY(aViewport, aScreen, mY);
+        float lX = SpaceUtil.transformX(aViewport, aScreen, x);
+        float lY = SpaceUtil.transformY(aViewport, aScreen, y);
 
         // these are in canvas coordinates!
         float lArrowCenterX = 0, lArrowCenterY = 0;
@@ -151,7 +151,7 @@ public class SpaceManObject extends SpaceObject {
 
     @Override
     public void setupMouseJoint(World world, BodyDef bd) {
-        if (!(mMove instanceof NullMoveProperties)) {
+        if (!(move instanceof NullMoveProperties)) {
             super.setupMouseJoint(world, bd);
         }
     }
@@ -172,12 +172,12 @@ public class SpaceManObject extends SpaceObject {
     }
 
     public void setPredictionPoint(int predictionIndex) {
-        mPredictionData.get(predictionIndex).set(mX, mY);
+        mPredictionData.get(predictionIndex).set(x, y);
         mLastPrediction++;
     }
 
     public void setRotation(float aAngle) {
-        mBody.setTransform(mBody.getPosition(), aAngle);
+        body.setTransform(body.getPosition(), aAngle);
     }
 
     public ArrowData getArrowData() {

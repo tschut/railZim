@@ -80,7 +80,7 @@ public class SpaceLevel {
         int count = mObjects.size();
         for (int i = 0; i < count; i++) {
             SpaceObject lO = mObjects.get(i);
-            if (lO.mType == SpaceObject.TYPE_SPACEMAN)
+            if (lO.type == SpaceObject.TYPE_SPACEMAN)
                 return (SpaceManObject) lO;
         }
         // should not get here! (can get here during loading though!)
@@ -156,8 +156,8 @@ public class SpaceLevel {
         float lGrav = aO2.gravity();
         if (lGrav > 0.f) {
             // Note: we apply some scaling to keep values a bit normal
-            mScratchVector1.set(aO1.mBody.getPosition());
-            mScratchVector2.set(aO2.mBody.getPosition());
+            mScratchVector1.set(aO1.body.getPosition());
+            mScratchVector2.set(aO2.body.getPosition());
             float lDistance = mScratchVector1.dst(mScratchVector2);
             if (lDistance > 0.0) { // if distance == 0, lO1 == lO2
                 mScratchVector3.set(mScratchVector2); // vec3 = vec2
@@ -169,7 +169,7 @@ public class SpaceLevel {
                 // grav pull, inverse square relationship with distance
                 float lGravPull = (lGrav / (lDistance * lDistance)) * aElapsed;
                 mScratchVector1.mul(lGravPull);
-                aO1.applyForce(mScratchVector1, aO1.mBody.getPosition());
+                aO1.applyForce(mScratchVector1, aO1.body.getPosition());
             }
         }
     }

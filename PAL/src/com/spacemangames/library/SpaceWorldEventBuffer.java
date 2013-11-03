@@ -23,10 +23,10 @@ public class SpaceWorldEventBuffer {
             SpaceObject lObjectB = (SpaceObject) contact.getFixtureB().getBody().getUserData();
             SpaceObject lSpaceMan, lOther;
 
-            if (lObjectA.mType == SpaceObject.TYPE_SPACEMAN) {
+            if (lObjectA.type == SpaceObject.TYPE_SPACEMAN) {
                 lSpaceMan = lObjectA;
                 lOther = lObjectB;
-            } else if (lObjectB.mType == SpaceObject.TYPE_SPACEMAN) {
+            } else if (lObjectB.type == SpaceObject.TYPE_SPACEMAN) {
                 lSpaceMan = lObjectB;
                 lOther = lObjectA;
             } else {
@@ -34,12 +34,12 @@ public class SpaceWorldEventBuffer {
                 return;
             }
 
-            if (lOther.mType == SpaceObject.TYPE_ROCKET) { // woohoo we hit the
+            if (lOther.type == SpaceObject.TYPE_ROCKET) { // woohoo we hit the
                                                            // rocket!
                 mEvents.add(EVENT_HIT_ROCKET);
             } else if (lOther.deathOnImpact()) {
                 mEvents.add(EVENT_HIT_DOI_OBJECT);
-            } else if (lOther.mType == SpaceObject.TYPE_BONUS && !SpaceGameState.INSTANCE.isPredicting()) {
+            } else if (lOther.type == SpaceObject.TYPE_BONUS && !SpaceGameState.INSTANCE.isPredicting()) {
                 SpaceBonusObject lObject = (SpaceBonusObject) lOther;
                 if (lObject.visible()) {
                     mEvents.add(EVENT_SCORE_BONUS);

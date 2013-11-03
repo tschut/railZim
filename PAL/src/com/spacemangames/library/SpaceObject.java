@@ -17,21 +17,13 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public abstract class SpaceObject {
-    public static final String MTAG                       = SpaceObject.class.getSimpleName();
+    public static final String TAG                        = SpaceObject.class.getSimpleName();
 
-    public static final float  BOX2D_SCALE_FACTOR         = 100f;                             // 1
-                                                                                               // pixel
-                                                                                               // =
-                                                                                               // 0.01
-                                                                                               // meter
-                                                                                               // =
-                                                                                               // 1
-                                                                                               // cm
-
+    public static final float  BOX2D_SCALE_FACTOR         = 100f;
     public static final float  BOUNCE_NONE                = -1.0f;
 
     /** Resources */
-    private IBitmap            mBitmap;
+    private IBitmap            bitmap;
 
     // Possible object types
     public static final int    TYPE_BACKGROUND            = 0;
@@ -43,42 +35,40 @@ public abstract class SpaceObject {
 
     public static final int    COLLISION_SIZE_IMAGE_WIDTH = -1;
 
-    public int                 mType;
+    public int                 type;
 
-    public float               mStartX;
-    public float               mStartY;
+    public float               startX;
+    public float               startY;
 
-    public float               mX;
-    public float               mY;
+    public float               x;
+    public float               y;
 
-    protected Body             mBody;
+    protected Body             body;
 
-    public float               mCollisionSize;
+    public float               collisionSize;
 
-    protected Rect             mRect;
+    protected Rect             rect;
 
-    protected IMoveProperties  mMove;
-    protected MouseJoint       mMouseJoint;
-    protected Body             mMouseJointBody;
-    private final Vector2      mMoveScratchVect           = new Vector2(0, 0);
+    protected IMoveProperties  move;
+    protected MouseJoint       mouseJoint;
+    protected Body             mouseJointBody;
+    private final Vector2      moveScratchVect            = new Vector2(0, 0);
 
-    public SpaceObject(String aBitmap, boolean lazyLoading, int aType, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
-        if (aBitmap != null) // objects don't always have a bitmap (e.g.
-                             // SpaceBackgroundObject)
-            mBitmap = PALManager.getBitmapFactory().createBitmap(aBitmap, lazyLoading);
-        mType = aType;
-        mStartX = aX;
-        mStartY = aY;
-        mMove = moveProperties;
+    public SpaceObject(String bitmap, boolean lazyLoading, int type, int x, int y, int collisionSize, IMoveProperties moveProperties) {
+        if (bitmap != null) {
+            this.bitmap = PALManager.getBitmapFactory().createBitmap(bitmap, lazyLoading);
+        }
+        this.type = type;
+        this.startX = x;
+        this.startY = y;
+        move = moveProperties;
 
-        mRect = new Rect();
+        rect = new Rect();
 
-        if (aCollisionSize == COLLISION_SIZE_IMAGE_WIDTH) {
-            mCollisionSize = mBitmap.getWidth() / 2.0f; // TODO this should use
-                                                        // the platform-specific
-                                                        // code!
+        if (collisionSize == COLLISION_SIZE_IMAGE_WIDTH) {
+            this.collisionSize = this.bitmap.getWidth() / 2.0f;
         } else {
-            mCollisionSize = aCollisionSize;
+            this.collisionSize = collisionSize;
         }
     }
 
@@ -88,15 +78,15 @@ public abstract class SpaceObject {
         String lType = getTypeString();
 
         lResult += "Type:           " + lType + "\n";
-        lResult += "X:              " + mStartX + "\n";
-        lResult += "Y:              " + mStartY + "\n";
-        lResult += "Bitmap:         " + mBitmap.getName() + "\n";
+        lResult += "X:              " + startX + "\n";
+        lResult += "Y:              " + startY + "\n";
+        lResult += "Bitmap:         " + bitmap.getName() + "\n";
 
         return lResult;
     }
 
     public String getTypeString() {
-        switch (mType) {
+        switch (type) {
         case TYPE_BACKGROUND:
             return "background";
         case TYPE_SPACEMAN:
@@ -114,14 +104,10 @@ public abstract class SpaceObject {
         }
     }
 
-    // override this in derived class to make an object affected by gravity from
-    // others
     public boolean isAffectedByGravity() {
         return false;
     }
 
-    // override this in derived class to make an object exert a gravitational
-    // pull
     public float gravity() {
         return -1.f;
     }
@@ -138,115 +124,114 @@ public abstract class SpaceObject {
         // default implementation is empty
     }
 
-    public float toBox2DCoords(float aIn) {
-        return aIn / BOX2D_SCALE_FACTOR;
+    public float toBox2DCoords(float in) {
+        return in / BOX2D_SCALE_FACTOR;
     }
 
-    public float fromBox2DCoords(float aIn) {
-        return aIn * BOX2D_SCALE_FACTOR;
+    public float fromBox2DCoords(float in) {
+        return in * BOX2D_SCALE_FACTOR;
     }
 
-    public Vector2 toBox2DCoords(Vector2 aIn) {
-        return aIn.mul(1.0f / BOX2D_SCALE_FACTOR);
+    public Vector2 toBox2DCoords(Vector2 in) {
+        return in.mul(1.0f / BOX2D_SCALE_FACTOR);
     }
 
-    public Vector2 fromBox2DCoords(Vector2 aIn) {
-        return aIn.mul(BOX2D_SCALE_FACTOR);
+    public Vector2 fromBox2DCoords(Vector2 in) {
+        return in.mul(BOX2D_SCALE_FACTOR);
     }
 
-    public void applyForce(Vector2 aForce, Vector2 aPos) {
-        mBody.applyForce(toBox2DCoords(aForce), aPos);
+    public void applyForce(Vector2 force, Vector2 pos) {
+        body.applyForce(toBox2DCoords(force), pos);
     }
 
     public void reset() {
-        mX = mStartX;
-        mY = mStartY;
-        if (mMove != null) {
-            mMove.reset();
+        x = startX;
+        y = startY;
+        if (move != null) {
+            move.reset();
         }
-        if (mBody != null) {
-            synchronized (mBody) {
-                World world = mBody.getWorld();
-                if (mMouseJoint != null)
-                    world.destroyJoint(mMouseJoint);
-                world.destroyBody(mBody);
-                mBody = createBody(world);
+        if (body != null) {
+            synchronized (body) {
+                World world = body.getWorld();
+                if (mouseJoint != null) {
+                    world.destroyJoint(mouseJoint);
+                }
+                world.destroyBody(body);
+                body = createBody(world);
             }
         }
     }
 
-    public void updateMoving(double aElapsed) {
-        if (mMouseJoint != null) {
-            mMove.elapse(aElapsed);
-            mMoveScratchVect.set(mMove.getPos().x, mMove.getPos().y);
-            toBox2DCoords(mMoveScratchVect);
+    public void updateMoving(double elapsed) {
+        if (mouseJoint != null) {
+            move.elapse(elapsed);
+            moveScratchVect.set(move.getPos().x, move.getPos().y);
+            toBox2DCoords(moveScratchVect);
 
-            mMoveScratchVect.add(toBox2DCoords(mStartX), toBox2DCoords(mStartY));
+            moveScratchVect.add(toBox2DCoords(startX), toBox2DCoords(startY));
 
-            mMouseJoint.setTarget(mMoveScratchVect);
+            mouseJoint.setTarget(moveScratchVect);
         }
     }
 
     public void updatePositions() {
-        synchronized (mBody) {
-            Vector2 lPosition = fromBox2DCoords(mBody.getPosition());
-            mX = lPosition.x;
-            mY = lPosition.y;
+        synchronized (body) {
+            Vector2 position = fromBox2DCoords(body.getPosition());
+            x = position.x;
+            y = position.y;
         }
     }
 
-    public void dispatchToRenderer(IRenderer aRenderer) {
-        aRenderer.doDraw(this);
+    public void dispatchToRenderer(IRenderer renderer) {
+        renderer.doDraw(this);
     }
 
-    public void setSpeed(Vector2 aSpeed) {
-        aSpeed = toBox2DCoords(aSpeed);
-        // Log.i (MTAG, "Setting speed to " + aSpeed.x + " " + aSpeed.y);
-        mBody.applyForce(aSpeed, mBody.getWorldCenter());
+    public void setSpeed(Vector2 speed) {
+        speed = toBox2DCoords(speed);
+        body.applyForce(speed, body.getWorldCenter());
     }
 
     public Rect getRect() {
-        float lHalfWidth = mBitmap.getWidth() / 2.0f;
-        float lHalfHeight = mBitmap.getHeight() / 2.0f;
-        mRect.set((int) (mX - lHalfWidth), (int) (mY - lHalfHeight), (int) (mX + lHalfWidth), (int) (mY + lHalfHeight));
-        return mRect;
+        float halfWidth = bitmap.getWidth() / 2.0f;
+        float halfHeight = bitmap.getHeight() / 2.0f;
+        rect.set((int) (x - halfWidth), (int) (y - halfHeight), (int) (x + halfWidth), (int) (y + halfHeight));
+        return rect;
     }
 
     public Body createBody(World world) {
         Shape sd = createShape();
         FixtureDef fdef = createFixtureDef(sd);
         BodyDef bd = createBodyDef();
-        mBody = createBody(world, bd, fdef);
+        body = createBody(world, bd, fdef);
         setupMouseJoint(world, bd);
 
         updatePositions();
 
-        return mBody;
+        return body;
     }
 
     public void setupMouseJoint(World world, BodyDef bd) {
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.position.set(0, 0);
-        mMouseJointBody = world.createBody(groundBodyDef);
-        // create a mousejoint
+        mouseJointBody = world.createBody(groundBodyDef);
         MouseJointDef mouseJointDef = new MouseJointDef();
-        mouseJointDef.bodyA = mMouseJointBody;
-        mouseJointDef.bodyB = mBody;
+        mouseJointDef.bodyA = mouseJointBody;
+        mouseJointDef.bodyB = body;
         mouseJointDef.dampingRatio = 0.2f;
         mouseJointDef.frequencyHz = 30;
         mouseJointDef.maxForce = 20000.0f;
         mouseJointDef.collideConnected = true;
         mouseJointDef.target.set(bd.position);
-        mMouseJoint = (MouseJoint) world.createJoint(mouseJointDef);
+        mouseJoint = (MouseJoint) world.createJoint(mouseJointDef);
     }
 
     public Body createBody(World world, BodyDef bd, FixtureDef fdef) {
-        mBody = world.createBody(bd);
-        mBody.createFixture(fdef);
-        mBody.setUserData(this);
-        mBody.setType(BodyDef.BodyType.DynamicBody);
+        body = world.createBody(bd);
+        body.createFixture(fdef);
+        body.setUserData(this);
+        body.setType(BodyDef.BodyType.DynamicBody);
 
-        return mBody;
+        return body;
     }
 
     public FixtureDef createFixtureDef(Shape sd) {
@@ -261,7 +246,7 @@ public abstract class SpaceObject {
 
     public Shape createShape() {
         CircleShape sd = new CircleShape();
-        sd.setRadius(toBox2DCoords(mCollisionSize));
+        sd.setRadius(toBox2DCoords(collisionSize));
 
         return sd;
     }
@@ -276,47 +261,48 @@ public abstract class SpaceObject {
     }
 
     public float getStartX() {
-        return toBox2DCoords(mX + mMove.getPos().x);
+        return toBox2DCoords(x + move.getPos().x);
     }
 
     public float getStartY() {
-        return toBox2DCoords(mY + mMove.getPos().y);
+        return toBox2DCoords(y + move.getPos().y);
     }
 
     public Body getBody() {
-        return mBody;
+        return body;
     }
 
     public IBitmap getBitmap() {
-        return mBitmap;
+        return bitmap;
     }
 
-    public void offset(int aX, int aY) {
-        mStartX = mStartX + aX;
-        mStartY = mStartY + aY;
+    public void offset(int x, int y) {
+        startX = startX + x;
+        startY = startY + y;
         reset();
     }
 
     public IMoveProperties getMoveProperties() {
-        return mMove;
+        return move;
     }
 
     public int getCollisionSize() {
-        if (mCollisionSize == mBitmap.getWidth() / 2.0f)
+        if (collisionSize == bitmap.getWidth() / 2.0f) {
             return -1;
-        else
-            return (int) mCollisionSize;
+        } else {
+            return (int) collisionSize;
+        }
     }
 
-    public void setBitmap(IBitmap aBitmap) {
-        mBitmap = aBitmap;
+    public void setBitmap(IBitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     public void releaseLazyMemory() {
-        mBitmap.releaseLazyMemory();
+        bitmap.releaseLazyMemory();
     }
 
     public PointF getPosition() {
-        return new PointF(mX, mY);
+        return new PointF(x, y);
     }
 }

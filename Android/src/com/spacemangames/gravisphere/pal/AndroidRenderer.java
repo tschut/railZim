@@ -85,8 +85,8 @@ public class AndroidRenderer implements IRenderer {
 
         float lRotation = (float) (aObject.getBody().getAngle() * (180.0f / Math.PI));
 
-        float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.mX);
-        float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.mY);
+        float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.x);
+        float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.y);
         float lW = SpaceUtil.scaleX(mViewport, mScreen, lBitmap.getWidth());
         float lH = SpaceUtil.scaleY(mViewport, mScreen, lBitmap.getHeight());
 
