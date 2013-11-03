@@ -20,17 +20,7 @@ public class SpacePlanetObject extends SpaceObject {
     }
 
     @Override
-    public void setGravity(float aGravity) {
-        mGravity = aGravity;
-    }
-
-    @Override
     public boolean deathOnImpact() {
         return mDOI;
-    }
-
-    @Override
-    public void setDeathOnImpact(boolean aDie) {
-        mDOI = aDie;
     }
 }

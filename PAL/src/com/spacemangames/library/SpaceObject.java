@@ -17,10 +17,7 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public abstract class SpaceObject {
-    public static final String TAG                        = SpaceObject.class.getSimpleName();
-
-    public static final float  BOX2D_SCALE_FACTOR         = 100f;
-    public static final float  BOUNCE_NONE                = -1.0f;
+    private static final float BOX2D_SCALE_FACTOR         = 100f;
 
     /** Resources */
     private IBitmap            bitmap;
@@ -33,25 +30,25 @@ public abstract class SpaceObject {
     public static final int    TYPE_JUNK                  = 4;
     public static final int    TYPE_BONUS                 = 5;
 
-    public static final int    COLLISION_SIZE_IMAGE_WIDTH = -1;
+    private static final int   COLLISION_SIZE_IMAGE_WIDTH = -1;
 
     public int                 type;
 
-    public float               startX;
-    public float               startY;
+    private float              startX;
+    private float              startY;
 
     public float               x;
     public float               y;
 
     protected Body             body;
 
-    public float               collisionSize;
+    private float              collisionSize;
 
-    protected Rect             rect;
+    private Rect               rect;
 
     protected IMoveProperties  move;
-    protected MouseJoint       mouseJoint;
-    protected Body             mouseJointBody;
+    private MouseJoint         mouseJoint;
+    private Body               mouseJointBody;
     private final Vector2      moveScratchVect            = new Vector2(0, 0);
 
     public SpaceObject(String bitmap, boolean lazyLoading, int type, int x, int y, int collisionSize, IMoveProperties moveProperties) {
@@ -85,7 +82,7 @@ public abstract class SpaceObject {
         return lResult;
     }
 
-    public String getTypeString() {
+    private String getTypeString() {
         switch (type) {
         case TYPE_BACKGROUND:
             return "background";
@@ -112,31 +109,19 @@ public abstract class SpaceObject {
         return -1.f;
     }
 
-    public void setGravity(float parseFloat) {
-        // default implementation is empty
-    }
-
     public boolean deathOnImpact() {
         return false;
     }
 
-    public void setDeathOnImpact(boolean aDie) {
-        // default implementation is empty
-    }
-
-    public float toBox2DCoords(float in) {
+    private float toBox2DCoords(float in) {
         return in / BOX2D_SCALE_FACTOR;
     }
 
-    public float fromBox2DCoords(float in) {
-        return in * BOX2D_SCALE_FACTOR;
-    }
-
-    public Vector2 toBox2DCoords(Vector2 in) {
+    private Vector2 toBox2DCoords(Vector2 in) {
         return in.mul(1.0f / BOX2D_SCALE_FACTOR);
     }
 
-    public Vector2 fromBox2DCoords(Vector2 in) {
+    private Vector2 fromBox2DCoords(Vector2 in) {
         return in.mul(BOX2D_SCALE_FACTOR);
     }
 
@@ -210,7 +195,7 @@ public abstract class SpaceObject {
         return body;
     }
 
-    public void setupMouseJoint(World world, BodyDef bd) {
+    protected void setupMouseJoint(World world, BodyDef bd) {
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.position.set(0, 0);
         mouseJointBody = world.createBody(groundBodyDef);
@@ -225,7 +210,7 @@ public abstract class SpaceObject {
         mouseJoint = (MouseJoint) world.createJoint(mouseJointDef);
     }
 
-    public Body createBody(World world, BodyDef bd, FixtureDef fdef) {
+    private Body createBody(World world, BodyDef bd, FixtureDef fdef) {
         body = world.createBody(bd);
         body.createFixture(fdef);
         body.setUserData(this);
@@ -234,7 +219,7 @@ public abstract class SpaceObject {
         return body;
     }
 
-    public FixtureDef createFixtureDef(Shape sd) {
+    protected FixtureDef createFixtureDef(Shape sd) {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = sd;
         fdef.density = 0.0f;
@@ -244,14 +229,14 @@ public abstract class SpaceObject {
         return fdef;
     }
 
-    public Shape createShape() {
+    private Shape createShape() {
         CircleShape sd = new CircleShape();
         sd.setRadius(toBox2DCoords(collisionSize));
 
         return sd;
     }
 
-    public BodyDef createBodyDef() {
+    private BodyDef createBodyDef() {
         BodyDef bd = new BodyDef();
         bd.allowSleep = false;
         bd.position.set(getStartX(), getStartY());
@@ -260,11 +245,11 @@ public abstract class SpaceObject {
         return bd;
     }
 
-    public float getStartX() {
+    private float getStartX() {
         return toBox2DCoords(x + move.getPos().x);
     }
 
-    public float getStartY() {
+    private float getStartY() {
         return toBox2DCoords(y + move.getPos().y);
     }
 
@@ -274,28 +259,6 @@ public abstract class SpaceObject {
 
     public IBitmap getBitmap() {
         return bitmap;
-    }
-
-    public void offset(int x, int y) {
-        startX = startX + x;
-        startY = startY + y;
-        reset();
-    }
-
-    public IMoveProperties getMoveProperties() {
-        return move;
-    }
-
-    public int getCollisionSize() {
-        if (collisionSize == bitmap.getWidth() / 2.0f) {
-            return -1;
-        } else {
-            return (int) collisionSize;
-        }
-    }
-
-    public void setBitmap(IBitmap bitmap) {
-        this.bitmap = bitmap;
     }
 
     public void releaseLazyMemory() {
