@@ -8,7 +8,7 @@ public class SpacePlanetObject extends SpaceObject {
 
     public SpacePlanetObject(String aBitmap, boolean lazyLoading, int aX, int aY, float aGrav, int aCollisionSize, boolean aDOI,
             IMoveProperties moveProperties) {
-        super(aBitmap, lazyLoading, TYPE_PLANET, aX, aY, aCollisionSize, moveProperties);
+        super(aBitmap, lazyLoading, ObjectType.PLANET, aX, aY, aCollisionSize, moveProperties);
 
         mGravity = aGrav;
         mDOI = aDOI;

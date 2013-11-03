@@ -19,20 +19,11 @@ import com.spacemangames.pal.PALManager;
 public abstract class SpaceObject {
     private static final float BOX2D_SCALE_FACTOR         = 100f;
 
-    /** Resources */
     private IBitmap            bitmap;
-
-    // Possible object types
-    public static final int    TYPE_BACKGROUND            = 0;
-    public static final int    TYPE_SPACEMAN              = 1;
-    public static final int    TYPE_PLANET                = 2;
-    public static final int    TYPE_ROCKET                = 3;
-    public static final int    TYPE_JUNK                  = 4;
-    public static final int    TYPE_BONUS                 = 5;
 
     private static final int   COLLISION_SIZE_IMAGE_WIDTH = -1;
 
-    public int                 type;
+    public ObjectType          type;
 
     private float              startX;
     private float              startY;
@@ -51,7 +42,7 @@ public abstract class SpaceObject {
     private Body               mouseJointBody;
     private final Vector2      moveScratchVect            = new Vector2(0, 0);
 
-    public SpaceObject(String bitmap, boolean lazyLoading, int type, int x, int y, int collisionSize, IMoveProperties moveProperties) {
+    public SpaceObject(String bitmap, boolean lazyLoading, ObjectType type, int x, int y, int collisionSize, IMoveProperties moveProperties) {
         if (bitmap != null) {
             this.bitmap = PALManager.getBitmapFactory().createBitmap(bitmap, lazyLoading);
         }
@@ -71,34 +62,14 @@ public abstract class SpaceObject {
 
     @Override
     public String toString() {
-        String lResult = "";
-        String lType = getTypeString();
+        String result = "";
 
-        lResult += "Type:           " + lType + "\n";
-        lResult += "X:              " + startX + "\n";
-        lResult += "Y:              " + startY + "\n";
-        lResult += "Bitmap:         " + bitmap.getName() + "\n";
+        result += "Type:           " + type.toString() + "\n";
+        result += "X:              " + startX + "\n";
+        result += "Y:              " + startY + "\n";
+        result += "Bitmap:         " + bitmap.getName() + "\n";
 
-        return lResult;
-    }
-
-    private String getTypeString() {
-        switch (type) {
-        case TYPE_BACKGROUND:
-            return "background";
-        case TYPE_SPACEMAN:
-            return "spaceman";
-        case TYPE_PLANET:
-            return "planet";
-        case TYPE_ROCKET:
-            return "rocket";
-        case TYPE_JUNK:
-            return "junk";
-        case TYPE_BONUS:
-            return "bonus";
-        default:
-            return "Unknown type!";
-        }
+        return result;
     }
 
     public boolean isAffectedByGravity() {

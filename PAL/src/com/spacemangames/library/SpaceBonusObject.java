@@ -9,7 +9,7 @@ public class SpaceBonusObject extends SpaceObject {
     private boolean mVisible = true;
 
     public SpaceBonusObject(String aBitmap, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
-        super(aBitmap, false, TYPE_BONUS, aX, aY, aCollisionSize, moveProperties);
+        super(aBitmap, false, ObjectType.BONUS, aX, aY, aCollisionSize, moveProperties);
     }
 
     @Override

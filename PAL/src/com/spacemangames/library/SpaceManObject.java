@@ -41,7 +41,7 @@ public class SpaceManObject extends SpaceObject {
     public int               mLastPrediction;
 
     public SpaceManObject(String aBitmap, int aX, int aY, String aArrowResource, int aCollisionSize, IMoveProperties moveProperties) {
-        super(aBitmap, false, TYPE_SPACEMAN, aX, aY, aCollisionSize, moveProperties);
+        super(aBitmap, false, ObjectType.SPACEMAN, aX, aY, aCollisionSize, moveProperties);
 
         mArrowBitmap = PALManager.getBitmapFactory().createBitmap(aArrowResource, false);
         mArrowData = new ArrowData();
@@ -50,15 +50,7 @@ public class SpaceManObject extends SpaceObject {
         mScratchVector = new Vector2(0, 0);
 
         mPredictionData = new ArrayList<PointF>();
-        int predictionPoints = (int) ((SpaceData.PREDICT_SECONDS / SpaceData.PREDICTION_STEP) + 1); // +
-                                                                                                    // 1
-                                                                                                    // just
-                                                                                                    // to
-                                                                                                    // be
-                                                                                                    // sure
-                                                                                                    // we've
-                                                                                                    // got
-                                                                                                    // enough
+        int predictionPoints = (int) ((SpaceData.PREDICT_SECONDS / SpaceData.PREDICTION_STEP) + 1);
         for (int i = 0; i < predictionPoints; ++i) {
             mPredictionData.add(new PointF(0, 0));
         }

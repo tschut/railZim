@@ -79,7 +79,7 @@ public class SpaceBackgroundObject extends SpaceObject {
     private final GradientProperties mGradientProperties   = new GradientProperties();
 
     public SpaceBackgroundObject(String aBackgroundColorInner, String aBackgroundColorOuter, String aSeed) {
-        super(null, false, TYPE_BACKGROUND, 0, 0, 0, new CircularMoveProperties());
+        super(null, false, ObjectType.BACKGROUND, 0, 0, 0, new CircularMoveProperties());
 
         mSeed = aSeed;
 

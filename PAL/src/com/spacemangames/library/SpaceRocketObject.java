@@ -4,7 +4,7 @@ import com.spacemangames.framework.IMoveProperties;
 
 public class SpaceRocketObject extends SpaceObject {
     public SpaceRocketObject(String aBitmap, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
-        super(aBitmap, false, TYPE_ROCKET, aX, aY, aCollisionSize, moveProperties);
+        super(aBitmap, false, ObjectType.ROCKET, aX, aY, aCollisionSize, moveProperties);
     }
 
     @Override

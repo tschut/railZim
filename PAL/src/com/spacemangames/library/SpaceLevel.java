@@ -80,7 +80,7 @@ public class SpaceLevel {
         int count = mObjects.size();
         for (int i = 0; i < count; i++) {
             SpaceObject lO = mObjects.get(i);
-            if (lO.type == SpaceObject.TYPE_SPACEMAN)
+            if (lO.type == ObjectType.SPACEMAN)
                 return (SpaceManObject) lO;
         }
         // should not get here! (can get here during loading though!)
