@@ -17,16 +17,16 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public abstract class SpaceObject {
-    public static final String MTAG                       = "SpaceObject";
+    public static final String MTAG                       = SpaceObject.class.getSimpleName();
 
-    public static final float  BOX2D_SCALE_FACTOR         = 100f;             // 1
-                                                                               // pixel
-                                                                               // =
-                                                                               // 0.01
-                                                                               // meter
-                                                                               // =
-                                                                               // 1
-                                                                               // cm
+    public static final float  BOX2D_SCALE_FACTOR         = 100f;                             // 1
+                                                                                               // pixel
+                                                                                               // =
+                                                                                               // 0.01
+                                                                                               // meter
+                                                                                               // =
+                                                                                               // 1
+                                                                                               // cm
 
     public static final float  BOUNCE_NONE                = -1.0f;
 
