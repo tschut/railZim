@@ -88,24 +88,24 @@ public class SpaceLevel {
         return null;
     }
 
-    public void addSpaceMan(int aX, int aY, String aBitmap, String aArrowBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceObject lObject = new SpaceManObject(aBitmap, aX, aY, aArrowBitmap, aCollisionSize, moveProperties);
+    public void addSpaceMan(PointF position, String aBitmap, String aArrowBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceObject lObject = new SpaceManObject(aBitmap, position, aArrowBitmap, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 
-    public void addPlanet(int aX, int aY, String aBitmap, boolean lazyLoading, float aGrav, int aCollisionSize, boolean aDOI,
+    public void addPlanet(PointF position, String aBitmap, boolean lazyLoading, float aGrav, int aCollisionSize, boolean aDOI,
             IMoveProperties moveProperties) {
-        SpacePlanetObject lObject = new SpacePlanetObject(aBitmap, lazyLoading, aX, aY, aGrav, aCollisionSize, aDOI, moveProperties);
+        SpacePlanetObject lObject = new SpacePlanetObject(aBitmap, lazyLoading, position, aGrav, aCollisionSize, aDOI, moveProperties);
         mObjects.add(lObject);
     }
 
-    public void addRocket(int aX, int aY, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceRocketObject lObject = new SpaceRocketObject(aBitmap, aX, aY, aCollisionSize, moveProperties);
+    public void addRocket(PointF position, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceRocketObject lObject = new SpaceRocketObject(aBitmap, position, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 
-    public void addBonus(int aX, int aY, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, aX, aY, aCollisionSize, moveProperties);
+    public void addBonus(PointF position, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
+        SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, position, aCollisionSize, moveProperties);
         mObjects.add(lObject);
     }
 

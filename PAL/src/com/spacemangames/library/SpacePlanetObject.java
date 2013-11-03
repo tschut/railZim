@@ -1,14 +1,15 @@
 package com.spacemangames.library;
 
 import com.spacemangames.framework.IMoveProperties;
+import com.spacemangames.math.PointF;
 
 public class SpacePlanetObject extends SpaceObject {
     private boolean mDOI;    // DOI = Death On Impact
     public float    mGravity;
 
-    public SpacePlanetObject(String aBitmap, boolean lazyLoading, int aX, int aY, float aGrav, int aCollisionSize, boolean aDOI,
+    public SpacePlanetObject(String aBitmap, boolean lazyLoading, PointF position, float aGrav, int aCollisionSize, boolean aDOI,
             IMoveProperties moveProperties) {
-        super(aBitmap, lazyLoading, ObjectType.PLANET, aX, aY, aCollisionSize, moveProperties);
+        super(aBitmap, lazyLoading, ObjectType.PLANET, position, aCollisionSize, moveProperties);
 
         mGravity = aGrav;
         mDOI = aDOI;

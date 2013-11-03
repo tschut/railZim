@@ -21,6 +21,7 @@ import com.spacemangames.gravisphere.pal.levelsjson.ObjectJson;
 import com.spacemangames.gravisphere.ui.SpaceApp;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
+import com.spacemangames.math.PointF;
 import com.spacemangames.pal.IResourceHandler;
 import com.spacemangames.pal.PALManager;
 
@@ -89,8 +90,7 @@ public class AndroidResourceHandler implements IResourceHandler {
                     moveProperties = new NullMoveProperties();
                 }
                 String type = objectJson.getType();
-                int lX = objectJson.getPosx();
-                int lY = objectJson.getPosy();
+                PointF position = new PointF(objectJson.getPosx(), objectJson.getPosy());
                 String lBitmap = objectJson.getBitmap();
                 boolean lazyLoading = objectJson.getLazyLoading();
                 String lArrowBitmap = objectJson.getArrowBitmap();
@@ -98,16 +98,17 @@ public class AndroidResourceHandler implements IResourceHandler {
                 float lGrav = objectJson.getGravity();
                 boolean lDOI = objectJson.getDeathOnImpact();
 
-                if (type.equals("spaceman"))
-                    level.addSpaceMan(lX, lY, lBitmap, lArrowBitmap, lCollisionSize, moveProperties);
-                else if (type.equals("planet"))
-                    level.addPlanet(lX, lY, lBitmap, lazyLoading, lGrav, lCollisionSize, lDOI, moveProperties);
-                else if (type.equals("rocket"))
-                    level.addRocket(lX, lY, lBitmap, lCollisionSize, moveProperties);
-                else if (type.equals("bonus"))
-                    level.addBonus(lX, lY, lBitmap, lCollisionSize, moveProperties);
-                else
+                if (type.equals("spaceman")) {
+                    level.addSpaceMan(position, lBitmap, lArrowBitmap, lCollisionSize, moveProperties);
+                } else if (type.equals("planet")) {
+                    level.addPlanet(position, lBitmap, lazyLoading, lGrav, lCollisionSize, lDOI, moveProperties);
+                } else if (type.equals("rocket")) {
+                    level.addRocket(position, lBitmap, lCollisionSize, moveProperties);
+                } else if (type.equals("bonus")) {
+                    level.addBonus(position, lBitmap, lCollisionSize, moveProperties);
+                } else {
                     PALManager.getLog().e(TAG, "Unexpected object type: " + type);
+                }
             }
             levels.add(level.mId, level);
         }

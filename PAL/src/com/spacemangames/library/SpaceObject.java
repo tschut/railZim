@@ -25,8 +25,9 @@ public abstract class SpaceObject {
 
     public ObjectType          type;
 
-    private float              startX;
-    private float              startY;
+    private PointF             startPosition;
+    // private float startX;
+    // private float startY;
 
     public float               x;
     public float               y;
@@ -42,13 +43,13 @@ public abstract class SpaceObject {
     private Body               mouseJointBody;
     private final Vector2      moveScratchVect            = new Vector2(0, 0);
 
-    public SpaceObject(String bitmap, boolean lazyLoading, ObjectType type, int x, int y, int collisionSize, IMoveProperties moveProperties) {
+    public SpaceObject(String bitmap, boolean lazyLoading, ObjectType type, PointF startPosition, int collisionSize,
+            IMoveProperties moveProperties) {
         if (bitmap != null) {
             this.bitmap = PALManager.getBitmapFactory().createBitmap(bitmap, lazyLoading);
         }
         this.type = type;
-        this.startX = x;
-        this.startY = y;
+        this.startPosition = startPosition;
         move = moveProperties;
 
         rect = new Rect();
@@ -62,14 +63,14 @@ public abstract class SpaceObject {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder builder = new StringBuilder();
 
-        result += "Type:           " + type.toString() + "\n";
-        result += "X:              " + startX + "\n";
-        result += "Y:              " + startY + "\n";
-        result += "Bitmap:         " + bitmap.getName() + "\n";
+        builder.append("Type:           " + type.toString() + "\n");
+        builder.append("X:              " + startPosition.x + "\n");
+        builder.append("Y:              " + startPosition.y + "\n");
+        builder.append("Bitmap:         " + bitmap.getName() + "\n");
 
-        return result;
+        return builder.toString();
     }
 
     public boolean isAffectedByGravity() {
@@ -101,11 +102,9 @@ public abstract class SpaceObject {
     }
 
     public void reset() {
-        x = startX;
-        y = startY;
-        if (move != null) {
-            move.reset();
-        }
+        x = startPosition.x;
+        y = startPosition.y;
+        move.reset();
         if (body != null) {
             synchronized (body) {
                 World world = body.getWorld();
@@ -124,7 +123,7 @@ public abstract class SpaceObject {
             moveScratchVect.set(move.getPos().x, move.getPos().y);
             toBox2DCoords(moveScratchVect);
 
-            moveScratchVect.add(toBox2DCoords(startX), toBox2DCoords(startY));
+            moveScratchVect.add(toBox2DCoords(startPosition.x), toBox2DCoords(startPosition.y));
 
             mouseJoint.setTarget(moveScratchVect);
         }

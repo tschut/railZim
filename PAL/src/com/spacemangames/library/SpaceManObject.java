@@ -40,8 +40,8 @@ public class SpaceManObject extends SpaceObject {
     public ArrayList<PointF> mPredictionData;
     public int               mLastPrediction;
 
-    public SpaceManObject(String aBitmap, int aX, int aY, String aArrowResource, int aCollisionSize, IMoveProperties moveProperties) {
-        super(aBitmap, false, ObjectType.SPACEMAN, aX, aY, aCollisionSize, moveProperties);
+    public SpaceManObject(String aBitmap, PointF position, String aArrowResource, int aCollisionSize, IMoveProperties moveProperties) {
+        super(aBitmap, false, ObjectType.SPACEMAN, position, aCollisionSize, moveProperties);
 
         mArrowBitmap = PALManager.getBitmapFactory().createBitmap(aArrowResource, false);
         mArrowData = new ArrowData();

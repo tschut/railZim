@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.framework.SpaceUtil;
+import com.spacemangames.math.PointF;
 
 public class SpaceBackgroundObject extends SpaceObject {
     public class Star implements Comparable<Star> {
@@ -79,7 +80,7 @@ public class SpaceBackgroundObject extends SpaceObject {
     private final GradientProperties mGradientProperties   = new GradientProperties();
 
     public SpaceBackgroundObject(String aBackgroundColorInner, String aBackgroundColorOuter, String aSeed) {
-        super(null, false, ObjectType.BACKGROUND, 0, 0, 0, new CircularMoveProperties());
+        super(null, false, ObjectType.BACKGROUND, new PointF(), 0, new CircularMoveProperties());
 
         mSeed = aSeed;
 

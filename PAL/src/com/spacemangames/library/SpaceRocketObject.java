@@ -1,10 +1,11 @@
 package com.spacemangames.library;
 
 import com.spacemangames.framework.IMoveProperties;
+import com.spacemangames.math.PointF;
 
 public class SpaceRocketObject extends SpaceObject {
-    public SpaceRocketObject(String aBitmap, int aX, int aY, int aCollisionSize, IMoveProperties moveProperties) {
-        super(aBitmap, false, ObjectType.ROCKET, aX, aY, aCollisionSize, moveProperties);
+    public SpaceRocketObject(String aBitmap, PointF position, int aCollisionSize, IMoveProperties moveProperties) {
+        super(aBitmap, false, ObjectType.ROCKET, position, aCollisionSize, moveProperties);
     }
 
     @Override
