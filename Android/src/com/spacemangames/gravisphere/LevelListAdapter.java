@@ -1,30 +1,31 @@
 package com.spacemangames.gravisphere;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.spacemangames.framework.EndGameState;
 import com.spacemangames.gravisphere.ui.EndGameStatePresenter;
+import com.spacemangames.gravisphere.ui.LevelListItemView;
+import com.spacemangames.gravisphere.ui.LevelListItemView_;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
 public class LevelListAdapter extends BaseAdapter {
-    private static final String  TAG            = "LevelListAdapter";
+    private static final String TAG            = "LevelListAdapter";
 
-    private static final int     TYPE_LEVEL     = 0;
-    private static final int     TYPE_AD        = 1;
-    private static final int     TYPE_MAX_COUNT = TYPE_AD + 1;
+    private static final int    TYPE_LEVEL     = 0;
+    private static final int    TYPE_AD        = 1;
+    private static final int    TYPE_MAX_COUNT = TYPE_AD + 1;
 
-    private final LayoutInflater inflater;
-    private final Cursor         cursor;
+    private final Cursor        cursor;
 
-    public LevelListAdapter(Cursor cursor, LayoutInflater inflater) {
-        this.inflater = inflater;
+    private Context             context;
+
+    public LevelListAdapter(Context context, Cursor cursor) {
+        this.context = context;
         this.cursor = cursor;
     }
 
@@ -59,34 +60,33 @@ public class LevelListAdapter extends BaseAdapter {
         String levelTitle = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_TITLE));
         String levelNumber = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_LEVELNUMBER));
         String levelHighScore = cursor.getString(cursor.getColumnIndex(LevelDbAdapter.KEY_HIGHSCORE));
+        String levelHighScoreLabel = "Score: ";
 
         PALManager.getLog().i(TAG, "Level: " + levelNumber + " " + levelHighScore + " points");
-        convertView = inflater.inflate(R.layout.levelselect_item, null);
-        TextView levelTitleTextView = (TextView) convertView.findViewById(R.id.level_title);
-        TextView levelNumberTextView = (TextView) convertView.findViewById(R.id.level_number);
-        TextView levelHighScoreTextView = (TextView) convertView.findViewById(R.id.level_points);
-        TextView levelHighScoreTitleView = (TextView) convertView.findViewById(R.id.level_points_text);
-        ImageView starImageView = (ImageView) convertView.findViewById(R.id.star_image);
 
-        levelTitleTextView.setText(levelTitle);
-        levelNumberTextView.setText(levelNumber);
-        levelHighScoreTextView.setText(levelHighScore);
+        LevelListItemView levelListItemView;
+        if (convertView == null) {
+            levelListItemView = LevelListItemView_.build(context);
+        } else {
+            levelListItemView = (LevelListItemView) convertView;
+        }
 
-        levelHighScoreTextView.setVisibility(View.VISIBLE);
-        levelHighScoreTitleView.setVisibility(View.VISIBLE);
+        int starImageResource;
         if (!LevelDbAdapter.getInstance().levelIsUnlocked(Integer.parseInt(levelNumber))) {
-            starImageView.setImageResource(R.drawable.star_disabled);
-            levelHighScoreTextView.setVisibility(View.INVISIBLE);
-            levelHighScoreTitleView.setVisibility(View.INVISIBLE);
-        } else if (Integer.parseInt(levelHighScore) == 0) {
-            starImageView.setImageResource(R.drawable.star_enabled);
+            starImageResource = R.drawable.star_disabled;
+            levelHighScore = "";
+            levelHighScoreLabel = "";
+        } else if (!levelHighScore.isEmpty() && Integer.parseInt(levelHighScore) == 0) {
+            starImageResource = R.drawable.star_enabled;
         } else {
             EndGameState endGameState = SpaceData.getInstance().levelStarColor(Integer.parseInt(levelNumber),
                     Integer.parseInt(levelHighScore));
             EndGameStatePresenter endGameStatePresenter = EndGameStatePresenter.valueOfEndGameState(endGameState);
-            starImageView.setImageResource(endGameStatePresenter.getStarImageResourceId());
+            starImageResource = endGameStatePresenter.getStarImageResourceId();
         }
 
-        return convertView;
+        levelListItemView.setData(levelTitle, levelNumber, levelHighScore, levelHighScoreLabel, starImageResource);
+
+        return levelListItemView;
     }
 }

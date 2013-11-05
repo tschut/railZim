@@ -2,11 +2,9 @@ package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,7 +24,7 @@ public class LevelSelect extends ListActivity {
     private final class LevelSelectItemClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View aView, int position, long id) {
-            int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.level_number)).getText());
+            int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.levelNumber)).getText());
 
             if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
                 Toast.makeText(getApplicationContext(), R.string.level_locked, Toast.LENGTH_SHORT).show();
@@ -85,8 +83,7 @@ public class LevelSelect extends ListActivity {
         levelCursor = dbHelper.fetchAllLevels();
         startManagingCursor(levelCursor);
 
-        LevelListAdapter levelListAdapter = new LevelListAdapter(levelCursor,
-                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        LevelListAdapter levelListAdapter = new LevelListAdapter(this, levelCursor);
 
         setListAdapter(levelListAdapter);
     }
