@@ -12,7 +12,6 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.LevelSelect_;
 import com.spacemangames.gravisphere.R;
 
 @EFragment(R.layout.pause_layout)
