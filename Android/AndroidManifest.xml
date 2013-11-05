@@ -37,7 +37,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.spacemangames.gravisphere.LevelSelect"
+            android:name="com.spacemangames.gravisphere.LevelSelect_"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <activity

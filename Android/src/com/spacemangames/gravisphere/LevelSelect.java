@@ -15,10 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.gravisphere.ui.LoadingActivity;
 import com.spacemangames.gravisphere.ui.SpaceApp;
-import com.spacemangames.pal.PALManager;
 
+@EActivity(R.layout.levelselect_layout)
 public class LevelSelect extends ListActivity {
     private final class LevelSelectItemClickListener implements OnItemClickListener {
         @Override
@@ -36,13 +38,10 @@ public class LevelSelect extends ListActivity {
         }
     }
 
-    private static final String       TAG                   = "LevelSelect";
+    private LevelDbAdapter            dbHelper;
+    private Cursor                    levelCursor;
 
-    private LevelDbAdapter            mDbHelper;
-    private Cursor                    mLevelCursor;
-
-    // Create a message handling object as an anonymous class.
-    private final OnItemClickListener mLevelSelectedHandler = new LevelSelectItemClickListener();
+    private final OnItemClickListener levelSelectedHandler = new LevelSelectItemClickListener();
 
     @Override
     protected void onResume() {
@@ -50,26 +49,24 @@ public class LevelSelect extends ListActivity {
         GoogleAnalyticsTracker.getInstance().trackPageView("/levelselect");
     };
 
+    @AfterViews
+    protected void afterViews() {
+        ListView listView = (ListView) this.findViewById(android.R.id.list);
+        listView.addHeaderView(new View(this), null, true);
+        listView.addFooterView(new View(this), null, true);
+
+        dbHelper = LevelDbAdapter.getInstance();
+
+        fillData();
+
+        getListView().setOnItemClickListener(levelSelectedHandler);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            PALManager.getLog().i(TAG, "Normal startup");
-
-            setContentView(R.layout.levelselect_layout);
-
-            ListView listView = (ListView) this.findViewById(android.R.id.list);
-            listView.addHeaderView(new View(this), null, true);
-            listView.addFooterView(new View(this), null, true);
-
-            mDbHelper = LevelDbAdapter.getInstance();
-
-            fillData();
-
-            getListView().setOnItemClickListener(mLevelSelectedHandler);
-        } else {
-            // we are being restored: restart the app
+        if (savedInstanceState != null) {
             Intent i = new Intent(getApplicationContext(), LoadingActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
@@ -84,10 +81,10 @@ public class LevelSelect extends ListActivity {
     }
 
     private void fillData() {
-        mLevelCursor = mDbHelper.fetchAllLevels();
-        startManagingCursor(mLevelCursor);
+        levelCursor = dbHelper.fetchAllLevels();
+        startManagingCursor(levelCursor);
 
-        LevelListAdapter lLevelListAdapter = new LevelListAdapter(mLevelCursor,
+        LevelListAdapter lLevelListAdapter = new LevelListAdapter(levelCursor,
                 (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 
         setListAdapter(lLevelListAdapter);

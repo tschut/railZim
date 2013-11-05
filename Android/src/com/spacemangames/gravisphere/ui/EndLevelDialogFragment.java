@@ -13,7 +13,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.LevelSelect;
+import com.spacemangames.gravisphere.LevelSelect_;
 import com.spacemangames.gravisphere.R;
 
 @EFragment(R.layout.end_level_layout)
@@ -100,7 +100,7 @@ public class EndLevelDialogFragment extends DialogFragment {
         // the level in the state it's in now because you can press the
         // 'back'button in the level selector
         GameThreadHolder.getThread().reloadCurrentLevel();
-        Intent intent = new Intent(data.activity, LevelSelect.class);
+        Intent intent = LevelSelect_.intent(data.activity).get();
         data.activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
         dismiss();
     }

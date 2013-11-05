@@ -16,7 +16,7 @@ import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GamePrefs_;
 import com.spacemangames.gravisphere.GameThreadHolder;
 import com.spacemangames.gravisphere.LevelDbAdapter;
-import com.spacemangames.gravisphere.LevelSelect;
+import com.spacemangames.gravisphere.LevelSelect_;
 import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.library.SpaceLevel;
@@ -54,7 +54,7 @@ public class MainMenu extends Activity {
     protected void onClickList() {
         PALManager.getLog().v(TAG, "OnClick listButton");
         GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-        Intent intent = new Intent(SpaceApp.mAppContext, LevelSelect.class);
+        Intent intent = LevelSelect_.intent(SpaceApp.mAppContext).get();
         startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
     }
 

@@ -12,7 +12,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.LevelSelect;
+import com.spacemangames.gravisphere.LevelSelect_;
 import com.spacemangames.gravisphere.R;
 
 @EFragment(R.layout.pause_layout)
@@ -45,7 +45,7 @@ public class PauseMenuFragment extends DialogFragment {
         if (state != EndGameState.NOT_ENDED) {
             GameThreadHolder.getThread().reloadCurrentLevel();
         }
-        Intent intent = new Intent(activity, LevelSelect.class);
+        Intent intent = LevelSelect_.intent(activity).get();
         activity.startActivityForResult(intent, SpaceApp.ACTIVITY_LEVELSELECT);
         dismiss();
     }
