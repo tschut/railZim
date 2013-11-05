@@ -10,42 +10,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.spacemangames.gravisphere.R;
 import com.spacemangames.gravisphere.ui.LoadingActivity;
 import com.spacemangames.gravisphere.ui.SpaceApp;
 import com.spacemangames.pal.PALManager;
 
 public class LevelSelect extends ListActivity {
+    private final class LevelSelectItemClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View aView, int position, long id) {
+            int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.level_number)).getText());
+
+            if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
+                Toast.makeText(getApplicationContext(), R.string.level_locked, Toast.LENGTH_SHORT).show();
+            } else {
+                Intent aIntent = new Intent();
+                aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
+                setResult(Activity.RESULT_OK, aIntent);
+                finish();
+            }
+        }
+    }
+
     private static final String       TAG                   = "LevelSelect";
 
     private LevelDbAdapter            mDbHelper;
     private Cursor                    mLevelCursor;
 
     // Create a message handling object as an anonymous class.
-    private final OnItemClickListener mLevelSelectedHandler = new OnItemClickListener() {
-                                                                public void onItemClick(AdapterView<?> parent, View aView, int position,
-                                                                        long id) {
-                                                                    // return
-                                                                    // the
-                                                                    // result
-                                                                    int lID = Integer.parseInt((String) ((TextView) aView
-                                                                            .findViewById(R.id.level_number)).getText());
-
-                                                                    if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
-                                                                        Toast.makeText(getApplicationContext(), R.string.level_locked,
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                    } else {
-                                                                        Intent aIntent = new Intent();
-                                                                        aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
-                                                                        setResult(Activity.RESULT_OK, aIntent);
-                                                                        finish();
-                                                                    }
-                                                                }
-                                                            };
+    private final OnItemClickListener mLevelSelectedHandler = new LevelSelectItemClickListener();
 
     @Override
     protected void onResume() {
@@ -61,6 +58,10 @@ public class LevelSelect extends ListActivity {
             PALManager.getLog().i(TAG, "Normal startup");
 
             setContentView(R.layout.levelselect_layout);
+
+            ListView listView = (ListView) this.findViewById(android.R.id.list);
+            listView.addHeaderView(new View(this), null, true);
+            listView.addFooterView(new View(this), null, true);
 
             mDbHelper = LevelDbAdapter.getInstance();
 
