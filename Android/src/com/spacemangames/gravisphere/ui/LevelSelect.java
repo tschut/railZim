@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.ui;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -17,8 +17,12 @@ import android.widget.Toast;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.spacemangames.gravisphere.ui.LoadingActivity;
-import com.spacemangames.gravisphere.ui.SpaceApp;
+import com.spacemangames.gravisphere.LevelDbAdapter;
+import com.spacemangames.gravisphere.LevelListAdapter;
+import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.R.id;
+import com.spacemangames.gravisphere.R.layout;
+import com.spacemangames.gravisphere.R.string;
 
 @EActivity(R.layout.levelselect_layout)
 public class LevelSelect extends ListActivity {
