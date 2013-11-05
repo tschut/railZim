@@ -20,9 +20,6 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.LevelListAdapter;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.R.id;
-import com.spacemangames.gravisphere.R.layout;
-import com.spacemangames.gravisphere.R.string;
 
 @EActivity(R.layout.levelselect_layout)
 public class LevelSelect extends ListActivity {
