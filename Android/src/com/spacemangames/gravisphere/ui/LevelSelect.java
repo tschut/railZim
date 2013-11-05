@@ -85,9 +85,9 @@ public class LevelSelect extends ListActivity {
         levelCursor = dbHelper.fetchAllLevels();
         startManagingCursor(levelCursor);
 
-        LevelListAdapter lLevelListAdapter = new LevelListAdapter(levelCursor,
+        LevelListAdapter levelListAdapter = new LevelListAdapter(levelCursor,
                 (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 
-        setListAdapter(lLevelListAdapter);
+        setListAdapter(levelListAdapter);
     }
 }
