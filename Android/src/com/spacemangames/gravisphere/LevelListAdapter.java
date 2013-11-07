@@ -14,7 +14,7 @@ import com.spacemangames.library.SpaceData;
 import com.spacemangames.pal.PALManager;
 
 public class LevelListAdapter extends BaseAdapter {
-    private static final String TAG            = "LevelListAdapter";
+    private static final String TAG            = LevelListAdapter.class.getSimpleName();
 
     private static final int    TYPE_LEVEL     = 0;
     private static final int    TYPE_AD        = 1;
