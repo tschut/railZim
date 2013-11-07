@@ -101,8 +101,8 @@ public class LevelDbAdapter {
     }
 
     /**
-     * Insert a level Normally, this should only be done on the first run of the
-     * app, for all levels in the levels xml file
+     * Insert a level. Normally, this should only be done on the first run of
+     * the app, for all levels in the levels xml file
      */
     private void insertLevel(String aTitle, int aLevelNr, int aHighScore) {
         ContentValues initialValues = new ContentValues();
@@ -112,11 +112,6 @@ public class LevelDbAdapter {
         initialValues.put(KEY_HIGHSCORE, aHighScore);
 
         mDb.insert(DATABASE_TABLE, null, initialValues);
-    }
-
-    // TODO this seems to be unused...
-    public void close() {
-        mDbHelper.close();
     }
 
     /** Return a Cursor over the list of all levels in the database */
