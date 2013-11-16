@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.contentprovider;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,7 @@ import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.api.Scope;
+import com.spacemangames.gravisphere.DebugSettings;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;

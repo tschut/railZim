@@ -10,8 +10,8 @@ import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.EndGameState;
-import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.R;
+import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.library.SpaceData;
 
 @EViewGroup(R.layout.levelselect_item)

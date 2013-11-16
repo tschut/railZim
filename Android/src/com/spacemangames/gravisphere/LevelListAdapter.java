@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.gravisphere.ui.LevelListItemView;
 import com.spacemangames.gravisphere.ui.LevelListItemView_;
 import com.spacemangames.library.SpaceData;

@@ -13,6 +13,7 @@ import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.GameThread;
 import com.spacemangames.framework.SpaceGameState;
+import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.gravisphere.pal.AndroidRenderer;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceWorldEventBuffer;
