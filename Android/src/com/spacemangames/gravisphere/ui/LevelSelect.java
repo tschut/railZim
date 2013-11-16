@@ -18,7 +18,6 @@ import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.gravisphere.LevelListAdapter;
 import com.spacemangames.gravisphere.R;
-import com.spacemangames.gravisphere.contentprovider.HighScoresContentProvider;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 
 @EActivity(R.layout.levelselect_layout)
@@ -81,11 +80,7 @@ public class LevelSelect extends ListActivity {
     }
 
     private void fillData() {
-        levelCursor = getContentResolver().query(HighScoresContentProvider.CONTENT_URI, null, null, null, null);
-
-        startManagingCursor(levelCursor);
-
-        LevelListAdapter levelListAdapter = new LevelListAdapter(this, levelCursor);
+        LevelListAdapter levelListAdapter = new LevelListAdapter(this);
 
         setListAdapter(levelListAdapter);
     }

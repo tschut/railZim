@@ -6,18 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.googlecode.androidannotations.annotations.EBean;
+import com.spacemangames.gravisphere.contentprovider.HighScoresContentProvider;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.gravisphere.ui.LevelListItemView;
 import com.spacemangames.gravisphere.ui.LevelListItemView_;
 import com.spacemangames.library.SpaceData;
 
+@EBean
 public class LevelListAdapter extends BaseAdapter {
-    private final Cursor cursor;
-    private Context      context;
+    private Context context;
+    private Cursor  cursor;
 
-    public LevelListAdapter(Context context, Cursor cursor) {
+    public LevelListAdapter(Context context) {
         this.context = context;
-        this.cursor = cursor;
+
+        cursor = context.getContentResolver().query(HighScoresContentProvider.CONTENT_URI, null, null, null, null);
     }
 
     @Override

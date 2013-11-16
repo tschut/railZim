@@ -2,6 +2,7 @@ package com.spacemangames.gravisphere;
 
 import java.util.Queue;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.view.SurfaceHolder;
@@ -51,8 +52,11 @@ public class SpaceGameThread extends GameThread {
 
     private final GoogleAnalyticsTracker tracker;
 
-    public SpaceGameThread() {
+    private Context                      context;
+
+    public SpaceGameThread(Context context) {
         super(SpaceData.getInstance());
+        this.context = context;
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
         renderer = new AndroidRenderer();
@@ -219,8 +223,9 @@ public class SpaceGameThread extends GameThread {
                 SpaceGameState.INSTANCE.setEndState(SpaceData.getInstance().currentLevelWinState(curScore));
                 tracker.trackEvent("win", String.valueOf(currentLevelID), String.valueOf(curScore), 0);
 
-                if (curScore > highScore)
+                if (curScore > highScore) {
                     levelDbAdapter.updateHighScore(currentLevelID, curScore);
+                }
                 msgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):
