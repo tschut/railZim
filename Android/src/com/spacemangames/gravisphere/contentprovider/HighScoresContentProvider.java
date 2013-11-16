@@ -1,4 +1,4 @@
-package com.spacemangames.gravisphere;
+package com.spacemangames.gravisphere.contentprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -7,6 +7,7 @@ import android.net.Uri;
 
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EProvider;
+import com.spacemangames.gravisphere.LevelDbAdapter;
 
 @EProvider
 public class HighScoresContentProvider extends ContentProvider {

@@ -48,7 +48,7 @@
         <provider
             android:exported="false"
             android:authorities="com.spacemangames.gravisphere"
-            android:name="com.spacemangames.gravisphere.HighScoresContentProvider_">
+            android:name="com.spacemangames.gravisphere.contentprovider.HighScoresContentProvider_">
         </provider>
     </application>
 
