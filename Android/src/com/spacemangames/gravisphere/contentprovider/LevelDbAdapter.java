@@ -86,7 +86,7 @@ public class LevelDbAdapter {
         SpaceData lData = SpaceData.getInstance();
 
         for (SpaceLevel level : lData.levels) {
-            insertLevel(level.mName, level.mId, 0);
+            insertLevel(level.name, level.id, 0);
         }
     }
 

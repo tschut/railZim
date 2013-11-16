@@ -175,7 +175,7 @@ public class AndroidRenderer implements IRenderer {
     public void doDraw(SpaceManObject aObject) {
         // do we need to draw the prediction bitmap?
         if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
-            AndroidBitmap predictionBitmap = (AndroidBitmap) SpaceData.getInstance().currentLevel.mPredictionBitmap;
+            AndroidBitmap predictionBitmap = (AndroidBitmap) SpaceData.getInstance().currentLevel.predictionBitmap;
             Drawable predictionDrawable = predictionBitmap.getDrawable();
 
             for (int i = 0; i < aObject.mLastPrediction; ++i) {

@@ -12,7 +12,7 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceLevel {
-    public static final String    TAG              = SpaceLevel.class.getSimpleName();
+    public static final String    TAG               = SpaceLevel.class.getSimpleName();
 
     public static final int       ID_LOADING_SCREEN = 0;
     public static final int       ID_HELP1          = 1;
@@ -20,206 +20,193 @@ public class SpaceLevel {
     public static final int       ID_HELP3          = 3;
     public static final int       ID_HELP4          = 4;
 
-    /** list of objects in this level */
-    public ArrayList<SpaceObject> mObjects;
-    /** The background (which is a special object) */
-    public SpaceBackgroundObject  mBackgroundObject;
+    public ArrayList<SpaceObject> objects;
+    public SpaceBackgroundObject  backgroundObject;
 
-    /** Id of this level */
-    public int                    mId;
+    public int                    id;
 
-    /** Bitmap used for prediction */
-    public IBitmap                mPredictionBitmap;
+    public IBitmap                predictionBitmap;
 
-    /** Name of this level */
-    public String                 mName;
+    public String                 name;
 
-    private int                   mStartY;
-    private int                   mStartX;
+    private int                   startY;
+    private int                   startX;
 
-    /** Point you have to score for silver/gold medals */
-    private int                   mSilver;
-    private int                   mGold;
+    private int                   silver;
+    private int                   gold;
 
-    /** scratch variables */
-    public static Vector2         mScratchVector1   = new Vector2();
-    public static Vector2         mScratchVector2   = new Vector2();
-    public static Vector2         mScratchVector3   = new Vector2();
+    public static Vector2         scratchVector1    = new Vector2();
+    public static Vector2         scratchVector2    = new Vector2();
+    public static Vector2         scratchVector3    = new Vector2();
 
-    private final Vector2         mSpaceManSpeedBuf = new Vector2();
+    private final Vector2         spaceManSpeedBuf  = new Vector2();
 
     public SpaceLevel() {
-        // Note: 16 is the initial value, we can grow beyond that. However, it
-        // seems a nice estimate,
-        // so as long as we stay below that we should have better loading
-        // performance as the array doesn't
-        // have to grow.
-        mObjects = new ArrayList<SpaceObject>(16);
+        objects = new ArrayList<SpaceObject>(16);
     }
 
-    public void draw(IRenderer aRenderer) {
-        aRenderer.doDraw(mObjects, mBackgroundObject);
+    public void draw(IRenderer renderer) {
+        renderer.doDraw(objects, backgroundObject);
     }
 
     public void dump() {
-        int lObjCount = mObjects.size();
-        int lObjIndex = 0;
+        int objCount = objects.size();
+        int objIndex = 0;
 
-        PALManager.getLog().i(TAG, "******" + mName + "******");
-        PALManager.getLog().i(TAG, "Startcenter: " + mStartX + ":" + mStartY);
-        PALManager.getLog().i(TAG, "Silver: " + mSilver + " Gold: " + mGold);
-        PALManager.getLog().i(TAG, "This level contains " + lObjCount + " objects");
-        for (SpaceObject lObj : mObjects) {
-            PALManager.getLog().i(TAG, "Object: " + lObjIndex);
-            PALManager.getLog().i(TAG, lObj.toString());
-            lObjIndex++;
+        PALManager.getLog().i(TAG, "******" + name + "******");
+        PALManager.getLog().i(TAG, "Startcenter: " + startX + ":" + startY);
+        PALManager.getLog().i(TAG, "Silver: " + silver + " Gold: " + gold);
+        PALManager.getLog().i(TAG, "This level contains " + objCount + " objects");
+        for (SpaceObject object : objects) {
+            PALManager.getLog().i(TAG, "Object: " + objIndex);
+            PALManager.getLog().i(TAG, object.toString());
+            objIndex++;
         }
     }
 
     public SpaceManObject getSpaceManObject() {
-        int count = mObjects.size();
+        int count = objects.size();
         for (int i = 0; i < count; i++) {
-            SpaceObject lO = mObjects.get(i);
-            if (lO.type == ObjectType.SPACEMAN)
-                return (SpaceManObject) lO;
+            SpaceObject object = objects.get(i);
+            if (object.type == ObjectType.SPACEMAN) {
+                return (SpaceManObject) object;
+            }
         }
         // should not get here! (can get here during loading though!)
         PALManager.getLog().e("SpaceObject", "Could not find spaceman object!");
         return null;
     }
 
-    public void addSpaceMan(PointF position, String aBitmap, String aArrowBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceObject lObject = new SpaceManObject(aBitmap, position, aArrowBitmap, aCollisionSize, moveProperties);
-        mObjects.add(lObject);
+    public void addSpaceMan(PointF position, String bitmap, String arrowBitmap, int collisionSize, IMoveProperties moveProperties) {
+        SpaceObject object = new SpaceManObject(bitmap, position, arrowBitmap, collisionSize, moveProperties);
+        objects.add(object);
     }
 
-    public void addPlanet(PointF position, String aBitmap, boolean lazyLoading, float aGrav, int aCollisionSize, boolean aDOI,
+    public void addPlanet(PointF position, String bitmap, boolean lazyLoading, float gravity, int collisionSize, boolean deathOnImpact,
             IMoveProperties moveProperties) {
-        SpacePlanetObject lObject = new SpacePlanetObject(aBitmap, lazyLoading, position, aGrav, aCollisionSize, aDOI, moveProperties);
-        mObjects.add(lObject);
+        SpacePlanetObject object = new SpacePlanetObject(bitmap, lazyLoading, position, gravity, collisionSize, deathOnImpact,
+                moveProperties);
+        objects.add(object);
     }
 
-    public void addRocket(PointF position, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceRocketObject lObject = new SpaceRocketObject(aBitmap, position, aCollisionSize, moveProperties);
-        mObjects.add(lObject);
+    public void addRocket(PointF position, String bitmap, int collisionSize, IMoveProperties moveProperties) {
+        SpaceRocketObject object = new SpaceRocketObject(bitmap, position, collisionSize, moveProperties);
+        objects.add(object);
     }
 
-    public void addBonus(PointF position, String aBitmap, int aCollisionSize, IMoveProperties moveProperties) {
-        SpaceBonusObject lObject = new SpaceBonusObject(aBitmap, position, aCollisionSize, moveProperties);
-        mObjects.add(lObject);
+    public void addBonus(PointF position, String bitmap, int collisionSize, IMoveProperties moveProperties) {
+        SpaceBonusObject object = new SpaceBonusObject(bitmap, position, collisionSize, moveProperties);
+        objects.add(object);
     }
 
-    public void setSpaceManSpeed(PointF aFirePower) {
-        mSpaceManSpeedBuf.set(aFirePower.x, aFirePower.y);
-        getSpaceManObject().setSpeed(mSpaceManSpeedBuf);
+    public void setSpaceManSpeed(PointF firePower) {
+        spaceManSpeedBuf.set(firePower.x, firePower.y);
+        getSpaceManObject().setSpeed(spaceManSpeedBuf);
     }
 
-    public void updatePhysics(float aElapsed) {
+    public void updatePhysics(float elapsed) {
         if (SpaceGameState.INSTANCE.getState() == GameState.FLYING) {
-            // calculate gravitational effect for all relevant objects
-            updatePhysicsGravity(aElapsed);
+            updatePhysicsGravity(elapsed);
         }
-        updateMovingObjects(aElapsed);
+        updateMovingObjects(elapsed);
     }
 
     public void reset() {
-        int count = mObjects.size();
+        int count = objects.size();
         for (int i = 0; i < count; i++) {
-            // by doing this we force the correct rotation for objects that move
-            // and rotate with that (e.g. the rocket)
-            mObjects.get(i).updateMoving(1);
-            mObjects.get(i).reset();
+            objects.get(i).updateMoving(1);
+            objects.get(i).reset();
         }
     }
 
-    private void updateMovingObjects(float aElapsed) {
-        int count = mObjects.size();
+    private void updateMovingObjects(float elapsed) {
+        int count = objects.size();
         for (int i = 0; i < count; i++) {
-            mObjects.get(i).updateMoving(aElapsed);
+            objects.get(i).updateMoving(elapsed);
         }
     }
 
-    public void updatePhysicsGravity(float aElapsed) {
-        int count = mObjects.size();
+    public void updatePhysicsGravity(float elapsed) {
+        int count = objects.size();
         for (int i = 0; i < count; i++) {
-            SpaceObject lO1 = mObjects.get(i);
-            if (lO1.isAffectedByGravity()) {
+            SpaceObject object1 = objects.get(i);
+            if (object1.isAffectedByGravity()) {
                 for (int j = 0; j < count; j++) {
-                    SpaceObject lO2 = mObjects.get(j);
-                    updatePhysicsGravity(aElapsed, lO1, lO2);
+                    SpaceObject object2 = objects.get(j);
+                    updatePhysicsGravity(elapsed, object1, object2);
                 }
             }
         }
     }
 
-    private void updatePhysicsGravity(float aElapsed, SpaceObject aO1, SpaceObject aO2) {
-        float lGrav = aO2.gravity();
-        if (lGrav > 0.f) {
+    private void updatePhysicsGravity(float elapsed, SpaceObject object1, SpaceObject object2) {
+        float gravity = object2.gravity();
+        if (gravity > 0.f) {
             // Note: we apply some scaling to keep values a bit normal
-            mScratchVector1.set(aO1.body.getPosition());
-            mScratchVector2.set(aO2.body.getPosition());
-            float lDistance = mScratchVector1.dst(mScratchVector2);
+            scratchVector1.set(object1.body.getPosition());
+            scratchVector2.set(object2.body.getPosition());
+            float lDistance = scratchVector1.dst(scratchVector2);
             if (lDistance > 0.0) { // if distance == 0, lO1 == lO2
-                mScratchVector3.set(mScratchVector2); // vec3 = vec2
-                mScratchVector3.sub(mScratchVector1); // vec3 = vec2 - vec1
-                mScratchVector1.set(mScratchVector3); // vec1 = vec3
-                mScratchVector1.mul(1.0f / mScratchVector3.len()); // vec1 =
-                                                                   // normalized
-                                                                   // direction
+                scratchVector3.set(scratchVector2); // vec3 = vec2
+                scratchVector3.sub(scratchVector1); // vec3 = vec2 - vec1
+                scratchVector1.set(scratchVector3); // vec1 = vec3
+                scratchVector1.mul(1.0f / scratchVector3.len()); // vec1 =
+                                                                 // normalized
+                                                                 // direction
                 // grav pull, inverse square relationship with distance
-                float lGravPull = (lGrav / (lDistance * lDistance)) * aElapsed;
-                mScratchVector1.mul(lGravPull);
-                aO1.applyForce(mScratchVector1, aO1.body.getPosition());
+                float gravityPull = (gravity / (lDistance * lDistance)) * elapsed;
+                scratchVector1.mul(gravityPull);
+                object1.applyForce(scratchVector1, object1.body.getPosition());
             }
         }
     }
 
-    public void addBackground(String aBackgroundColorInner, String aBackgroundColorOuter) {
-        mBackgroundObject = new SpaceBackgroundObject(aBackgroundColorInner, aBackgroundColorOuter, mName);
+    public void addBackground(String backgroundColorInner, String backgroundColorOuter) {
+        backgroundObject = new SpaceBackgroundObject(backgroundColorInner, backgroundColorOuter, name);
     }
 
-    public void setStartCenterY(int lStartY) {
-        mStartY = lStartY;
+    public void setStartCenterY(int startY) {
+        this.startY = startY;
     }
 
-    public void setStartCenterX(int lStartX) {
-        mStartX = lStartX;
+    public void setStartCenterX(int startX) {
+        this.startX = startX;
     }
 
     public int startCenterX() {
-        return mStartX;
+        return startX;
     }
 
     public int startCenterY() {
-        return mStartY;
+        return startY;
     }
 
     public PointF startCenter() {
-        return new PointF(mStartX, mStartY);
+        return new PointF(startX, startY);
     }
 
-    public void setPredictionBitmap(String aResource) {
-        mPredictionBitmap = PALManager.getBitmapFactory().createBitmap(aResource, false);
+    public void setPredictionBitmap(String resource) {
+        predictionBitmap = PALManager.getBitmapFactory().createBitmap(resource, false);
     }
 
-    public void setSilver(int aSilver) {
-        mSilver = aSilver;
+    public void setSilver(int silver) {
+        this.silver = silver;
     }
 
-    public void setGold(int aGold) {
-        mGold = aGold;
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 
     public int silver() {
-        return mSilver;
+        return silver;
     }
 
     public int gold() {
-        return mGold;
+        return gold;
     }
 
     public void releaseLazyMemory() {
-        for (SpaceObject object : mObjects) {
+        for (SpaceObject object : objects) {
             object.releaseLazyMemory();
         }
     }

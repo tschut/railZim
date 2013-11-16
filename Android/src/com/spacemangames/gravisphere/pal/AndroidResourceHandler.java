@@ -69,8 +69,8 @@ public class AndroidResourceHandler implements IResourceHandler {
     public void preloadLevels(List<SpaceLevel> levels, LevelsJson levelsJson) {
         for (LevelJson levelJson : levelsJson.getLevels()) {
             SpaceLevel level = new SpaceLevel();
-            level.mId = levelJson.getId();
-            level.mName = levelJson.getName();
+            level.id = levelJson.getId();
+            level.name = levelJson.getName();
             level.setStartCenterX(levelJson.getStartCenterX());
             level.setStartCenterY(levelJson.getStartCenterY());
             level.setPredictionBitmap(levelJson.getPredictionBitmap());
@@ -110,7 +110,7 @@ public class AndroidResourceHandler implements IResourceHandler {
                     PALManager.getLog().e(TAG, "Unexpected object type: " + type);
                 }
             }
-            levels.add(level.mId, level);
+            levels.add(level.id, level);
         }
     }
 }

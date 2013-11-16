@@ -83,9 +83,9 @@ public class SpaceData {
         points.reset();
 
         // create bodies for all objects
-        int count = currentLevel.mObjects.size();
+        int count = currentLevel.objects.size();
         for (int i = 0; i < count; i++) {
-            SpaceObject object = currentLevel.mObjects.get(i);
+            SpaceObject object = currentLevel.objects.get(i);
             object.createBody(world);
             object.reset();
         }
@@ -118,9 +118,9 @@ public class SpaceData {
                 world.step(timeCount * BOX2D_SPEEDUP, BOX2D_VEL_ITER, BOX2D_POS_ITER);
             }
 
-            int count = currentLevel.mObjects.size();
+            int count = currentLevel.objects.size();
             for (int i = 0; i < count; i++) {
-                SpaceObject object = currentLevel.mObjects.get(i);
+                SpaceObject object = currentLevel.objects.get(i);
                 object.updatePositions();
             }
         }
@@ -181,11 +181,11 @@ public class SpaceData {
     }
 
     public int getCurrentLevelId() {
-        return currentLevel.mId;
+        return currentLevel.id;
     }
 
     public int getLastLevelId() {
-        return levels.get(levels.size() - 1).mId;
+        return levels.get(levels.size() - 1).id;
     }
 
     public EndGameState currentLevelWinState(int points) {

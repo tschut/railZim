@@ -37,7 +37,7 @@ public class HelpActivity extends Activity {
     @Click(R.id.prevButton)
     protected void onClickPrev() {
         PALManager.getLog().v(TAG, "OnClick PrevButton");
-        if (SpaceData.getInstance().currentLevel.mId == SpaceLevel.ID_HELP1) {
+        if (SpaceData.getInstance().currentLevel.id == SpaceLevel.ID_HELP1) {
             SpaceView spaceview = (SpaceView) findViewById(R.id.space);
             spaceview.ignoreFocusChange = true;
             finish();
@@ -49,7 +49,7 @@ public class HelpActivity extends Activity {
     @Click(R.id.nextButton)
     protected void onClickNext() {
         PALManager.getLog().v(TAG, "OnClick NextButton");
-        if (SpaceData.getInstance().currentLevel.mId == SpaceLevel.ID_HELP4) {
+        if (SpaceData.getInstance().currentLevel.id == SpaceLevel.ID_HELP4) {
             GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
             Intent i = new Intent();
             i.putExtra("action", HELP_ACTION_START_GAME);
