@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceUtil;
@@ -24,11 +25,12 @@ import com.spacemangames.pal.PALManager;
 
 @EActivity(R.layout.loading_layout)
 public class LoadingActivity extends Activity implements ILoadingDoneListener {
-    private final static String TAG = "LoadingActivity";
-
     static {
         System.loadLibrary("gdx");
     }
+
+    @Bean
+    protected LevelDbAdapter levelDbAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
         bootstrap();
 
         // start the game thread
-        final SpaceGameThread lThread = GameThreadHolder.createThread();
+        final SpaceGameThread lThread = GameThreadHolder.createThread(getApplicationContext());
         lThread.setRunning(true);
         lThread.freeze();
         if (lThread.getState() == Thread.State.NEW)
@@ -47,7 +49,7 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
             @Override
             public void run() {
                 SpaceData.getInstance().preloadAllLevels();
-                LevelDbAdapter.getInstance().insertAllLevelsIfEmpty();
+                levelDbAdapter.insertAllLevelsIfEmpty();
                 // load the fist level
                 lThread.changeLevel(0, true);
                 SpaceData.getInstance().setLoadingDone();

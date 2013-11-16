@@ -1,14 +1,14 @@
 package com.spacemangames.gravisphere;
 
-import com.spacemangames.library.SpaceData;
+import android.content.Context;
 
 public class GameThreadHolder {
     private static SpaceGameThread mThread;
 
     // Create the thread
-    public static SpaceGameThread createThread() {
+    public static SpaceGameThread createThread(Context context) {
         if (mThread == null) {
-            mThread = new SpaceGameThread(SpaceData.getInstance());
+            mThread = SpaceGameThread_.getInstance_(context);
         }
         return mThread;
     }

@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.view.SurfaceHolder;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.spacemangames.framework.EndGameState;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.GameThread;
@@ -18,6 +20,7 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
 import com.spacemangames.util.ThreadUtils;
 
+@EBean
 public class SpaceGameThread extends GameThread {
     public class FireSpacemanRunnable implements Runnable {
         @Override
@@ -28,16 +31,14 @@ public class SpaceGameThread extends GameThread {
 
     public static final String           TAG                = SpaceGameThread.class.getSimpleName();
 
-    public static final float            MIN_FRAME_TIME     = 0.033f;                               // in
-                                                                                                     // seconds
-                                                                                                     // (0.033
-                                                                                                     // =
-                                                                                                     // 30
-                                                                                                     // fps)
+    public static final float            MIN_FRAME_TIME     = 0.033f;
     public static final float            MAX_FRAME_TIME     = 0.100f;
 
     private SurfaceHolder                surfaceHolder;
     private final Object                 dummySurfaceHolder = new Object();
+
+    @Bean
+    protected LevelDbAdapter             levelDbAdapter;
 
     // used to message the ui thread
     private Handler                      msgHandler;
@@ -49,8 +50,8 @@ public class SpaceGameThread extends GameThread {
 
     private final GoogleAnalyticsTracker tracker;
 
-    public SpaceGameThread(SpaceData spaceData) {
-        super(spaceData);
+    public SpaceGameThread() {
+        super(SpaceData.getInstance());
         SpaceGameState.INSTANCE.setState(GameState.LOADING);
 
         renderer = new AndroidRenderer();
@@ -212,13 +213,13 @@ public class SpaceGameThread extends GameThread {
             case (SpaceWorldEventBuffer.EVENT_HIT_ROCKET):
                 SpaceGameState.INSTANCE.setPaused(true);
                 int currentLevelID = SpaceData.getInstance().getCurrentLevelId();
-                int highScore = LevelDbAdapter.getInstance().highScore(currentLevelID);
+                int highScore = levelDbAdapter.highScore(currentLevelID);
                 int curScore = SpaceData.getInstance().points.getCurrentPoints();
                 SpaceGameState.INSTANCE.setEndState(SpaceData.getInstance().currentLevelWinState(curScore));
                 tracker.trackEvent("win", String.valueOf(currentLevelID), String.valueOf(curScore), 0);
 
                 if (curScore > highScore)
-                    LevelDbAdapter.getInstance().updateHighScore(currentLevelID, curScore);
+                    levelDbAdapter.updateHighScore(currentLevelID, curScore);
                 msgHandler.sendEmptyMessage(0);
                 break;
             case (SpaceWorldEventBuffer.EVENT_HIT_DOI_OBJECT):

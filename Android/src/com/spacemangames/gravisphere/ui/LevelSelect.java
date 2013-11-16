@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.spacemangames.gravisphere.HighScoresContentProvider;
 import com.spacemangames.gravisphere.LevelDbAdapter;
 import com.spacemangames.gravisphere.LevelListAdapter;
 import com.spacemangames.gravisphere.R;
@@ -26,7 +28,7 @@ public class LevelSelect extends ListActivity {
         public void onItemClick(AdapterView<?> parent, View aView, int position, long id) {
             int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.levelNumber)).getText());
 
-            if (!LevelDbAdapter.getInstance().levelIsUnlocked(lID)) {
+            if (!dbHelper.levelIsUnlocked(lID)) {
                 Toast.makeText(getApplicationContext(), R.string.level_locked, Toast.LENGTH_SHORT).show();
             } else {
                 Intent aIntent = new Intent();
@@ -37,7 +39,8 @@ public class LevelSelect extends ListActivity {
         }
     }
 
-    private LevelDbAdapter            dbHelper;
+    @Bean
+    protected LevelDbAdapter          dbHelper;
     private Cursor                    levelCursor;
 
     private final OnItemClickListener levelSelectedHandler = new LevelSelectItemClickListener();
@@ -53,8 +56,6 @@ public class LevelSelect extends ListActivity {
         ListView listView = (ListView) this.findViewById(android.R.id.list);
         listView.addHeaderView(new View(this), null, true);
         listView.addFooterView(new View(this), null, true);
-
-        dbHelper = LevelDbAdapter.getInstance();
 
         fillData();
 
@@ -80,7 +81,8 @@ public class LevelSelect extends ListActivity {
     }
 
     private void fillData() {
-        levelCursor = dbHelper.fetchAllLevels();
+        levelCursor = getContentResolver().query(HighScoresContentProvider.CONTENT_URI, null, null, null, null);
+
         startManagingCursor(levelCursor);
 
         LevelListAdapter levelListAdapter = new LevelListAdapter(this, levelCursor);

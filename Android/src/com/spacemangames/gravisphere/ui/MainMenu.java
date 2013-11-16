@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OnActivityResult;
@@ -39,6 +40,9 @@ public class MainMenu extends Activity {
 
     @Pref
     protected GamePrefs_        gamePrefs;
+
+    @Bean
+    protected LevelDbAdapter    levelDbAdapter;
 
     @Click(R.id.playButton)
     protected void onClickPlay() {
@@ -139,7 +143,7 @@ public class MainMenu extends Activity {
 
     private boolean goToHelpImmediately() {
         // return true if the first level is never completed...
-        if (LevelDbAdapter.getInstance().highScore(0) > 0)
+        if (levelDbAdapter.highScore(0) > 0)
             return false;
 
         return !gamePrefs.hasSeenHelp().getOr(false);

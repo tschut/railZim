@@ -54,6 +54,9 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     @Bean
     protected PointsUpdateThread   pointsUpdateThread;
 
+    @Bean
+    protected LevelDbAdapter       levelDbAdapter;
+
     @ViewById
     SpaceView                      spaceView;
 
@@ -70,14 +73,14 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         tracker.trackPageView("/endLevelDialog");
 
         int points = SpaceData.getInstance().points.getCurrentPoints();
-        int best = LevelDbAdapter.getInstance().highScore(SpaceData.getInstance().getCurrentLevelId());
+        int best = levelDbAdapter.highScore(SpaceData.getInstance().getCurrentLevelId());
         EndGameStatePresenter endState = EndGameStatePresenter.valueOfEndGameState(SpaceGameState.INSTANCE.endState());
         int imageResource = endState.getStarImageResourceId();
         int titleResource = endState.getTitleResourceId();
         int textResource = endState.getMsgResourceId();
         boolean nextLevelUnlocked = false;
 
-        if (LevelDbAdapter.getInstance().levelIsUnlocked(SpaceData.getInstance().getCurrentLevelId() + 1)) {
+        if (levelDbAdapter.levelIsUnlocked(SpaceData.getInstance().getCurrentLevelId() + 1)) {
             nextLevelUnlocked = true;
         }
 
@@ -177,7 +180,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         }
 
         if (mRestoreLevel == LAST_UNLOCKED_LEVEL) {
-            int level = LevelDbAdapter.getInstance().getLastUnlockedLevelID();
+            int level = levelDbAdapter.getLastUnlockedLevelID();
             PALManager.getLog().v(TAG, "restoring last unlocked level: " + level);
             GameThreadHolder.getThread().changeLevel(level, false);
         } else if (mRestoreLevel != -1) {

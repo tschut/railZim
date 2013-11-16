@@ -3,15 +3,18 @@ package com.spacemangames.gravisphere;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.spacemangames.gravisphere.ui.SpaceApp;
+import com.googlecode.androidannotations.annotations.AfterInject;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.RootContext;
+import com.googlecode.androidannotations.api.Scope;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 
+@EBean(scope = Scope.Singleton)
 public class LevelDbAdapter {
     public static final String  KEY_ROWID        = "_id";
     public static final String  KEY_TITLE        = "title";
@@ -33,7 +36,9 @@ public class LevelDbAdapter {
 
     private DatabaseHelper      mDbHelper;
     private SQLiteDatabase      mDb;
-    private final Context       mCtx;
+
+    @RootContext
+    protected Context           context;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
@@ -57,31 +62,15 @@ public class LevelDbAdapter {
         }
     }
 
-    // Singleton holder
-    private static class SingletonHolder {
-        public static final LevelDbAdapter INSTANCE = new LevelDbAdapter();
-    }
-
-    // Singleton access
-    public static LevelDbAdapter getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    public LevelDbAdapter() {
-        this.mCtx = SpaceApp.mAppContext;
-        open();
-    }
-
-    private LevelDbAdapter open() throws SQLException {
-        mDbHelper = new DatabaseHelper(mCtx);
+    @AfterInject
+    protected void open() {
+        mDbHelper = new DatabaseHelper(context);
         mDb = mDbHelper.getWritableDatabase();
 
         // force onCreate if DEBUG
         if (DebugSettings.DEBUG_DB_CREATION) {
             mDbHelper.onCreate(mDb);
         }
-
-        return this;
     }
 
     public synchronized void insertAllLevelsIfEmpty() {

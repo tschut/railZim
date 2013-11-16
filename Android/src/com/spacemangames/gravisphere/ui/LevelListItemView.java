@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.framework.EndGameState;
@@ -16,15 +17,18 @@ import com.spacemangames.library.SpaceData;
 @EViewGroup(R.layout.levelselect_item)
 public class LevelListItemView extends LinearLayout {
     @ViewById
-    protected TextView  levelTitle;
+    protected TextView       levelTitle;
     @ViewById
-    protected TextView  levelNumber;
+    protected TextView       levelNumber;
     @ViewById
-    protected TextView  levelPoints;
+    protected TextView       levelPoints;
     @ViewById
-    protected TextView  levelPointsLabel;
+    protected TextView       levelPointsLabel;
     @ViewById
-    protected ImageView starImage;
+    protected ImageView      starImage;
+
+    @Bean
+    protected LevelDbAdapter levelDbAdapter;
 
     public LevelListItemView(Context context) {
         super(context);
@@ -37,7 +41,7 @@ public class LevelListItemView extends LinearLayout {
         this.levelPoints.setVisibility(View.VISIBLE);
         this.levelPointsLabel.setVisibility(View.VISIBLE);
 
-        if (!LevelDbAdapter.getInstance().levelIsUnlocked(Integer.parseInt(levelNumber))) {
+        if (!levelDbAdapter.levelIsUnlocked(Integer.parseInt(levelNumber))) {
             starImage.setImageResource(R.drawable.star_disabled);
             this.levelPoints.setVisibility(View.INVISIBLE);
             this.levelPointsLabel.setVisibility(View.INVISIBLE);
