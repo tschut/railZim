@@ -12,7 +12,7 @@ import com.spacemangames.pal.IRenderer;
 import com.spacemangames.pal.PALManager;
 
 public class SpaceLevel {
-    public static final String    MTAG              = "SpaceLevel";
+    public static final String    TAG              = SpaceLevel.class.getSimpleName();
 
     public static final int       ID_LOADING_SCREEN = 0;
     public static final int       ID_HELP1          = 1;
@@ -65,13 +65,13 @@ public class SpaceLevel {
         int lObjCount = mObjects.size();
         int lObjIndex = 0;
 
-        PALManager.getLog().i(MTAG, "******" + mName + "******");
-        PALManager.getLog().i(MTAG, "Startcenter: " + mStartX + ":" + mStartY);
-        PALManager.getLog().i(MTAG, "Silver: " + mSilver + " Gold: " + mGold);
-        PALManager.getLog().i(MTAG, "This level contains " + lObjCount + " objects");
+        PALManager.getLog().i(TAG, "******" + mName + "******");
+        PALManager.getLog().i(TAG, "Startcenter: " + mStartX + ":" + mStartY);
+        PALManager.getLog().i(TAG, "Silver: " + mSilver + " Gold: " + mGold);
+        PALManager.getLog().i(TAG, "This level contains " + lObjCount + " objects");
         for (SpaceObject lObj : mObjects) {
-            PALManager.getLog().i(MTAG, "Object: " + lObjIndex);
-            PALManager.getLog().i(MTAG, lObj.toString());
+            PALManager.getLog().i(TAG, "Object: " + lObjIndex);
+            PALManager.getLog().i(TAG, lObj.toString());
             lObjIndex++;
         }
     }
