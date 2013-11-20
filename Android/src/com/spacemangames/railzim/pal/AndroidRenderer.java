@@ -11,41 +11,36 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 
-import com.spacemangames.framework.GameState;
-import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.library.SpaceBackgroundObject;
-import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceManObject;
 import com.spacemangames.library.SpaceObject;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IRenderer;
 
 public class AndroidRenderer implements IRenderer {
-    private boolean                     mInitialized = false;
+    private boolean          mInitialized = false;
 
-    private Canvas                      mCanvas;
-    private Rect                        mViewport;
-    private Rect                        mScreen;
+    private Canvas           mCanvas;
+    private Rect             mViewport;
+    private Rect             mScreen;
 
     // For the background we make a copy of the gradient bitmap to speed up
     // future rendering
-    private Bitmap                      mBackgroundGradient;
-    private Canvas                      mGradientCanvas;
-    private GradientDrawable            mGradientDrawable;
+    private Bitmap           mBackgroundGradient;
+    private Canvas           mGradientCanvas;
+    private GradientDrawable mGradientDrawable;
 
     // Bitmaps for the stars
-    private List<Bitmap>                mStarBitmaps = null;
-    private final Canvas                mScratchCanvas;
+    private List<Bitmap>     mStarBitmaps = null;
+    private final Canvas     mScratchCanvas;
 
     // helpers
-    private int                         mCanvasWidth;
-    private int                         mCanvasHeight;
-    private final android.graphics.Rect mScratchRect;
+    private int              mCanvasWidth;
+    private int              mCanvasHeight;
 
     public AndroidRenderer() {
         mScratchCanvas = new Canvas();
-        mScratchRect = new android.graphics.Rect();
     }
 
     // initialize platform stuff
@@ -80,8 +75,6 @@ public class AndroidRenderer implements IRenderer {
         AndroidBitmap lBitmap = (AndroidBitmap) aObject.getBitmap();
         Drawable lDrawable = lBitmap.getDrawable();
 
-        float lRotation = (float) (aObject.getBody().getAngle() * (180.0f / Math.PI));
-
         float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.position.x);
         float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.position.y);
         float lW = SpaceUtil.scaleX(mViewport, mScreen, lBitmap.getWidth());
@@ -91,10 +84,7 @@ public class AndroidRenderer implements IRenderer {
         int yTop = (int) (lY - (lH / 2.0f));
         int xLeft = (int) (lX - (lW / 2.0f));
         lDrawable.setBounds(xLeft, yTop, (int) (xLeft + lW), (int) (yTop + lH));
-        mCanvas.save();
-        mCanvas.rotate(lRotation, lX, lY);
         lDrawable.draw(mCanvas);
-        mCanvas.restore();
     }
 
     @Override
@@ -173,48 +163,6 @@ public class AndroidRenderer implements IRenderer {
 
     @Override
     public void doDraw(SpaceManObject aObject) {
-        // do we need to draw the prediction bitmap?
-        if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
-            AndroidBitmap predictionBitmap = (AndroidBitmap) SpaceData.getInstance().currentLevel.predictionBitmap;
-            Drawable predictionDrawable = predictionBitmap.getDrawable();
-
-            for (int i = 0; i < aObject.mLastPrediction; ++i) {
-                int lX = Math.round(SpaceUtil.transformX(mViewport, mScreen, aObject.mPredictionData.get(i).x));
-                int lY = Math.round(SpaceUtil.transformY(mViewport, mScreen, aObject.mPredictionData.get(i).y));
-                float lW = SpaceUtil.scaleX(mViewport, mScreen, predictionBitmap.getWidth());
-                float lH = SpaceUtil.scaleY(mViewport, mScreen, predictionBitmap.getHeight());
-
-                // Draw object
-                int yTop = (int) (lY - (lH / 2.0f));
-                int xLeft = (int) (lX - (lW / 2.0f));
-                predictionDrawable.setBounds(xLeft, yTop, (int) (xLeft + lW), (int) (yTop + lH));
-                predictionDrawable.draw(mCanvas);
-            }
-            // set spaceman rotation to reflect direction we're going to shoot
-            // in
-            aObject.setRotation(-1 * SpaceGameState.INSTANCE.chargingState.getAngle());
-        }
-
-        // now use normal drawing function to draw spaceman
         doDraw((SpaceObject) aObject);
-
-        // don't render arrow if we're inside the viewport
-        if (Rect.intersects(aObject.getRect(), mViewport))
-            return;
-
-        // let the object calculate the arrow position before we render it
-        aObject.calculateOutsideArrowPosition(mScreen, mViewport);
-        AndroidBitmap lArrowBitmap = (AndroidBitmap) aObject.getArrowBitmap();
-        Drawable lArrowDrawable = lArrowBitmap.getDrawable();
-        SpaceManObject.ArrowData lArrowData = aObject.getArrowData();
-        // Draw arrow
-        Rect lR = lArrowData.mRect;
-        mScratchRect.set(lR.left, lR.top, lR.right, lR.bottom);
-        lArrowDrawable.setAlpha(lArrowData.mAlpha);
-        lArrowDrawable.setBounds(mScratchRect);
-        mCanvas.save();
-        mCanvas.rotate(lArrowData.mAngle, lArrowData.mRect.exactCenterX(), lArrowData.mRect.exactCenterY());
-        lArrowDrawable.draw(mCanvas);
-        mCanvas.restore();
     }
 }

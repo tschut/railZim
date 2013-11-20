@@ -6,7 +6,6 @@ import android.view.MotionEvent;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.framework.SpaceUtil;
-import com.spacemangames.library.SpaceData;
 import com.spacemangames.math.PointF;
 import com.spacemangames.railzim.GameThreadHolder;
 
@@ -18,7 +17,6 @@ public class GestureListener implements OnGestureListener {
     public boolean onDown(MotionEvent event) {
         boolean result = false;
         boolean hitsSpaceMan = GameThreadHolder.getThread().hitsSpaceMan(event.getX(), event.getY());
-        boolean hitsArrow = GameThreadHolder.getThread().hitsSpaceManArrow(event.getX(), event.getY());
         GameState state = SpaceGameState.INSTANCE.getState();
 
         if (state == GameState.NOT_STARTED && hitsSpaceMan) {
@@ -27,12 +25,6 @@ public class GestureListener implements OnGestureListener {
             SpaceGameState.INSTANCE.setState(GameState.CHARGING);
             SpaceGameState.INSTANCE.chargingState.setChargingStart(x, y);
             SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
-            result = true;
-        } else if (state == GameState.NOT_STARTED && hitsArrow) {
-            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().currentLevel.startCenter());
-            result = true;
-        } else if (hitsArrow) {
-            GameThreadHolder.getThread().viewport.focusOn(SpaceData.getInstance().currentLevel.getSpaceManObject().getPosition());
             result = true;
         }
 
@@ -88,7 +80,6 @@ public class GestureListener implements OnGestureListener {
             float x = SpaceUtil.resolutionScale(event.getX());
             float y = SpaceUtil.resolutionScale(event.getY());
             SpaceGameState.INSTANCE.chargingState.setChargingCurrent(x, y);
-            GameThreadHolder.getThread().postRunnable(GameThreadHolder.getThread().new FireSpacemanRunnable());
             result = true;
         }
 

@@ -96,7 +96,6 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     @AfterViews
     protected void startPointsUpdateThread() {
         GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
-        GameThreadHolder.getThread().setMsgHandler(mMsgHandler);
 
         pointsUpdateThread.start();
     }

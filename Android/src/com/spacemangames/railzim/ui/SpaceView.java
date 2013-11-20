@@ -10,7 +10,6 @@ import android.view.SurfaceView;
 
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.library.SpaceData;
 import com.spacemangames.railzim.GameThreadHolder;
 
 class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
@@ -76,7 +75,6 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
     private void interruptCharging() {
         if (SpaceGameState.INSTANCE.getState() == GameState.CHARGING) {
             SpaceGameState.INSTANCE.chargingState.reset();
-            SpaceData.getInstance().resetPredictionData();
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
         }
     }

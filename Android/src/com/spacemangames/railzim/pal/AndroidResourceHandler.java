@@ -73,7 +73,6 @@ public class AndroidResourceHandler implements IResourceHandler {
             level.name = levelJson.getName();
             level.setStartCenterX(levelJson.getStartCenterX());
             level.setStartCenterY(levelJson.getStartCenterY());
-            level.setPredictionBitmap(levelJson.getPredictionBitmap());
             level.setSilver(levelJson.getSilver());
             level.setGold(levelJson.getGold());
 
@@ -92,20 +91,11 @@ public class AndroidResourceHandler implements IResourceHandler {
                 String type = objectJson.getType();
                 PointF position = new PointF(objectJson.getPosx(), objectJson.getPosy());
                 String lBitmap = objectJson.getBitmap();
-                boolean lazyLoading = objectJson.getLazyLoading();
                 String lArrowBitmap = objectJson.getArrowBitmap();
                 int lCollisionSize = objectJson.getCollisionSize();
-                float lGrav = objectJson.getGravity();
-                boolean lDOI = objectJson.getDeathOnImpact();
 
                 if (type.equals("spaceman")) {
                     level.addSpaceMan(position, lBitmap, lArrowBitmap, lCollisionSize, moveProperties);
-                } else if (type.equals("planet")) {
-                    level.addPlanet(position, lBitmap, lazyLoading, lGrav, lCollisionSize, lDOI, moveProperties);
-                } else if (type.equals("rocket")) {
-                    level.addRocket(position, lBitmap, lCollisionSize, moveProperties);
-                } else if (type.equals("bonus")) {
-                    level.addBonus(position, lBitmap, lCollisionSize, moveProperties);
                 } else {
                     PALManager.getLog().e(TAG, "Unexpected object type: " + type);
                 }

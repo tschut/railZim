@@ -45,16 +45,6 @@ public abstract class GameThread extends Thread {
         return distance <= SPACEMAN_HIT_FUZZYNESS * spaceData.currentLevel.getSpaceManObject().getBitmap().getWidth();
     }
 
-    public boolean hitsSpaceManArrow(float x, float y) {
-        Rect arrowRect = spaceData.currentLevel.getSpaceManObject().getArrowData().mRect;
-        if (arrowRect.isEmpty())
-            return false;
-
-        double distance = arrowRect.center().distanceTo(new PointF(x, y));
-
-        return distance <= ARROW_HIT_RADIUS;
-    }
-
     // returns immediately!
     public void postRunnable(Runnable runnable) {
         synchronized (eventQueue) {
@@ -87,19 +77,9 @@ public abstract class GameThread extends Thread {
         redrawOnce = true;
     }
 
-    protected void fireSpaceMan() {
-        spaceData.points.reset();
-        SpaceGameState.INSTANCE.setState(GameState.FLYING);
-        PointF speed = SpaceGameState.INSTANCE.chargingState.getSpaceManSpeed();
-        spaceData.currentLevel.setSpaceManSpeed(speed);
-
-        viewport.setFocusOnSpaceman(true);
-    }
-
     public void changeLevel(int index, boolean isSpecial) {
         synchronized (getSurfaceLocker()) {
             SpaceGameState.INSTANCE.chargingState.reset();
-            spaceData.resetPredictionData();
             viewport.resetFocusViewportStatus(false);
             spaceData.setCurrentLevel(index, isSpecial);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
