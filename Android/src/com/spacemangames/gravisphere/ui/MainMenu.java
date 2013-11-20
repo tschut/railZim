@@ -16,7 +16,7 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GamePrefs_;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.library.SpaceLevel;

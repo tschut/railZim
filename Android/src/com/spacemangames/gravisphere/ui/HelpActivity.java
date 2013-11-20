@@ -13,7 +13,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GamePrefs_;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;

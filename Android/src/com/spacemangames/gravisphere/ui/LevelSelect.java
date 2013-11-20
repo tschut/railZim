@@ -17,7 +17,7 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.gravisphere.LevelListAdapter;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 
 @EActivity(R.layout.levelselect_layout)

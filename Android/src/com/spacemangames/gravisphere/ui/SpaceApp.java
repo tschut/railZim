@@ -22,7 +22,7 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.gravisphere.DebugSettings;
 import com.spacemangames.gravisphere.FreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.UnfreezeGameThreadRunnable;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.gravisphere.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;

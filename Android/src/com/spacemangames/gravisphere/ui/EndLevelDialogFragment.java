@@ -13,7 +13,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 
 @EFragment(R.layout.end_level_layout)
 public class EndLevelDialogFragment extends DialogFragment {

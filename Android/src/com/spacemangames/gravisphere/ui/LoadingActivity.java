@@ -12,7 +12,7 @@ import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceUtil;
 import com.spacemangames.gravisphere.DebugSettings;
 import com.spacemangames.gravisphere.GameThreadHolder;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.SpaceGameThread;
 import com.spacemangames.gravisphere.contentprovider.LevelDbAdapter;
 import com.spacemangames.gravisphere.pal.AndroidBitmapFactory;

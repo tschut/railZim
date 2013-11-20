@@ -1,7 +1,7 @@
 package com.spacemangames.gravisphere.ui;
 
 import com.spacemangames.framework.EndGameState;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 
 public enum EndGameStatePresenter {
     NOT_ENDED(-1, -1, -1),

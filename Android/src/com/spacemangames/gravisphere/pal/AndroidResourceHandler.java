@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.framework.IMoveProperties;
 import com.spacemangames.framework.NullMoveProperties;
-import com.spacemangames.gravisphere.R;
+import com.spacemangames.railzim.R;
 import com.spacemangames.gravisphere.pal.levelsjson.LevelJson;
 import com.spacemangames.gravisphere.pal.levelsjson.LevelsJson;
 import com.spacemangames.gravisphere.pal.levelsjson.ObjectJson;
