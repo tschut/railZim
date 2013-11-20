@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
         <activity
-            android:name="com.spacemangames.gravisphere.ui.LoadingActivity_"
+            android:name="com.spacemangames.railzim.ui.LoadingActivity_"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
@@ -29,26 +29,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.spacemangames.gravisphere.ui.MainMenu_"
+            android:name="com.spacemangames.railzim.ui.MainMenu_"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.spacemangames.gravisphere.ui.SpaceApp_"
+            android:name="com.spacemangames.railzim.ui.SpaceApp_"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.spacemangames.gravisphere.ui.LevelSelect_"
+            android:name="com.spacemangames.railzim.ui.LevelSelect_"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.spacemangames.gravisphere.ui.HelpActivity_"
+            android:name="com.spacemangames.railzim.ui.HelpActivity_"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <provider
             android:exported="false"
             android:authorities="com.spacemangames.gravisphere"
-            android:name="com.spacemangames.gravisphere.contentprovider.HighScoresContentProvider_">
+            android:name="com.spacemangames.railzim.contentprovider.HighScoresContentProvider_">
         </provider>
     </application>
 
