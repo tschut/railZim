@@ -20,28 +20,34 @@ import com.spacemangames.railzim.SpaceGameThread;
 import com.spacemangames.railzim.pal.AndroidBitmapFactory;
 import com.spacemangames.railzim.pal.AndroidLog;
 import com.spacemangames.railzim.pal.AndroidResourceHandler;
+import com.spacemangames.util.ThreadUtils;
 
 @EActivity(R.layout.loading_layout)
 public class LoadingActivity extends Activity implements ILoadingDoneListener {
+    private long startLoadingTime;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        startLoadingTime = System.currentTimeMillis();
+
         bootstrap();
 
         // start the game thread
-        final SpaceGameThread lThread = GameThreadHolder.createThread(getApplicationContext());
-        lThread.setRunning(true);
-        lThread.freeze();
-        if (lThread.getState() == Thread.State.NEW)
-            lThread.start();
+        final SpaceGameThread thread = GameThreadHolder.createThread(getApplicationContext());
+        thread.setRunning(true);
+        thread.freeze();
+        if (thread.getState() == Thread.State.NEW) {
+            thread.start();
+        }
 
-        lThread.postRunnable(new Runnable() {
+        thread.postRunnable(new Runnable() {
             @Override
             public void run() {
                 SpaceData.getInstance().preloadAllLevels();
                 // load the fist level
-                lThread.changeLevel(0, true);
+                thread.changeLevel(0, true);
                 SpaceData.getInstance().setLoadingDone();
             }
         });
@@ -77,7 +83,11 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
     @Override
     public void loadingDone() {
         SpaceData.getInstance().remLoadingDoneListener(this);
-        // loading done, continue to the MainMenuActivity
+
+        while (System.currentTimeMillis() - startLoadingTime < 3000) {
+            ThreadUtils.silentSleep(100);
+        }
+
         startActivity(new Intent(SpaceApp.mAppContext, MainMenu_.class));
     }
 }
