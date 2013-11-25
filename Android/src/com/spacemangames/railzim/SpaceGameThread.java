@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EBean;
 import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.GameThread;
@@ -12,7 +11,6 @@ import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.library.SpaceData;
 import com.spacemangames.math.Rect;
 import com.spacemangames.pal.PALManager;
-import com.spacemangames.railzim.contentprovider.LevelDbAdapter;
 import com.spacemangames.railzim.pal.AndroidRenderer;
 import com.spacemangames.util.ThreadUtils;
 
@@ -25,9 +23,6 @@ public class SpaceGameThread extends GameThread {
 
     private SurfaceHolder         surfaceHolder;
     private final Object          dummySurfaceHolder = new Object();
-
-    @Bean
-    protected LevelDbAdapter      levelDbAdapter;
 
     private final AndroidRenderer renderer;
 

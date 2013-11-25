@@ -26,7 +26,6 @@ import com.spacemangames.railzim.FreezeGameThreadRunnable;
 import com.spacemangames.railzim.GameThreadHolder;
 import com.spacemangames.railzim.R;
 import com.spacemangames.railzim.UnfreezeGameThreadRunnable;
-import com.spacemangames.railzim.contentprovider.LevelDbAdapter;
 import com.spacemangames.railzim.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;
 
 @EActivity(R.layout.space_layout)
@@ -54,9 +53,6 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     @Bean
     protected PointsUpdateThread   pointsUpdateThread;
 
-    @Bean
-    protected LevelDbAdapter       levelDbAdapter;
-
     @ViewById
     SpaceView                      spaceView;
 
@@ -73,21 +69,16 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
         tracker.trackPageView("/endLevelDialog");
 
         int points = SpaceData.getInstance().points.getCurrentPoints();
-        int best = levelDbAdapter.highScore(SpaceData.getInstance().getCurrentLevelId());
         EndGameStatePresenter endState = EndGameStatePresenter.valueOfEndGameState(SpaceGameState.INSTANCE.endState());
         int imageResource = endState.getStarImageResourceId();
         int titleResource = endState.getTitleResourceId();
         int textResource = endState.getMsgResourceId();
         boolean nextLevelUnlocked = false;
 
-        if (levelDbAdapter.levelIsUnlocked(SpaceData.getInstance().getCurrentLevelId() + 1)) {
-            nextLevelUnlocked = true;
-        }
-
         FragmentManager fm = getSupportFragmentManager();
         EndLevelDialogFragment endLevelDialog = new EndLevelDialogFragment_();
         EndLevelDialogFragmentData data = new EndLevelDialogFragmentData();
-        data.activity(this).points(points).best(best).star(imageResource).subtitle(titleResource).message(textResource)
+        data.activity(this).points(points).best(9999).star(imageResource).subtitle(titleResource).message(textResource)
                 .nextLevelUnlocked(nextLevelUnlocked);
         endLevelDialog.setProperties(data);
         endLevelDialog.show(fm, "end_level_dialog");
@@ -178,17 +169,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             i.removeExtra("level");
         }
 
-        if (mRestoreLevel == LAST_UNLOCKED_LEVEL) {
-            int level = levelDbAdapter.getLastUnlockedLevelID();
-            PALManager.getLog().v(TAG, "restoring last unlocked level: " + level);
-            GameThreadHolder.getThread().changeLevel(level, false);
-        } else if (mRestoreLevel != -1) {
-            PALManager.getLog().v(TAG, "restoring level id " + mRestoreLevel);
-            GameThreadHolder.getThread().changeLevel(mRestoreLevel, false);
-        } else {
-            PALManager.getLog().v(TAG, "restoring level id " + 0);
-            GameThreadHolder.getThread().changeLevel(0, false);
-        }
+        GameThreadHolder.getThread().changeLevel(0, false);
         GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
         GameThreadHolder.getThread().redrawOnce();
     }

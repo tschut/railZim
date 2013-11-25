@@ -3,22 +3,18 @@ package com.spacemangames.railzim.ui;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.railzim.LevelListAdapter;
 import com.spacemangames.railzim.R;
-import com.spacemangames.railzim.contentprovider.LevelDbAdapter;
 
 @EActivity(R.layout.levelselect_layout)
 public class LevelSelect extends ListActivity {
@@ -27,20 +23,12 @@ public class LevelSelect extends ListActivity {
         public void onItemClick(AdapterView<?> parent, View aView, int position, long id) {
             int lID = Integer.parseInt((String) ((TextView) aView.findViewById(R.id.levelNumber)).getText());
 
-            if (!dbHelper.levelIsUnlocked(lID)) {
-                Toast.makeText(getApplicationContext(), R.string.level_locked, Toast.LENGTH_SHORT).show();
-            } else {
-                Intent aIntent = new Intent();
-                aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
-                setResult(Activity.RESULT_OK, aIntent);
-                finish();
-            }
+            Intent aIntent = new Intent();
+            aIntent.putExtra(SpaceApp.LEVEL_ID_STRING, lID);
+            setResult(Activity.RESULT_OK, aIntent);
+            finish();
         }
     }
-
-    @Bean
-    protected LevelDbAdapter          dbHelper;
-    private Cursor                    levelCursor;
 
     private final OnItemClickListener levelSelectedHandler = new LevelSelectItemClickListener();
 

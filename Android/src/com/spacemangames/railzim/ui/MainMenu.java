@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OnActivityResult;
@@ -20,7 +19,6 @@ import com.spacemangames.railzim.GamePrefs_;
 import com.spacemangames.railzim.GameThreadHolder;
 import com.spacemangames.railzim.R;
 import com.spacemangames.railzim.UnfreezeGameThreadRunnable;
-import com.spacemangames.railzim.contentprovider.LevelDbAdapter;
 
 @EActivity(R.layout.mainmenu_layout)
 public class MainMenu extends Activity {
@@ -40,9 +38,6 @@ public class MainMenu extends Activity {
 
     @Pref
     protected GamePrefs_        gamePrefs;
-
-    @Bean
-    protected LevelDbAdapter    levelDbAdapter;
 
     @Click(R.id.playButton)
     protected void onClickPlay() {
@@ -142,10 +137,6 @@ public class MainMenu extends Activity {
     }
 
     private boolean goToHelpImmediately() {
-        // return true if the first level is never completed...
-        if (levelDbAdapter.highScore(0) > 0)
-            return false;
-
         return !gamePrefs.hasSeenHelp().getOr(false);
     }
 }

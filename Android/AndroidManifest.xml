@@ -45,11 +45,6 @@
             android:name="com.spacemangames.railzim.ui.HelpActivity_"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
-        <provider
-            android:exported="false"
-            android:authorities="com.spacemangames.gravisphere"
-            android:name="com.spacemangames.railzim.contentprovider.HighScoresContentProvider_">
-        </provider>
     </application>
 
 </manifest>

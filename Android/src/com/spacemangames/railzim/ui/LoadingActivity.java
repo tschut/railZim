@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.spacemangames.framework.ILoadingDoneListener;
 import com.spacemangames.framework.SpaceUtil;
@@ -18,16 +17,12 @@ import com.spacemangames.railzim.DebugSettings;
 import com.spacemangames.railzim.GameThreadHolder;
 import com.spacemangames.railzim.R;
 import com.spacemangames.railzim.SpaceGameThread;
-import com.spacemangames.railzim.contentprovider.LevelDbAdapter;
 import com.spacemangames.railzim.pal.AndroidBitmapFactory;
 import com.spacemangames.railzim.pal.AndroidLog;
 import com.spacemangames.railzim.pal.AndroidResourceHandler;
 
 @EActivity(R.layout.loading_layout)
 public class LoadingActivity extends Activity implements ILoadingDoneListener {
-    @Bean
-    protected LevelDbAdapter levelDbAdapter;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +40,6 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
             @Override
             public void run() {
                 SpaceData.getInstance().preloadAllLevels();
-                levelDbAdapter.insertAllLevelsIfEmpty();
                 // load the fist level
                 lThread.changeLevel(0, true);
                 SpaceData.getInstance().setLoadingDone();
