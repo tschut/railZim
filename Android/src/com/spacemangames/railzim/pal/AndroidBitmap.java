@@ -22,7 +22,7 @@ public class AndroidBitmap implements IBitmap {
     public AndroidBitmap(String aResource, boolean lazyLoading) {
         this.lazyLoading = lazyLoading;
         name = aResource;
-        identifier = mResources.getIdentifier(name, "drawable", "com.spacemangames.gravisphere");
+        identifier = mResources.getIdentifier(name, "drawable", "com.spacemangames.railzim");
 
         if (!lazyLoading) {
             loadDrawable();

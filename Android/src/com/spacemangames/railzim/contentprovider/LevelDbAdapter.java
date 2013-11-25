@@ -24,7 +24,7 @@ public class LevelDbAdapter {
 
     private static final String DATABASE_NAME    = "data";
     private static final String DATABASE_TABLE   = "leveldata";
-    private static final int    DATABASE_VERSION = 4;
+    private static final int    DATABASE_VERSION = 1;
 
     private static final String TAG              = "LevelDbAdapter";
 
@@ -113,10 +113,11 @@ public class LevelDbAdapter {
     public int highScore(long aLevelID) {
         Cursor cursor = mDb.query(DATABASE_TABLE, new String[] { KEY_HIGHSCORE }, KEY_LEVELNUMBER + "=" + aLevelID, null, null, null, null);
         cursor.moveToFirst();
-        int lResult = cursor.getInt(cursor.getColumnIndex(LevelDbAdapter.KEY_HIGHSCORE));
+        // int lResult =
+        // cursor.getInt(cursor.getColumnIndex(LevelDbAdapter.KEY_HIGHSCORE));
         cursor.close();
 
-        return lResult;
+        return 0;
     }
 
     public boolean levelIsUnlocked(long aLevelID) {

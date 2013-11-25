@@ -25,10 +25,6 @@ import com.spacemangames.railzim.pal.AndroidResourceHandler;
 
 @EActivity(R.layout.loading_layout)
 public class LoadingActivity extends Activity implements ILoadingDoneListener {
-    static {
-        System.loadLibrary("gdx");
-    }
-
     @Bean
     protected LevelDbAdapter levelDbAdapter;
 
