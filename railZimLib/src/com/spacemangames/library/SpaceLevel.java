@@ -84,8 +84,8 @@ public class SpaceLevel {
         }
     }
 
-    public void addBackground(String backgroundColorInner, String backgroundColorOuter) {
-        backgroundObject = new SpaceBackgroundObject(backgroundColorInner, backgroundColorOuter, name);
+    public void addBackground() {
+        backgroundObject = new SpaceBackgroundObject();
     }
 
     public void setStartCenterY(int startY) {

@@ -72,7 +72,7 @@ public class AndroidResourceHandler implements IResourceHandler {
             level.setSilver(levelJson.getSilver());
             level.setGold(levelJson.getGold());
 
-            level.addBackground(levelJson.getBackground().getColor_inner(), levelJson.getBackground().getColor_outer());
+            level.addBackground();
             for (ObjectJson objectJson : levelJson.getObjects()) {
                 IMoveProperties moveProperties;
                 if (objectJson.getMove()) {
