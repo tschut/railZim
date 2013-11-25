@@ -19,100 +19,94 @@ import com.spacemangames.math.Rect;
 import com.spacemangames.pal.IRenderer;
 
 public class AndroidRenderer implements IRenderer {
-    private boolean          mInitialized = false;
+    private boolean          initialized = false;
 
-    private Canvas           mCanvas;
-    private Rect             mViewport;
-    private Rect             mScreen;
+    private Canvas           canvas;
+    private Rect             viewport;
+    private Rect             screen;
 
-    // For the background we make a copy of the gradient bitmap to speed up
-    // future rendering
-    private Bitmap           mBackgroundGradient;
-    private Canvas           mGradientCanvas;
-    private GradientDrawable mGradientDrawable;
+    private Bitmap           backgroundGradient;
+    private Canvas           gradientCanvas;
+    private GradientDrawable gradientDrawable;
 
-    // Bitmaps for the stars
-    private List<Bitmap>     mStarBitmaps = null;
-    private final Canvas     mScratchCanvas;
+    private List<Bitmap>     starBitmaps = null;
+    private final Canvas     scratchCanvas;
 
-    // helpers
-    private int              mCanvasWidth;
-    private int              mCanvasHeight;
+    private int              canvasWidth;
+    private int              canvasHeight;
 
     public AndroidRenderer() {
-        mScratchCanvas = new Canvas();
+        scratchCanvas = new Canvas();
     }
 
     // initialize platform stuff
-    public void initialize(Canvas aCanvas, Rect aViewport, Rect aScreen) {
-        mCanvas = aCanvas;
-        mCanvasWidth = mCanvas.getWidth();
-        mCanvasHeight = mCanvas.getHeight();
+    public void initialize(Canvas canvas, Rect viewport, Rect screen) {
+        this.canvas = canvas;
+        canvasWidth = canvas.getWidth();
+        canvasHeight = canvas.getHeight();
 
-        mViewport = aViewport;
-        mScreen = aScreen;
-        mInitialized = true;
+        this.viewport = viewport;
+        this.screen = screen;
+        initialized = true;
     }
 
     @Override
-    public void doDraw(List<SpaceObject> aObjects, SpaceBackgroundObject aBackgroundObject) {
-        assert !mInitialized;
+    public void doDraw(List<SpaceObject> objects, SpaceBackgroundObject backgroundObject) {
+        assert !initialized;
 
-        // draw the background first
-        doDraw(aBackgroundObject);
+        doDraw(backgroundObject);
 
-        // now draw the rest of the objects
-        int lCount = aObjects.size();
-        for (int i = 0; i < lCount; ++i) {
-            aObjects.get(i).dispatchToRenderer(this);
+        int count = objects.size();
+        for (int i = 0; i < count; ++i) {
+            objects.get(i).dispatchToRenderer(this);
         }
 
-        mInitialized = false;
+        initialized = false;
     }
 
     @Override
-    public void doDraw(SpaceObject aObject) {
-        AndroidBitmap lBitmap = (AndroidBitmap) aObject.getBitmap();
-        Drawable lDrawable = lBitmap.getDrawable();
+    public void doDraw(SpaceObject object) {
+        AndroidBitmap bitmap = (AndroidBitmap) object.getBitmap();
+        Drawable drawable = bitmap.getDrawable();
 
-        float lX = SpaceUtil.transformX(mViewport, mScreen, aObject.position.x);
-        float lY = SpaceUtil.transformY(mViewport, mScreen, aObject.position.y);
-        float lW = SpaceUtil.scaleX(mViewport, mScreen, lBitmap.getWidth());
-        float lH = SpaceUtil.scaleY(mViewport, mScreen, lBitmap.getHeight());
+        float x = SpaceUtil.transformX(viewport, screen, object.position.x);
+        float y = SpaceUtil.transformY(viewport, screen, object.position.y);
+        float w = SpaceUtil.scaleX(viewport, screen, bitmap.getWidth());
+        float h = SpaceUtil.scaleY(viewport, screen, bitmap.getHeight());
 
         // Draw object
-        int yTop = (int) (lY - (lH / 2.0f));
-        int xLeft = (int) (lX - (lW / 2.0f));
-        lDrawable.setBounds(xLeft, yTop, (int) (xLeft + lW), (int) (yTop + lH));
-        lDrawable.draw(mCanvas);
+        int yTop = (int) (y - (h / 2.0f));
+        int xLeft = (int) (x - (w / 2.0f));
+        drawable.setBounds(xLeft, yTop, (int) (xLeft + w), (int) (yTop + h));
+        drawable.draw(canvas);
     }
 
     @Override
-    public void doDraw(SpaceBackgroundObject aObject) {
+    public void doDraw(SpaceBackgroundObject object) {
         // if this returns true we cache the gradient
-        if (aObject.verifyStarFieldReady(mCanvasWidth, mCanvasHeight)) {
-            SpaceBackgroundObject.GradientProperties gradProps = aObject.getGradientProperties();
+        if (object.verifyStarFieldReady(canvasWidth, canvasHeight)) {
+            SpaceBackgroundObject.GradientProperties gradProps = object.getGradientProperties();
             int gradColor[] = new int[2];
             gradColor[0] = Color.parseColor(gradProps.mInnerColor);
             gradColor[1] = Color.parseColor(gradProps.mOuterColor);
-            mGradientDrawable = new GradientDrawable(Orientation.TL_BR, gradColor);
-            mGradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-            mGradientDrawable.setDither(true);
-            mGradientDrawable.setGradientCenter(gradProps.mCenterX, gradProps.mCenterY);
-            mGradientDrawable.setGradientRadius(gradProps.mRadius);
-            mGradientDrawable.setBounds(0, 0, mCanvasWidth, mCanvasHeight);
+            gradientDrawable = new GradientDrawable(Orientation.TL_BR, gradColor);
+            gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+            gradientDrawable.setDither(true);
+            gradientDrawable.setGradientCenter(gradProps.mCenterX, gradProps.mCenterY);
+            gradientDrawable.setGradientRadius(gradProps.mRadius);
+            gradientDrawable.setBounds(0, 0, canvasWidth, canvasHeight);
 
-            mBackgroundGradient = Bitmap.createBitmap(mCanvasWidth, mCanvasHeight, Bitmap.Config.RGB_565);
-            mGradientCanvas = new Canvas(mBackgroundGradient);
-            mGradientDrawable.draw(mGradientCanvas);
+            backgroundGradient = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.RGB_565);
+            gradientCanvas = new Canvas(backgroundGradient);
+            gradientDrawable.draw(gradientCanvas);
 
             // we have to generate the bitmaps for the stars
-            List<SpaceBackgroundObject.Star> lStars = aObject.getStars();
+            List<SpaceBackgroundObject.Star> lStars = object.getStars();
             int lCount = lStars.size();
-            if (mStarBitmaps == null) {
-                mStarBitmaps = new ArrayList<Bitmap>(lCount);
+            if (starBitmaps == null) {
+                starBitmaps = new ArrayList<Bitmap>(lCount);
             }
-            mStarBitmaps.clear();
+            starBitmaps.clear();
             Paint lPaint = new Paint();
             for (int i = 0; i < lCount; ++i) {
                 SpaceBackgroundObject.Star lStar = lStars.get(i);
@@ -120,11 +114,11 @@ public class AndroidRenderer implements IRenderer {
                 if (lBitmapSize < 1) // we can't create bitmaps smaller than 1x1
                     lBitmapSize = 1;
                 Bitmap aBitmap = Bitmap.createBitmap(lBitmapSize, lBitmapSize, Bitmap.Config.ARGB_8888);
-                mScratchCanvas.setBitmap(aBitmap);
+                scratchCanvas.setBitmap(aBitmap);
                 int lColor = Color.HSVToColor(lStar.mColor);
                 lPaint.setColor(lColor);
-                mScratchCanvas.drawCircle(lStar.mRadius, lStar.mRadius, lStar.mRadius, lPaint);
-                mStarBitmaps.add(i, aBitmap);
+                scratchCanvas.drawCircle(lStar.mRadius, lStar.mRadius, lStar.mRadius, lPaint);
+                starBitmaps.add(i, aBitmap);
             }
 
             // this looks like a good moment for some GC...
@@ -132,15 +126,15 @@ public class AndroidRenderer implements IRenderer {
         }
 
         // first draw background gradient
-        mCanvas.drawBitmap(mBackgroundGradient, 0, 0, null);
+        canvas.drawBitmap(backgroundGradient, 0, 0, null);
 
         // now draw all stars
-        int lCurrentZoom = mViewport.width() / mCanvasWidth;
-        int lXOffset = (mScreen.centerX() - mViewport.centerX()) / lCurrentZoom;
-        int lYOffset = (mScreen.centerY() - mViewport.centerY()) / lCurrentZoom;
+        int lCurrentZoom = viewport.width() / canvasWidth;
+        int lXOffset = (screen.centerX() - viewport.centerX()) / lCurrentZoom;
+        int lYOffset = (screen.centerY() - viewport.centerY()) / lCurrentZoom;
 
         // here we assume the stars have been sorted on distance, farthest first
-        List<SpaceBackgroundObject.Star> lStars = aObject.getStars();
+        List<SpaceBackgroundObject.Star> lStars = object.getStars();
         SpaceBackgroundObject.Star lStar;
         float lDepth;
         float lDiam, lX = 0, lY = 0;
@@ -149,15 +143,15 @@ public class AndroidRenderer implements IRenderer {
             lStar = lStars.get(i);
             lDiam = lStar.mDiameter;
             lDepth = lStar.mDepth;
-            lX = (lXOffset * lDepth - lStar.mX) % (mCanvasWidth + lDiam);
-            lY = (lYOffset * lDepth - lStar.mY) % (mCanvasHeight + lDiam);
+            lX = (lXOffset * lDepth - lStar.mX) % (canvasWidth + lDiam);
+            lY = (lYOffset * lDepth - lStar.mY) % (canvasHeight + lDiam);
 
             if (lX + lDiam < 0)
-                lX = mCanvasWidth + (lX + lDiam);
+                lX = canvasWidth + (lX + lDiam);
             if (lY + lDiam < 0)
-                lY = mCanvasHeight + (lY + lDiam);
+                lY = canvasHeight + (lY + lDiam);
 
-            mCanvas.drawBitmap(mStarBitmaps.get(i), lX, lY, null);
+            canvas.drawBitmap(starBitmaps.get(i), lX, lY, null);
         }
     }
 
