@@ -127,8 +127,9 @@ public class SpaceGameThread extends GameThread {
 
     private void sleepUntilFrameFilled(long loopStart) {
         double upToHere = (System.nanoTime() - loopStart) / 1000000000d;
-        if (upToHere < MIN_FRAME_TIME)
+        if (upToHere < MIN_FRAME_TIME) {
             ThreadUtils.silentSleep((long) ((MIN_FRAME_TIME - upToHere) * 1000));
+        }
     }
 
     private boolean safeCopyViewport(Rect viewportCopy) {
