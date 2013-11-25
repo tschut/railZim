@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.spacemangames.framework.CircularMoveProperties;
 import com.spacemangames.framework.IMoveProperties;
 import com.spacemangames.framework.NullMoveProperties;
-import com.spacemangames.library.SpaceData;
 import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.math.PointF;
 import com.spacemangames.pal.IResourceHandler;
@@ -32,9 +31,6 @@ public class AndroidResourceHandler implements IResourceHandler {
     public void preloadAllLevels(ArrayList<SpaceLevel> aLevels) {
         LevelsJson levelsJson = getLevelsJson(R.raw.defaultlevels);
         preloadLevels(aLevels, levelsJson);
-
-        LevelsJson specials = getLevelsJson(R.raw.speciallevels);
-        preloadLevels(SpaceData.getInstance().specialLevels, specials);
     }
 
     public LevelsJson getLevelsJson(int resource) {

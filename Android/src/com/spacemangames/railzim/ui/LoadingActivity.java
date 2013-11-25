@@ -46,8 +46,7 @@ public class LoadingActivity extends Activity implements ILoadingDoneListener {
             @Override
             public void run() {
                 SpaceData.getInstance().preloadAllLevels();
-                // load the fist level
-                thread.changeLevel(0, true);
+                thread.changeLevel(0);
                 SpaceData.getInstance().setLoadingDone();
             }
         });

@@ -16,8 +16,6 @@ public class SpaceData {
 
     public ArrayList<SpaceLevel>                 levels;
 
-    public ArrayList<SpaceLevel>                 specialLevels;
-
     public SpaceLevel                            currentLevel;
 
     public boolean                               preloadingDone;
@@ -30,7 +28,6 @@ public class SpaceData {
     private SpaceData() {
         preloadingDone = false;
         levels = new ArrayList<SpaceLevel>();
-        specialLevels = new ArrayList<SpaceLevel>();
         points = new SpaceGamePoints();
     }
 
@@ -42,22 +39,18 @@ public class SpaceData {
         return SingletonHolder.INSTANCE;
     }
 
-    public void setCurrentLevel(int index, boolean special) {
+    public void setCurrentLevel(int index) {
         if (currentLevel != null) {
             currentLevel.releaseLazyMemory();
             currentLevel.reset();
         }
 
-        if (special) {
-            currentLevel = specialLevels.get(index);
-        } else {
-            currentLevel = levels.get(index);
-        }
+        currentLevel = levels.get(index);
         currentLevel.reset();
 
         points.reset();
 
-        invokeLevelChangedListeners(index, special);
+        invokeLevelChangedListeners(index);
     }
 
     public void stepCurrentLevel(float elapsed) {
@@ -81,10 +74,6 @@ public class SpaceData {
     public void setLoadingDone() {
         preloadingDone = true;
         invokeLoadingDoneListeners();
-    }
-
-    public void setMainMenuLevel() {
-        currentLevel = specialLevels.get(0);
     }
 
     public int getCurrentLevelId() {
@@ -148,10 +137,10 @@ public class SpaceData {
         }
     }
 
-    private void invokeLevelChangedListeners(int newLevelID, boolean special) {
+    private void invokeLevelChangedListeners(int newLevelID) {
         synchronized (levelChangedListeners) {
             for (ILevelChangedListener list : levelChangedListeners) {
-                list.LevelChanged(newLevelID, special);
+                list.LevelChanged(newLevelID);
             }
         }
     }

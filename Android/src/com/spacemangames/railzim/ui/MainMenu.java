@@ -12,13 +12,11 @@ import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.spacemangames.framework.SpaceGameState;
-import com.spacemangames.library.SpaceLevel;
 import com.spacemangames.pal.PALManager;
 import com.spacemangames.railzim.FreezeGameThreadRunnable;
 import com.spacemangames.railzim.GamePrefs_;
 import com.spacemangames.railzim.GameThreadHolder;
 import com.spacemangames.railzim.R;
-import com.spacemangames.railzim.UnfreezeGameThreadRunnable;
 
 @EActivity(R.layout.mainmenu_layout)
 public class MainMenu extends Activity {
@@ -32,9 +30,6 @@ public class MainMenu extends Activity {
 
     @ViewById
     protected Button            listButton;
-
-    @ViewById
-    protected SpaceView         spaceView;
 
     @Pref
     protected GamePrefs_        gamePrefs;
@@ -88,11 +83,6 @@ public class MainMenu extends Activity {
             Intent intent = HelpActivity_.intent(this).get();
             startActivityForResult(intent, SpaceApp.ACTIVITY_HELP);
         } else {
-            spaceView.ignoreInput(true);
-
-            GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
-            GameThreadHolder.getThread().changeLevel(SpaceLevel.ID_LOADING_SCREEN, true);
-            GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
             SpaceGameState.INSTANCE.setPaused(false);
         }
     }
@@ -128,11 +118,8 @@ public class MainMenu extends Activity {
     @OnActivityResult(SpaceApp.ACTIVITY_HELP)
     protected void onReturnFromHelp(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            int action = data.getIntExtra("action", HelpActivity.HELP_ACTION_START_GAME);
-            if (action == HelpActivity.HELP_ACTION_START_GAME) {
-                GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
-                startActivity(new Intent(SpaceApp.mAppContext, SpaceApp_.class));
-            }
+            GameThreadHolder.getThread().postSyncRunnable(new FreezeGameThreadRunnable());
+            startActivity(new Intent(SpaceApp.mAppContext, SpaceApp_.class));
         }
     }
 

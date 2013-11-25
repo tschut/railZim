@@ -77,11 +77,11 @@ public abstract class GameThread extends Thread {
         redrawOnce = true;
     }
 
-    public void changeLevel(int index, boolean isSpecial) {
+    public void changeLevel(int index) {
         synchronized (getSurfaceLocker()) {
             SpaceGameState.INSTANCE.chargingState.reset();
             viewport.resetFocusViewportStatus(false);
-            spaceData.setCurrentLevel(index, isSpecial);
+            spaceData.setCurrentLevel(index);
             SpaceGameState.INSTANCE.setState(GameState.NOT_STARTED);
             SpaceGameState.INSTANCE.setEndState(EndGameState.NOT_ENDED);
             viewport.reset(spaceData.currentLevel.startCenter(), canvasSize);
@@ -89,18 +89,14 @@ public abstract class GameThread extends Thread {
     }
 
     public void loadNextLevel() {
-        changeLevel(spaceData.getCurrentLevelId() + 1, false);
+        changeLevel(spaceData.getCurrentLevelId() + 1);
     }
 
-    public void loadPrevLevel(boolean isSpecial) {
-        changeLevel(spaceData.getCurrentLevelId() - 1, isSpecial);
-    }
-
-    public void loadNextLevel(boolean isSpecial) {
-        changeLevel(spaceData.getCurrentLevelId() + 1, isSpecial);
+    public void loadPrevLevel() {
+        changeLevel(spaceData.getCurrentLevelId() - 1);
     }
 
     public void reloadCurrentLevel() {
-        changeLevel(spaceData.getCurrentLevelId(), false);
+        changeLevel(spaceData.getCurrentLevelId());
     }
 }

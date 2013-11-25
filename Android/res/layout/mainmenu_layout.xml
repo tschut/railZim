@@ -3,12 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.spacemangames.railzim.ui.SpaceView
-        android:id="@+id/spaceView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:keepScreenOn="true" />
-
     <LinearLayout
         android:id="@+id/linearLayoutVertical"
         android:layout_width="match_parent"

@@ -169,7 +169,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
             i.removeExtra("level");
         }
 
-        GameThreadHolder.getThread().changeLevel(0, false);
+        GameThreadHolder.getThread().changeLevel(0);
         GameThreadHolder.getThread().postSyncRunnable(new UnfreezeGameThreadRunnable());
         GameThreadHolder.getThread().redrawOnce();
     }
@@ -181,9 +181,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     }
 
     @Override
-    public void LevelChanged(int aNewLevelID, boolean aSpecial) {
-        if (!aSpecial) {
-            tracker.trackPageView("/levels/" + aNewLevelID);
-        }
+    public void LevelChanged(int aNewLevelID) {
+        tracker.trackPageView("/levels/" + aNewLevelID);
     }
 }
