@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.spacemangames.railzim.ui.SpaceView
-        android:id="@+id/spaceView"
+    <com.spacemangames.railzim.ui.GameView
+        android:id="@+id/gameView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:keepScreenOn="true" />

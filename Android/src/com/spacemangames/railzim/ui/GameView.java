@@ -12,7 +12,7 @@ import com.spacemangames.framework.GameState;
 import com.spacemangames.framework.SpaceGameState;
 import com.spacemangames.railzim.GameThreadHolder;
 
-class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
+class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GestureDetector      gestureDetector;
     private GestureListener      gestureListener      = new GestureListener();
 
@@ -24,7 +24,7 @@ class SpaceView extends SurfaceView implements SurfaceHolder.Callback {
 
     public boolean               ignoreFocusChange    = false;
 
-    public SpaceView(Context context, AttributeSet attrs) {
+    public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         scaleGestureDetector = new ScaleGestureDetector(context, scaleGestureListener);

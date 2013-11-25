@@ -28,7 +28,7 @@ import com.spacemangames.railzim.R;
 import com.spacemangames.railzim.UnfreezeGameThreadRunnable;
 import com.spacemangames.railzim.ui.EndLevelDialogFragment.EndLevelDialogFragmentData;
 
-@EActivity(R.layout.space_layout)
+@EActivity(R.layout.game_layout)
 public class SpaceApp extends FragmentActivity implements ILevelChangedListener {
     public static final int        ACTIVITY_LEVELSELECT = 0;
     public static final int        ACTIVITY_HELP        = 1;
@@ -54,7 +54,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
     protected PointsUpdateThread   pointsUpdateThread;
 
     @ViewById
-    SpaceView                      spaceView;
+    GameView                       gameView;
 
     // parse events that occurred. This is called after the physics have been
     // updated
@@ -86,7 +86,7 @@ public class SpaceApp extends FragmentActivity implements ILevelChangedListener 
 
     @AfterViews
     protected void startPointsUpdateThread() {
-        GameThreadHolder.getThread().setSurfaceHolder(spaceView.getHolder());
+        GameThreadHolder.getThread().setSurfaceHolder(gameView.getHolder());
 
         pointsUpdateThread.start();
     }
